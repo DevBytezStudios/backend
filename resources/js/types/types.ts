@@ -3,20 +3,27 @@ export interface Produto {
     nome: string;
     descricao: string;
     valor: number;
-    valorDesc: number;
+    valor_desc: number;
     imagem: string;
-    categoria: string;
+    categoria: Categoria | null;
 }
 
 export interface Variacao {
     id: number;
+    id_produto: number;
     titulo: string;
     opcoes: Opcao[] | null;
 }
 
 export interface Opcao {
     id: number;
-
-    titulo: string;
+    id_var:number
+    nome: string;
     valor: number;
+}
+
+
+export interface Categoria{
+    id: number,
+    titulo: number
 }

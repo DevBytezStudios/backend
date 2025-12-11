@@ -14,7 +14,7 @@ import {
     InputGroupInput,
 } from '@/components/ui/input-group';
 import Input from '@/components/ui/input/Input.vue';
-import useDialogProduto from '@/stores/dialogProduto';
+import useDialogProduto from '@/stores/DialogProduto';
 import { Opcao, Variacao } from '@/types/types';
 import {
     Coins,
@@ -28,14 +28,16 @@ const dialogProduto = useDialogProduto();
 interface Props {
     variante: Variacao;
 }
-
-const emit = defineEmits(['removerVariacao', 'adicionarOpcao']);
+const emit = defineEmits(['deleteVariacao', 'adicionarOpcao','deleteOpcao']);
 const props = defineProps<Props>();
 
 // CONFIGURAÇÂO DE VARIAÇÔES
-const removerVariacao = (variaco: Variacao) => {
+const deleteVariacao = (variaco: Variacao) => {
     if (variaco.id != 0) {
-        dialogProduto.deleteVariaco(variaco.id);
+        emit('deleteVariacao',variaco.id);
+
+         dialogProduto.variacoes = dialogProduto.variacoes.filter(
+        (v) => v.id !== variaco.id,);
         return;
     }
 
@@ -44,13 +46,14 @@ const removerVariacao = (variaco: Variacao) => {
     );
 };
 
+import 'vue-sonner/style.css'
 const removerOpcao = (indexOpcao: number, opcao: Opcao) => {
     if (props.variante.opcoes) {
         props.variante.opcoes = props.variante.opcoes?.filter(
             (opcao, index) => index != indexOpcao,
         );
         if (opcao.id != 0) {
-            dialogProduto.deleteOpcao(opcao.id);
+           emit('deleteOpcao',opcao.id)
         }
     }
 };
@@ -61,7 +64,7 @@ const addOption = () => {
 </script>
 
 <template>
-    <Accordion type="multiple" class="w-full gap-2 space-y-2">
+    <Accordion type="multiple" class="w-full gap-2 space-y-2">        
         <AccordionItem value="item-1" class="rounded-lg border px-2">
             <AccordionTrigger class="flex items-end">
                 <Field>
@@ -76,7 +79,7 @@ const addOption = () => {
                     size="icon"
                     variant="ghost"
                     class="h-10 w-10"
-                    @click="removerVariacao(variante)"
+                    @click="deleteVariacao(variante)"
                 >
                     <Trash2 class="size-4 text-red-500" />
                 </Button>
@@ -89,12 +92,12 @@ const addOption = () => {
                     :key="index"
                 >
                     <Field class="flex-1">
-                        <FieldLabel>Título</FieldLabel>
+                        <FieldLabel>Nome</FieldLabel>
                         <InputGroup>
                             <InputGroupInput
                                 placeholder="Morango com Chocolate"
                                 type="text"
-                                v-model="opcao.titulo"
+                                v-model="opcao.nome"
                             />
                             <InputGroupAddon align="inline-start">
                                 <TextCursorIcon />

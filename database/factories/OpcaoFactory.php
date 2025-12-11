@@ -19,7 +19,6 @@ class OpcaoFactory extends Factory
     {
         return [
             'id_con' => 1,
-            'id_produto' => 1,
             'id_var' => fake()->randomElement(Variacao::pluck('id')),
             'nome' => fake()->name(),
             'valor' => fake()->numberBetween(5,100)

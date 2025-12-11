@@ -19,7 +19,8 @@ class CategoriaFactory extends Factory
     {
         return [
             "id_con" => 1,
-            "titulo" => 'Bolos',
+            // "titulo" => 'Bolos',
+            "titulo" => fake()->word(),
         ];
     }
 }

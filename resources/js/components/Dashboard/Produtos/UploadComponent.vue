@@ -3,7 +3,8 @@ import Input from '@/components/ui/input/Input.vue';
 import Label from '@/components/ui/label/Label.vue';
 import { UploadCloud } from 'lucide-vue-next';
 import { ref, watch } from 'vue';
-
+import useDialogProduto from '@/stores/DialogProduto';
+const dialogProduto = useDialogProduto();
 const props = defineProps(['imagem']);
 
 const file = ref<File | null>(null);
@@ -14,16 +15,10 @@ function handleFileChange(e: Event) {
     if (!input.files?.length) return;
 
     file.value = input.files[0];
-
-    // Gerar preview da imagem
+    dialogProduto.file = file.value;
     if (file.value.type.startsWith('image/')) {
         previewUrl.value = URL.createObjectURL(file.value);
     }
-}
-
-function clearFile() {
-    file.value = null;
-    previewUrl.value = null;
 }
 
 watch(
@@ -38,7 +33,6 @@ watch(
 
 <template>
     <div class="flex items-start gap-3">
-        <!-- Preview estilo produto -->
         <div
             class="relative h-32 w-32 overflow-hidden rounded-lg border bg-muted/30 shadow-sm"
         >
@@ -50,7 +44,6 @@ watch(
                 class="h-full w-full object-cover"
             />
         </div>
-        <!-- Input super pequeno -->
         <Label
             for="upload-input"
             class="flex h-20 w-20 cursor-pointer flex-col items-center justify-center rounded-lg border border-dashed border-muted-foreground transition hover:bg-muted/30"

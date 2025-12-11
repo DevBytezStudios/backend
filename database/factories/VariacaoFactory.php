@@ -18,7 +18,6 @@ class VariacaoFactory extends Factory
     public function definition(): array
     {
         return [
-            'id_con' => 1,
             'id_produto' => 1,
             'titulo'=> "Teste Campo Variação",
         ];

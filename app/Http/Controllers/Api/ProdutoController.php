@@ -21,7 +21,7 @@ class ProdutoController extends Controller
             foreach ($variacoes as $variaco) {
                 $variacoesCollection[] = [
                     'titulo' => $variaco->titulo,
-                    'opoes' => $variaco->opcoes
+                    'opcoes' => $variaco->opcoes
                 ];
             }
             return [

@@ -20,7 +20,8 @@ class ProdutoFactory extends Factory
     {
         return [
             "id_con" => 1,
-            'id_cat' => 1,
+            // 'id_cat' => 1,
+            'id_cat' => fake()->randomElement(Categoria::pluck('id')),
             'nome' => "Bolo de Chocolate",
             'imagem' => 'bolodechocolate.jpg',
             'valor' => 20.99,

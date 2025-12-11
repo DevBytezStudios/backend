@@ -10,7 +10,6 @@ class Opcao extends Model
 
      protected $fillable = [
         'id_con',
-        'id_produto',
         'id_var',
         'nome',
         'valor'

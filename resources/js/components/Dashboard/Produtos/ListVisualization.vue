@@ -20,15 +20,13 @@ import {
 import { Edit2Icon, TrashIcon } from 'lucide-vue-next';
 import DialogProduct from './DialogProduct.vue';
 import { Produto } from '@/types/types';
-import useDialogProduto from '@/stores/dialogProduto';
+import useDialogProduto from '@/stores/DialogProduto';
 
 const dialogProduto = useDialogProduto();
 
 const props = defineProps<{
     produtos: Produto[];
 }>();
-
-const emit = defineEmits(['saveProduct']);
 
 // DIALOGS DOS PRODUTOS
 const showDialog = ref(false);
@@ -41,18 +39,12 @@ const showDialog = ref(false);
 // });
 
 // Produto escolhido
-const editProduto = (produto: Produto) => {
-    dialogProduto.produto = produto;
-    dialogProduto.getVariacao();
+const editProduto = async (produto: Produto) => {
+     dialogProduto.produto = produto;
+     await dialogProduto.getVariacao();
+     showDialog.value = true;
 };
 
-const saveProduct = (product: Produto) => {
-    // toast('PRODUTO SALVO!');
-    emit('saveProduct', product);
-    // alertDialog.value.active = true,
-    // alertDialog.value.msg = "Produto salvo com sucesso"
-    // alertDialog.value.title = "Produto Salvo!"
-};
 </script>
 
 <template>
@@ -61,7 +53,6 @@ const saveProduct = (product: Produto) => {
         <DialogProduct
             :open="showDialog"
             @close-dialog="showDialog = false"
-            @save-product="saveProduct"
         />
 
         <Table>
@@ -102,7 +93,7 @@ const saveProduct = (product: Produto) => {
                     </TableCell>
 
                     <TableCell class="hidden md:table-cell">
-                        {{ produto.categoria }}
+                        {{ produto.categoria?.titulo }}
                     </TableCell>
 
                     <TableCell class="hidden md:table-cell">
@@ -110,7 +101,7 @@ const saveProduct = (product: Produto) => {
                     </TableCell>
 
                     <TableCell class="hidden md:table-cell">
-                        {{ produto.valorDesc }}
+                        {{ produto.valor_desc }}
                     </TableCell>
 
                     <TableCell class="flex justify-end gap-2 text-right">
@@ -136,8 +127,7 @@ const saveProduct = (product: Produto) => {
                             <DropdownMenuContent>
                                 <DropdownMenuItem
                                     @click="
-                                        (editProduto(produto),
-                                        (showDialog = true))
+                                        editProduto(produto)
                                     "
                                     ><Edit2Icon /> Editar</DropdownMenuItem
                                 >

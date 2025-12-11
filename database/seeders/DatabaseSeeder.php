@@ -22,10 +22,10 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         Confeitaria::factory(1)->create();
-        categoria::factory(1)->create();
-        Produto::factory(30)->create();
+        categoria::factory(5)->create();
+        Produto::factory(10)->create();
         Variacao::factory(10)->create();
-        Opcao::factory(50)->create();
+        Opcao::factory(10)->create();
         Cliente::factory(1)->create();
         Pedido::factory(10)->create();
         PedidoItemSeeder::class;

@@ -16,7 +16,8 @@ class ConfeitariaController extends Controller
         // $confeitaria = Confeitaria::where('slug',$request->slug)->first();
         $confeitaria = DB::table('confeitarias')->select('id', 'nome', 'slug', 'cor_princ', 'cor_sec', 'logo')->where('id', 1)->first();
 
-        $produtos = DB::table('produtos')->select('id', 'id_con', 'id_cat', 'nome', 'imagem', 'valor','valor_desc')->where('id_con', 1)->orderBy('id', 'desc')->get();
+        $produtos = Produto::with('categoria')->select('id', 'id_con', 'id_cat', 'nome',"descricao", 'imagem', 'valor','valor_desc')->where('id_con', 1)->orderBy('id')->get(10);
+
 
         $catalogo = [
             'confeitaria' => $confeitaria,
