@@ -1,0 +1,35 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('opcaos', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('id_con');
+            $table->foreign('id_con')->references('id')->on('confeitarias')->onDelete('cascade')->onUpdate('cascade');
+            $table->unsignedBigInteger('id_produto');
+            $table->foreign('id_produto')->references('id')->on('produtos')->onDelete('cascade')->onUpdate('cascade');
+            $table->unsignedBigInteger('id_var');
+            $table->foreign('id_var')->references('id')->on('variacaos')->onDelete('cascade')->onUpdate('cascade');
+            $table->string('nome');
+            $table->float('valor');
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('opcaos');
+    }
+};
