@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Confeitaria;
+use App\Models\Produto;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -18,8 +19,8 @@ class VariacaoFactory extends Factory
     public function definition(): array
     {
         return [
-            'id_produto' => 1,
-            'titulo'=> "Teste Campo Variação",
+            'id_produto' => fake()->randomElement(Produto::pluck('id')),
+            'titulo'=> fake()->word(),
         ];
     }
 }

@@ -14,9 +14,8 @@ import AppLayout from '@/layouts/AppLayout.vue';
 </script>
 
 <template>
-    <AppLayout>
-        <SystemLogo />
-        <h1>Informações da loja</h1>
+    <AppLayout page="Informações da loja">
+        <SystemLogo />        
         <form>
             <FieldGroup>
                 <FieldSet>

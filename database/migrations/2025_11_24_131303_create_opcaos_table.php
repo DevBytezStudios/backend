@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('opcaos', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('id_con');
             $table->unsignedBigInteger('id_var');
             $table->foreign('id_var')->references('id')->on('variacaos')->onDelete('cascade')->onUpdate('cascade');
             $table->string('nome');

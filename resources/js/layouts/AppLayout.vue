@@ -1,7 +1,8 @@
-<script lang="ts">
+<script  lang="ts">
 export const description = 'A sidebar that collapses to icons.';
 export const iframeHeight = '800px';
 export const containerClass = 'w-full h-full';
+
 </script>
 
 <script setup lang="ts">
@@ -18,6 +19,13 @@ import {
     SidebarProvider,
     SidebarTrigger,
 } from '@/components/ui/sidebar';
+
+
+interface Props{
+    page: string
+}
+
+const props = defineProps<Props>();
 </script>
 
 <template>
@@ -37,7 +45,7 @@ import {
                         <BreadcrumbList>
                             <BreadcrumbItem class="hidden md:block">
                                 <BreadcrumbLink href="#">
-                                    Pagina
+                                    {{ props.page }}
                                 </BreadcrumbLink>
                             </BreadcrumbItem>
                         </BreadcrumbList>

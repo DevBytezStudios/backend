@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
+import { router } from '@inertiajs/vue3';
 
 import Button from '@/components/ui/button/Button.vue';
 import Input from '@/components/ui/input/Input.vue';
+
 import {
     Pagination,
     PaginationContent,
-    PaginationEllipsis,
     PaginationItem,
     PaginationNext,
     PaginationPrevious,
@@ -24,29 +25,35 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Produto } from '@/types/types';
+import useDialogProduto from '@/stores/DialogProduto';
+import { Paginator, Produto } from '@/types/types';
 import { GridIcon, ListIcon, PlusCircleIcon } from 'lucide-vue-next';
-
-const filterValue = ref('nome');
+import PaginationEllipsis from '@/components/ui/pagination/PaginationEllipsis.vue';
 
 interface Props {
-    produtos: Array<Produto>;
+    produtos: Produto[];
+    paginator: Paginator;
 }
 
 const showDialog = ref(false);
 const props = defineProps<Props>();
-import useDialogProduto from '@/stores/DialogProduto';
 const dialogProduto = useDialogProduto();
+const filterValue = ref('nome');
 
-
+console.log(props.paginator);
 const addProduto = async () => {
     await dialogProduto.getCategorias();
     showDialog.value = true;
 };
+
+const navigate = (url: string | null) => {
+    if (!url) return;
+    router.get(url);
+};
 </script>
 
 <template>
-    <AppLayout>
+    <AppLayout page="Produtos">
         <DialogProduct :open="showDialog" @close-dialog="showDialog = false" />
 
         <header class="menubar">
@@ -96,27 +103,42 @@ const addProduto = async () => {
                 </TabsContent>
             </Tabs>
             <!-- VISUALIZAÇÂO -->
+        </div>
 
-            <!-- PAGINAÇÃO -->
+        <div class="flex flex-col gap-6">
             <Pagination
                 v-slot="{ page }"
-                :items-per-page="10"
-                :total="30"
-                :default-page="2"
+                :items-per-page="props.paginator.per_page"
+                :total="props.paginator.total"
+                :default-page="props.paginator.current_page"
             >
                 <PaginationContent v-slot="{ items }">
-                    <PaginationPrevious />
-                    <template v-for="(item, index) in items" :key="index">
-                        <PaginationItem
-                            v-if="item.type === 'page'"
-                            :value="item.value"
-                            :is-active="item.value === page"
+                    <PaginationPrevious
+                        @click="navigate(props.paginator.prev_page_url)"
+                    />
+
+                    <template
+                        v-for="(link, index) in props.paginator.links"
+                        :key="index"
+                    >
+                        <template
+                            v-if="
+                                !link.label.includes('Previous') &&
+                                !link.label.includes('Next')
+                            "
                         >
-                            {{ item.value }}
-                        </PaginationItem>
+                            <PaginationItem
+                                :value="link.page"
+                                :is-active="link.active"
+                                @click="navigate(link.url)"
+                            >
+                                {{ link.label }}
+                                
+                            </PaginationItem>
+                        </template>
+                        
                     </template>
-                    <PaginationEllipsis :index="4" />
-                    <PaginationNext />
+                    <PaginationNext @click="navigate(props.paginator.next_page_url)" />
                 </PaginationContent>
             </Pagination>
         </div>

@@ -18,7 +18,6 @@ class OpcaoFactory extends Factory
     public function definition(): array
     {
         return [
-            'id_con' => 1,
             'id_var' => fake()->randomElement(Variacao::pluck('id')),
             'nome' => fake()->name(),
             'valor' => fake()->numberBetween(5,100)

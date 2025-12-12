@@ -23,11 +23,11 @@ class DatabaseSeeder extends Seeder
     {
         Confeitaria::factory(1)->create();
         categoria::factory(5)->create();
-        Produto::factory(10)->create();
-        Variacao::factory(10)->create();
+        Produto::factory(5)->create();
+        Variacao::factory(5)->create();
         Opcao::factory(10)->create();
         Cliente::factory(1)->create();
-        Pedido::factory(10)->create();
+        // Pedido::factory(10)->create();
         PedidoItemSeeder::class;
     }
 }

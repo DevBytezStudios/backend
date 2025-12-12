@@ -15,9 +15,9 @@ class PedidoController extends Controller
 {
     public function setPedido(Request $request)
     {
-        try {
+        try {;
             $confeitaria = Confeitaria::where('slug', $request->slug)->first();
-            $dataCliente = $request->cliente;
+            $dataCliente = $request['cliente'];
             $cliente = Cliente::select('id', 'nome', 'telefone', 'cep')->where('telefone', $dataCliente['telefone'])->where('nome', $dataCliente['nome'])->where('cep', $dataCliente['cep'])->first();
             if ($cliente == null) {
                 $cliente = Cliente::create([
@@ -32,7 +32,6 @@ class PedidoController extends Controller
                 ]);
             }
 
-
             // CRIAR O PEDIDO
             $pedido = Pedido::create([
                 'id_con' => $confeitaria->id,
@@ -43,14 +42,16 @@ class PedidoController extends Controller
             ]);
 
 
-            $produtos = $request->produtos;
-            foreach ($produtos as $item) {
-                pedido_item::create([
-                    'id_pedido' => $pedido->id,
-                    'id_produto' => $item['id'],
-                    'id_opcao' => $item['id_opcao'],
-                    'quantidade' => $item['quant']
-                ]);
+            $produtos = $request['produtos'];
+            foreach ($produtos as $produto) {
+                foreach ($produto["opcoes"] as $opcao) {
+                    pedido_item::create([
+                        'id_pedido' => $pedido->id,
+                        'id_produto' => $produto['id'],
+                        'id_opcao' => $opcao['id'],
+                        'quantidade' => $produto['quant']
+                    ]);
+                }
             }
 
             return [

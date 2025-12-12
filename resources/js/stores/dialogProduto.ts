@@ -148,21 +148,16 @@ const useDialogProduto = defineStore('dialogProduto', {
                 };
             };
 
-            // 1. Validação de NOME
             if (!this.produto.nome || this.produto.nome.trim() === '') {
                 return error('O nome do produto é obrigatório.');
             }
 
-            // 2. Validação de DESCRIÇÃO
             if (
                 !this.produto.descricao ||
                 this.produto.descricao.trim() === ''
             ) {
                 return error('A descrição do produto é obrigatória.');
             }
-
-            // 3. Validação de CATEGORIA
-            // Verifica se é nulo ou undefined (permitindo ID 0 se necessário)
             if (
                 this.produto.categoria === null ||
                 this.produto.categoria === undefined
@@ -170,13 +165,11 @@ const useDialogProduto = defineStore('dialogProduto', {
                 return error('A categoria do produto é obrigatória.');
             }
 
-            // 4. Validação de VALOR (Preço)
             const valorNum = Number(this.produto.valor);
             if (isNaN(valorNum) || valorNum <= 0) {
                 return error('O valor do produto deve ser maior que zero.');
             }
 
-            // 5. Validação de VALOR DE DESCONTO (Novo)
             const valorDescNum = Number(this.produto.valor_desc);
             if (!isNaN(valorDescNum) && valorDescNum > valorNum) {
                 return error(
@@ -188,7 +181,6 @@ const useDialogProduto = defineStore('dialogProduto', {
                 return error('O valor do desconto não pode ser negativo.');
             }
 
-            // Se passou por tudo, retorna true (sucesso)
             return true;
         },
     },
