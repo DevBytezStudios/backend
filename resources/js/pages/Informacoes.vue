@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import SystemLogo from '@/components/SystemLogo.vue';
+import UploadComponent from '@/components/Dashboard/Produtos/UploadComponent.vue';
 import { Button } from '@/components/ui/button';
 import {
     Field,
@@ -9,24 +9,42 @@ import {
     FieldSet,
 } from '@/components/ui/field';
 import FieldDescription from '@/components/ui/field/FieldDescription.vue';
+import FieldLegend from '@/components/ui/field/FieldLegend.vue';
+import FieldTitle from '@/components/ui/field/FieldTitle.vue';
+import Input from '@/components/ui/input/Input.vue';
 
 import AppLayout from '@/layouts/AppLayout.vue';
 </script>
 
 <template>
-    <AppLayout page="Informações da loja">
-        <SystemLogo />        
+    <AppLayout page="Informações da confeitaria">
+        <!-- <SystemLogo />         -->
+
         <form>
             <FieldGroup>
                 <FieldSet>
                     <FieldGroup>
                         <Field>
-                            <FieldLegend>Cores da Loja</FieldLegend>
+                            <FieldTitle>Logo</FieldTitle>
+                            <UploadComponent />
+                        </Field>
+                    </FieldGroup>
+                    <FieldGroup>
+                        <Field>
+                            <FieldLabel for="checkout-7j9-card-name-43j">
+                                Nome da confeitaria
+                            </FieldLabel>
+                            <Input type="text"/>
+                        </Field>
+                    </FieldGroup>
+                    <FieldGroup>
+                        <Field>
+                            <FieldLegend>Cores da confeitaria</FieldLegend>
                             <FieldDescription>
-                                Escolha as cores da sua loja
+                                Escolha as cores dos botões e demais
                             </FieldDescription>
                             <FieldLabel for="checkout-7j9-card-name-43j">
-                                Cor principal da loja
+                                Cor principal
                             </FieldLabel>
                             <input
                                 type="color"
@@ -34,7 +52,7 @@ import AppLayout from '@/layouts/AppLayout.vue';
                                 name="corPrincipal"
                             />
                             <FieldLabel for="checkout-7j9-card-name-43j">
-                                Cor segundaria da loja
+                                Cor segundaria
                             </FieldLabel>
                             <input
                                 type="color"
@@ -43,7 +61,7 @@ import AppLayout from '@/layouts/AppLayout.vue';
                             />
                         </Field>
                     </FieldGroup>
-                </FieldSet
+                </FieldSet>
                 <FieldSeparator />
                 <Field orientation="horizontal">
                     <Button type="submit"> Salvar </Button>

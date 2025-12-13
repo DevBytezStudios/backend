@@ -13,6 +13,7 @@ class Pedido extends Model
         'pagamento',
         'code',
         'data',
+        'status'
     ];
 
 

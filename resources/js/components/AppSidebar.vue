@@ -52,7 +52,7 @@ const data = {
                 },
                 {
                     title: 'Pedidos',
-                    url: '#',
+                    url: '/catalogo/pedidos',
                 },
                 {
                     title: 'Categorias',

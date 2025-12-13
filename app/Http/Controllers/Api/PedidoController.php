@@ -39,6 +39,7 @@ class PedidoController extends Controller
                 'pagamento' => $request->pagamento,
                 'code' => $this->getCode(),
                 'data' => now()->toDateString(),
+                'status' => 'nenhum'
             ]);
 
 

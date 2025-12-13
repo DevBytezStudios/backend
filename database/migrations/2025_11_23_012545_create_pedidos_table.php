@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('pagamento');
             $table->string('code');
             $table->date('data');
+            $table->string('status');
             $table->timestamps();
         });
     }

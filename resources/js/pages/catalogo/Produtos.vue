@@ -2,9 +2,13 @@
 import AppLayout from '@/layouts/AppLayout.vue';
 import { router } from '@inertiajs/vue3';
 
+import { ButtonGroup } from '@/components/ui/button-group';
 import Button from '@/components/ui/button/Button.vue';
 import Input from '@/components/ui/input/Input.vue';
+import { SearchIcon } from 'lucide-vue-next';
 
+import DialogProduct from '@/components/Dashboard/Produtos/DialogProduct.vue';
+import ListVisualization from '@/components/Dashboard/Produtos/ListVisualization.vue';
 import {
     Pagination,
     PaginationContent,
@@ -12,10 +16,6 @@ import {
     PaginationNext,
     PaginationPrevious,
 } from '@/components/ui/pagination';
-import { ref } from 'vue';
-
-import DialogProduct from '@/components/Dashboard/Produtos/DialogProduct.vue';
-import ListVisualization from '@/components/Dashboard/Produtos/ListVisualization.vue';
 import {
     Select,
     SelectContent,
@@ -24,11 +24,13 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import useDialogProduto from '@/stores/DialogProduto';
 import { Paginator, Produto } from '@/types/types';
-import { GridIcon, ListIcon, PlusCircleIcon } from 'lucide-vue-next';
-import PaginationEllipsis from '@/components/ui/pagination/PaginationEllipsis.vue';
+import axios from 'axios';
+import { PlusCircleIcon } from 'lucide-vue-next';
+import { ref } from 'vue';
+import { toast, Toaster } from 'vue-sonner';
+import 'vue-sonner/style.css';
 
 interface Props {
     produtos: Produto[];
@@ -38,9 +40,7 @@ interface Props {
 const showDialog = ref(false);
 const props = defineProps<Props>();
 const dialogProduto = useDialogProduto();
-const filterValue = ref('nome');
 
-console.log(props.paginator);
 const addProduto = async () => {
     await dialogProduto.getCategorias();
     showDialog.value = true;
@@ -50,22 +50,73 @@ const navigate = (url: string | null) => {
     if (!url) return;
     router.get(url);
 };
+
+// PESQUISA
+const filterValue = ref('nome');
+const searchValue = ref('');
+const pesquisando = ref(false);
+const produtosPesquisa = ref<Produto[]>([]);
+let searchTimeout: number | null = null;
+
+const searchProdutos = async () => {
+    if (searchTimeout) {
+        clearTimeout(searchTimeout);
+    }
+    // BUSCAR PRODUTOS
+    try {
+        if (pesquisando.value == false && searchValue.value != '') {
+            pesquisando.value = true;
+            // PAUSA DE 2 SEGUNDOS
+            searchTimeout = setTimeout(async () => {
+                const formData = new FormData();
+
+                formData.append('valor', searchValue.value);
+                formData.append('filtro', filterValue.value);
+
+                const response = await axios.post<Produto[]>(
+                    '/catalogo/produto/search',
+                    formData,
+                );
+
+                produtosPesquisa.value = response.data;
+                // SE NÃO ACHAR NADA
+                if(produtosPesquisa.value.length == 0){
+                    toast.warning('Nada Encontrado!...');
+                }
+            }, 500);
+        } else {
+            produtosPesquisa.value = [];
+            toast.warning('Pesquisa vazia!...');
+        }
+    } catch ($error) {
+        console.log($error);
+    } finally {
+        pesquisando.value = false;
+    }
+};
 </script>
 
 <template>
+    <Toaster />
+
     <AppLayout page="Produtos">
         <DialogProduct :open="showDialog" @close-dialog="showDialog = false" />
 
         <header class="menubar">
-            <label class="containerSearch" for="inputSearch">
+            <ButtonGroup class="w-full">
                 <Input
-                    type="text"
-                    placeholder="Pesquisar produto"
-                    name="inputSearch"
-                    id="inputSearch"
-                    class="w-full"
+                    placeholder="Pesquisar..."
+                    v-model="searchValue"
+                    @input="searchProdutos"
                 />
-            </label>
+                <Button
+                    variant="outline"
+                    aria-label="Search"
+                    @click="searchProdutos"
+                >
+                    <SearchIcon />
+                </Button>
+            </ButtonGroup>
 
             <Select v-model="filterValue">
                 <SelectTrigger class="w-[180px]">
@@ -85,7 +136,20 @@ const navigate = (url: string | null) => {
         </header>
 
         <div class="flex flex-col gap-6">
-            <Tabs default-value="list" class="w-full">
+            <ListVisualization
+                v-if="produtosPesquisa?.length == 0"
+                :produtos="props.produtos"
+                :open-dialog="showDialog"
+            />
+            <!-- SE TIVER PESQUISA -->
+            <ListVisualization
+                v-if="produtosPesquisa.length != 0"
+                :produtos="produtosPesquisa"
+                :open-dialog="showDialog"
+            />
+
+            <!-- ADICIONAR VISUALIZAÇÔES DIFERENTES DEPOIS -->
+            <!-- <Tabs default-value="list" class="w-full">
                 <TabsList>
                     <TabsTrigger value="list">
                         <ListIcon />
@@ -99,9 +163,9 @@ const navigate = (url: string | null) => {
                     />
                 </TabsContent>
                 <TabsContent value="grid">
-                    <!-- <GridVisualization :produtos="props.produtos" /> -->
+                    <GridVisualization :produtos="props.produtos" /> 
                 </TabsContent>
-            </Tabs>
+            </Tabs> -->
             <!-- VISUALIZAÇÂO -->
         </div>
 
@@ -133,12 +197,12 @@ const navigate = (url: string | null) => {
                                 @click="navigate(link.url)"
                             >
                                 {{ link.label }}
-                                
                             </PaginationItem>
                         </template>
-                        
                     </template>
-                    <PaginationNext @click="navigate(props.paginator.next_page_url)" />
+                    <PaginationNext
+                        @click="navigate(props.paginator.next_page_url)"
+                    />
                 </PaginationContent>
             </Pagination>
         </div>
@@ -155,16 +219,5 @@ const navigate = (url: string | null) => {
     padding: 10px;
     border: white 1px solid;
     border-radius: 5px;
-}
-
-.containerSearch {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.searchIcon {
-    width: 10%;
 }
 </style>

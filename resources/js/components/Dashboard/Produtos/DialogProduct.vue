@@ -25,10 +25,10 @@ import SelectTrigger from '@/components/ui/select/SelectTrigger.vue';
 import SelectValue from '@/components/ui/select/SelectValue.vue';
 import Textarea from '@/components/ui/textarea/Textarea.vue';
 import { PlusSquareIcon } from 'lucide-vue-next';
-import { toast, Toaster } from 'vue-sonner';
 import ProductOpitions from './ProductOpitions.vue';
 import UploadComponent from './UploadComponent.vue';
-
+import { toast, Toaster } from 'vue-sonner';
+import 'vue-sonner/style.css';
 // FECHAR O DIALOG
 const closeDialog = () => {
     dialogProduto.clearDialog();
@@ -90,7 +90,7 @@ const saveProduct = async () => {
     }
 };
 
-import 'vue-sonner/style.css';
+
 </script>
 
 <template>

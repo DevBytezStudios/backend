@@ -94,6 +94,28 @@ const useDialogProduto = defineStore('dialogProduto', {
                 console.log($error);
             }
         },
+        async deleteProduto() {
+            try {
+                if (this.produto.id != 0) {
+                    const response = await axios.post(
+                        '/catalogo/produto/deleteproduto',
+                        {
+                            id: this.produto.id,
+                        },
+                    );
+
+                    return response.data;
+                } else {
+                    return {
+                        error: {
+                            titulo: 'Produto não encontrado para deletar!',
+                        },
+                    };
+                }
+            } catch ($error) {
+                console.log($error);
+            }
+        },
         clearDialog() {
             this.produto = {
                 id: 0,
@@ -134,7 +156,7 @@ const useDialogProduto = defineStore('dialogProduto', {
 
                     return response.data;
                 } catch ($error) {}
-            }else{
+            } else {
                 return this.verificacao();
             }
         },

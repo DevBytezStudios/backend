@@ -17,10 +17,10 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import useDialogProduto from '@/stores/DialogProduto';
+import { Produto } from '@/types/types';
 import { Edit2Icon, TrashIcon } from 'lucide-vue-next';
 import DialogProduct from './DialogProduct.vue';
-import { Produto } from '@/types/types';
-import useDialogProduto from '@/stores/DialogProduto';
 
 const dialogProduto = useDialogProduto();
 
@@ -31,30 +31,72 @@ const props = defineProps<{
 // DIALOGS DOS PRODUTOS
 const showDialog = ref(false);
 
-// CONTROLE DO ALERT
-// const alertDialog = ref({
-//     active: false,
-//     title: '',
-//     msg: '',
-// });
-
 // Produto escolhido
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 const editProduto = async (produto: Produto) => {
-     dialogProduto.produto = produto;
-     await dialogProduto.getVariacao();
-     showDialog.value = true;
+    dialogProduto.produto = produto;
+    await dialogProduto.getVariacao();
+    showDialog.value = true;
 };
 
+import { toast, Toaster } from 'vue-sonner';
+import 'vue-sonner/style.css';
+// DELETAR PRODUTO
+const alertDialog = ref(false);
+
+const deletarProduto = async () => {
+    try {
+        const response = await dialogProduto.deleteProduto();
+        console.log(response);
+        if (response.success) {
+            alertDialog.value = false;
+            dialogProduto.produto.id = 0;
+            toast.success(response.success.titulo);
+        } else {
+            toast.error(response.error.titulo);
+        }
+    } catch ($error) {}
+};
 </script>
 
 <template>
     <div class="w-full overflow-x-auto">
-        <!-- <Toaster /> -->
-        <DialogProduct
-            :open="showDialog"
-            @close-dialog="showDialog = false"
-        />
-
+        <Toaster />
+        <DialogProduct :open="showDialog" @close-dialog="showDialog = false" />
+        <AlertDialog :open="alertDialog">
+            <AlertDialogContent>
+                <AlertDialogHeader>
+                    <AlertDialogTitle
+                        >Deseja deletar esse produto?</AlertDialogTitle
+                    >
+                    <AlertDialogDescription>
+                        Essa ação irá deletar este produto PERMANENTEMENTE,
+                        deseja deletar?
+                    </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                    <AlertDialogCancel
+                        @click="
+                            ((dialogProduto.produto.id = 0),
+                            (alertDialog = false))
+                        "
+                        >Cancelar</AlertDialogCancel
+                    >
+                    <AlertDialogAction @click="deletarProduto"
+                        >Continuar</AlertDialogAction
+                    >
+                </AlertDialogFooter>
+            </AlertDialogContent>
+        </AlertDialog>
         <Table>
             <TableCaption>Lista de produtos cadastrados</TableCaption>
 
@@ -97,7 +139,12 @@ const editProduto = async (produto: Produto) => {
                     </TableCell>
 
                     <TableCell class="hidden md:table-cell">
-                        {{new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(produto.valor,)}}
+                        {{
+                            new Intl.NumberFormat('pt-BR', {
+                                style: 'currency',
+                                currency: 'BRL',
+                            }).format(produto.valor)
+                        }}
                     </TableCell>
 
                     <TableCell class="hidden md:table-cell">
@@ -125,13 +172,16 @@ const editProduto = async (produto: Produto) => {
                             </DropdownMenuTrigger>
 
                             <DropdownMenuContent>
-                                <DropdownMenuItem
-                                    @click="
-                                        editProduto(produto)
-                                    "
+                                <DropdownMenuItem @click="editProduto(produto)"
                                     ><Edit2Icon /> Editar</DropdownMenuItem
                                 >
                                 <DropdownMenuItem
+                                    class="bg-red-500"
+                                    @click="
+                                        ((dialogProduto.produto.id =
+                                            produto.id),
+                                        (alertDialog = true))
+                                    "
                                     ><TrashIcon />Deletar</DropdownMenuItem
                                 >
                             </DropdownMenuContent>

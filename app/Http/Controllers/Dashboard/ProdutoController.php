@@ -30,7 +30,6 @@ class ProdutoController extends Controller
         return response()->json(['variacoes' => $variacoesCollection]);
     }
 
-
     public function deleteOpcao(Request $request)
     {
         try {
@@ -82,6 +81,39 @@ class ProdutoController extends Controller
                     'error' => [
                         'titulo' => 'Algo deu Errado!',
                         'message' => "Variação não encontrada!",
+                        'code' => 404,
+                    ]
+                ];
+            }
+        } catch (Throwable $error) {
+            return [
+                'error' => [
+                    'titulo' => 'Algo de errado!',
+                    'message' => $error->getMessage(),
+                    'code' => $error->getCode(),
+                ]
+            ];
+        }
+    }
+
+    public function deleteProduto(Request $request)
+    {
+        try {
+            $produto = Produto::find($request->id);
+            if ($produto != null) {
+                $produto->delete();
+                return [
+                    'success' => [
+                        'titulo' => 'Deletado!',
+                        'message' => "Produto Deleteado!",
+                        'code' => 200,
+                    ]
+                ];
+            } else {
+                return [
+                    'error' => [
+                        'titulo' => 'Algo deu Errado!',
+                        'message' => "Produto não encontrada!",
                         'code' => 404,
                     ]
                 ];
@@ -195,26 +227,26 @@ class ProdutoController extends Controller
                 ]);
 
                 foreach ($variacoes as $variacao) {
-                        // CRIAR VARIACAO
-                        $variacaoORM = Variacao::create([
-                            "id_produto" => $produto->id,
-                            "titulo" => $variacao['titulo']
-                        ]);
+                    // CRIAR VARIACAO
+                    $variacaoORM = Variacao::create([
+                        "id_produto" => $produto->id,
+                        "titulo" => $variacao['titulo']
+                    ]);
 
-                        foreach ($variacao['opcoes'] as $opcao) {
-                            if ($opcao['id'] != 0) {
-                                // UPDATE
-                            } else {
-                                $opcaoORM = Opcao::create([
-                                    "id_var" => $variacaoORM->id,
-                                    "nome" => $opcao['nome'],
-                                    "valor" => $opcao['valor'],
-                                ]);
-                            }
+                    foreach ($variacao['opcoes'] as $opcao) {
+                        if ($opcao['id'] != 0) {
+                            // UPDATE
+                        } else {
+                            $opcaoORM = Opcao::create([
+                                "id_var" => $variacaoORM->id,
+                                "nome" => $opcao['nome'],
+                                "valor" => $opcao['valor'],
+                            ]);
                         }
+                    }
                 }
 
-                   return [
+                return [
                     'success' => [
                         'titulo' => 'Produto Criado!',
                         'message' => "criado com sucesso!",
@@ -230,6 +262,23 @@ class ProdutoController extends Controller
                     'code' => $error->getCode(),
                 ]
             ];
+        }
+    }
+
+
+
+    public function search(Request $request)
+    {
+        $produtos = [];
+        if ($request->filtro == "nome") {
+            $produtos = Produto::with('categoria')->select('id', 'id_con', 'id_cat', 'nome', "descricao", 'imagem', 'valor', 'valor_desc')->where('nome', 'like', "%$request->valor%")->get();
+            return $produtos;
+        } else {
+
+            $produtos = Produto::with('categoria')->select('id', 'id_con', 'id_cat', 'nome', "descricao", 'imagem', 'valor', 'valor_desc')->whereHas('categoria', function ($q) use ($request) {
+                $q->where('titulo', 'like', "%$request->valor%");
+            })->get();
+            return $produtos;
         }
     }
 }
