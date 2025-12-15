@@ -56,7 +56,7 @@ const data = {
                 },
                 {
                     title: 'Categorias',
-                    url: '#',
+                    url: '/catalogo/categorias',
                 },
             ],
         },

@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { ref } from 'vue';
 
 import {
     Card,
     CardContent,
-    CardDescription,
     CardFooter,
     CardHeader,
     CardTitle,
@@ -12,106 +11,132 @@ import {
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
-import { TimerIcon, User2Icon } from 'lucide-vue-next';
+import { Pedido } from '@/types/types';
+import axios from 'axios';
+import { Trash2Icon, User2Icon } from 'lucide-vue-next';
 import CardCliente from './CardCliente.vue';
 
-/* =========================
-   DADOS FALSOS (MOCK)
-   ========================= */
+interface Props {
+    pedido: Pedido;
+}
 
-const pedido = {
-    codigo: '123ABC',
-    data: '12 Jul 2025 • 18:12',
-    pagamento: 'PIX',
-};
-
-const cliente = {
-    nome: 'João Silva',
-    telefone: '(11) 99999-9999',
-    rua: 'Rua das Flores',
-    numero: 123,
-    bairro: 'Centro',
-    cidade: 'São Paulo',
-    complemento: 'Apto 45',
-};
-
-const itens = [
-    {
-        id: 1,
-        quantidade: 1,
-        produto: {
-            nome: 'Bolo de Chocolate',
-            valor: 45.0,
-        },
-        opcao: {
-            nome: 'Recheio de Morango',
-            valor: 5.0,
-        },
-    },
-    {
-        id: 2,
-        quantidade: 2,
-        produto: {
-            nome: 'Cupcake Gourmet',
-            valor: 12.0,
-        },
-        opcao: {
-            nome: 'Cobertura Extra',
-            valor: 3.0,
-        },
-    },
+const props = defineProps<Props>();
+const statusPedido = ref(props.pedido.status);
+const open = ref(false);
+const dialogCliente = ref(false);
+const statusOptions = [
+    { value: 'em_progresso', label: 'Em progresso' },
+    { value: 'concluido', label: 'Concluído' },
+    { value: 'cancelado', label: 'Cancelado' },
 ];
 
-/* ========================= */
+const emit = defineEmits(['updateStatus','deletePedido']);
+const updateStatus = async () =>  {
+    await atualizarStatus();
+    emit('updateStatus', props.pedido, statusPedido.value);
+};
 
-const open = ref(false);
+function calcularTotal(pedido: Pedido): number {
+    return pedido.pedidoItem.reduce((total, item) => {
+        // valor do produto (prioriza valor_desc)
+        const valorProduto =
+            item.produto.valor_desc !== null &&
+            item.produto.valor_desc !== undefined
+                ? Number(item.produto.valor_desc)
+                : Number(item.produto.valor);
 
-const total = computed(() =>
-    itens.reduce((acc, item) => {
-        const base = item.produto.valor;
-        const extra = item.opcao?.valor ?? 0;
-        return acc + (base + extra) * item.quantidade;
-    }, 0),
-);
+        // soma das opções
+        const totalOpcoes = item.opcoes.reduce(
+            (soma, opcao) => soma + Number(opcao.valor),
+            0,
+        );
 
-const dialogCliente = ref(false);
+        // subtotal do item
+        const subtotal = (valorProduto + totalOpcoes) * item.quantidade;
+
+        return total + subtotal;
+    }, 0);
+}
+
+const atualizarStatus = async () => {
+    try {
+        console.log(statusPedido.value);
+        const response = await axios.post('/catalogo/pedidos/updatestatus', {
+            id: props.pedido.id,
+            status: statusPedido.value,
+        });
+    } catch ($error) {
+        console.log($error);
+    }
+};
+
 </script>
 
 <template>
-    <Card class="w-full text-sm sm:w-[280px]">
+    <Card class="h-fit w-full text-sm sm:w-[300px]">
         <!-- Header -->
         <CardHeader class="space-y-0.5 pb-3">
             <div class="flex items-center justify-between">
-                <CardTitle class="text-sm font-semibold">
-                    Pedido {{ pedido.codigo }}
-                </CardTitle>
+                <div class="flex flex-col">
+                    <CardTitle class="text-sm font-semibold">
+                        Pedido {{ props.pedido.code }}
+                    </CardTitle>
+
+                    <span class="text-xs text-muted-foreground">
+                        {{
+                            new Date(props.pedido.data).toLocaleDateString(
+                                'pt-BR',
+                            )
+                        }}
+                    </span>
+                </div>
 
                 <div class="flex items-center gap-1">
+                    <!-- Pagamento -->
                     <Badge variant="secondary" class="px-2 py-0 text-xs">
                         {{ pedido.pagamento }}
                     </Badge>
 
-                    <Badge
-                        variant="outline"
-                        class="flex items-center gap-1 px-2 py-0 text-xs"
+                    <!-- Status (editável) -->
+                    <Select
+                        v-model="statusPedido"
+                        @update:model-value="updateStatus"
                     >
-                        <TimerIcon class="h-3 w-3" />
-                        Em prog.
-                    </Badge>
+                        <SelectTrigger class="h-6 border-dashed px-2 text-xs">
+                            <SelectValue />
+                        </SelectTrigger>
+
+                        <SelectContent>
+                            <SelectItem
+                                v-for="status in statusOptions"
+                                :key="status.value"
+                                :value="status.value"
+                            >
+                                {{ status.label }}
+                            </SelectItem>
+                        </SelectContent>
+                    </Select>
                 </div>
             </div>
-
-            <CardDescription class="text-xs">
-                {{ pedido.data }}
-            </CardDescription>
         </CardHeader>
 
         <Separator />
 
         <!-- Itens -->
-        <CardContent class="space-y-2 pt-3 text-xs">
-            <div v-for="item in itens" :key="item.id" class="space-y-0.5">
+        <CardContent class="h-40 space-y-2 overflow-auto pt-3 text-xs">
+            <div
+                v-for="item in pedido.pedidoItem"
+                :key="item.id"
+                class="space-y-0.5"
+            >
                 <div class="flex justify-between font-medium">
                     <span class="max-w-[130px] truncate">
                         {{ item.produto.nome }}
@@ -119,30 +144,44 @@ const dialogCliente = ref(false);
                     <span>x{{ item.quantidade }}</span>
                 </div>
 
-                <div class="text-muted-foreground">+ {{ item.opcao.nome }}</div>
+                <div
+                    class="text-muted-foreground"
+                    v-for="(opcao, index) in item.opcoes"
+                    :key="index"
+                >
+                    + {{ opcao.nome }}
+                </div>
             </div>
         </CardContent>
 
         <Separator />
 
-        <CardFooter class="flex items-center justify-between pt-3 bg-muted/10">
+        <CardFooter class="flex items-center justify-between bg-muted/10 pt-3">
             <!-- Total -->
             <div class="flex flex-col leading-tight">
                 <span class="text-xs text-muted-foreground"> Total </span>
                 <span class="text-sm font-semibold">
-                    R$ {{ total.toFixed(2) }}
+                    {{
+                        new Intl.NumberFormat('pt-BR', {
+                            style: 'currency',
+                            currency: 'BRL',
+                        }).format(calcularTotal(pedido))
+                    }}
                 </span>
             </div>
 
             <!-- Ações -->
             <div class="flex items-center gap-2">
+                <Button variant="destructive" class="h-10 w-10" @click="emit('deletePedido')">
+                    <Trash2Icon />
+                </Button>
                 <Button
                     variant="outline"
                     size="sm"
-                    class="text-xs"
+                    class="h-10 w-10"
                     @click="dialogCliente = true"
                 >
-                    <User2Icon class="h-4 w-4" />
+                    <User2Icon />
                 </Button>
 
                 <!-- <Button size="sm" class="text-xs"> Detalhes </Button> -->
@@ -151,8 +190,8 @@ const dialogCliente = ref(false);
 
         <CardCliente
             :open="dialogCliente"
-            :cliente="cliente"
-            :code="pedido.codigo"
+            :cliente="pedido.cliente"
+            :code="pedido.code"
             @close="dialogCliente = false"
         />
     </Card>

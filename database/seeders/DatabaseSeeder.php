@@ -28,6 +28,6 @@ class DatabaseSeeder extends Seeder
         Opcao::factory(10)->create();
         Cliente::factory(1)->create();
         // Pedido::factory(10)->create();
-        PedidoItemSeeder::class;
+        // PedidoItemSeeder::class;
     }
 }

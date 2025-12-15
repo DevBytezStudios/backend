@@ -39,8 +39,6 @@ const useDialogProduto = defineStore('dialogProduto', {
                     variacoes.map((variacao: Variacao) => {
                         this.variacoes.push(variacao);
                     });
-
-                    console.log(this.variacoes);
                 } catch ($error) {
                     console.log($error);
                 }

@@ -15,8 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('id_pedido');
             $table->foreign('id_pedido')->references('id')->on('pedidos')->onDelete('cascade')->onUpdate('cascade');
-            $table->unsignedBigInteger('id_opcao')->nullable();
-            $table->foreign('id_opcao')->references('id')->on('opcaos')->onDelete('cascade')->onUpdate('cascade');
+
             $table->unsignedBigInteger('id_produto');
             $table->foreign('id_produto')->references('id')->on('produtos')->onDelete('cascade')->onUpdate('cascade');
             $table->integer('quantidade');

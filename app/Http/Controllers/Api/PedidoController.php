@@ -6,6 +6,7 @@ use App\Models\Cliente;
 use App\Models\Confeitaria;
 use App\Models\Pedido;
 use App\Models\pedido_item;
+use App\Models\PedidoItemOpcao;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
@@ -15,7 +16,7 @@ class PedidoController extends Controller
 {
     public function setPedido(Request $request)
     {
-        try {;
+        try {
             $confeitaria = Confeitaria::where('slug', $request->slug)->first();
             $dataCliente = $request['cliente'];
             $cliente = Cliente::select('id', 'nome', 'telefone', 'cep')->where('telefone', $dataCliente['telefone'])->where('nome', $dataCliente['nome'])->where('cep', $dataCliente['cep'])->first();
@@ -39,18 +40,24 @@ class PedidoController extends Controller
                 'pagamento' => $request->pagamento,
                 'code' => $this->getCode(),
                 'data' => now()->toDateString(),
-                'status' => 'nenhum'
+                // 'data' => "2025/12/12",
+                'status' => 'em_progresso'
             ]);
 
 
             $produtos = $request['produtos'];
             foreach ($produtos as $produto) {
-                foreach ($produto["opcoes"] as $opcao) {
-                    pedido_item::create([
-                        'id_pedido' => $pedido->id,
-                        'id_produto' => $produto['id'],
+                $pedidoItem = pedido_item::create([
+                    'id_pedido' => $pedido->id,
+                    'id_produto' => $produto['id'],
+                    'quantidade' => $produto['quant']
+                ]);
+                foreach ($produto['opcoes'] ?? [] as $opcao) {
+                    if (!isset($opcao['id'])) continue;
+
+                    PedidoItemOpcao::create([
+                        'id_pedido_item' => $pedidoItem->id,
                         'id_opcao' => $opcao['id'],
-                        'quantidade' => $produto['quant']
                     ]);
                 }
             }
@@ -93,5 +100,4 @@ class PedidoController extends Controller
 
         return $code;
     }
-
 }

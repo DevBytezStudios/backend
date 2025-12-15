@@ -24,7 +24,7 @@ export interface Opcao {
 
 export interface Categoria {
     id: number;
-    titulo: number;
+    titulo: string;
 }
 
 export interface PaginatorLink {
@@ -49,3 +49,51 @@ export interface Paginator {
     to: number | null;
     total: number;
 }
+
+
+// PEDIDOS
+export interface Pedido{
+    id: number,
+    id_con: number,
+    cliente: Cliente,
+    pagamento: string,
+    code: string,
+    data: Date,
+    pedidoItem: PedidoItems[]
+    total: number,
+    status: string,
+}
+
+export interface Cliente{
+    id: number,
+    nome: string,
+    telefone: string,
+    cep: string,
+    rua: string,
+    numero: number,
+    complemento: string,
+    bairro: string,
+    cidade:string,
+}
+
+export interface PedidoItems{
+    id: number,
+    id_pedido: number,
+    produto: ProdutoPedido,
+    opcoes:OpcaoPedido[],
+    quantidade: number
+}
+
+export interface ProdutoPedido {
+    id: number;
+    nome: string;
+    valor: number;
+    valor_desc: number;
+}
+
+export interface OpcaoPedido{
+    id:number,
+    valor: number,
+    nome: string
+}
+

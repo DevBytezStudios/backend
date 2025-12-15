@@ -42,6 +42,7 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
+
 const editProduto = async (produto: Produto) => {
     dialogProduto.produto = produto;
     await dialogProduto.getVariacao();
@@ -56,7 +57,6 @@ const alertDialog = ref(false);
 const deletarProduto = async () => {
     try {
         const response = await dialogProduto.deleteProduto();
-        console.log(response);
         if (response.success) {
             alertDialog.value = false;
             dialogProduto.produto.id = 0;

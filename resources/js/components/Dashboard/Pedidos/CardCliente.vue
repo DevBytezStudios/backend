@@ -7,22 +7,23 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
+import { Cliente } from '@/types/types';
 
-defineProps<{
+
+interface Props{
     open: boolean;
-    cliente: {
-        nome: string;
-        telefone: string;
-        rua: string;
-        numero: number;
-        bairro: string;
-        cidade: string;
-        complemento?: string;
-    };
+    cliente: Cliente
     code: string,
-}>();
+}
+const props = defineProps<Props>();
 
 defineEmits(['close']);
+
+const contact = () =>{
+    const url = `https://api.whatsapp.com/send?phone=${props.cliente.telefone}`
+
+    window.open(url,'_blank')
+}
 </script>
 
 <template>
@@ -50,6 +51,7 @@ defineEmits(['close']);
 
             <!-- Botão WhatsApp -->
             <Button
+                @click="contact"
                 class="inline-block rounded-lg bg-green-500 px-4 py-2 text-center text-white transition-colors hover:bg-green-600"
             >
                 <span class="flex items-center justify-center gap-2">

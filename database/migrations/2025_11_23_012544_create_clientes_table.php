@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('nome');
             $table->string('cep');
             $table->string('rua');
-            $table->string('complemento');
+            $table->string('complemento')->nullable();
             $table->string('bairro');
             $table->integer('numero');
             $table->string('cidade');
