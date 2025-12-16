@@ -6,7 +6,10 @@ import type { DefineComponent } from 'vue';
 import { createApp, h } from 'vue';
 
 import { createPinia } from 'pinia'
+import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
+
 const pinia = createPinia()
+pinia.use(piniaPluginPersistedstate)
 
 const appName = import.meta.env.VITE_APP_NAME || 'Dashboard';
 

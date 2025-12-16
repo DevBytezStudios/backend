@@ -1,3 +1,14 @@
+export interface Confeitaria{
+    id: number,
+    nome: string,
+    slug: string,
+    logo: string,
+    cor_princ: string,
+    cor_sec: string,
+    email: string
+}
+
+
 export interface Produto {
     id: number;
     nome: string;

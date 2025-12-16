@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Dashboard;
 
 use App\Models\Categoria;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Throwable;
 
 class CategoriaController extends Controller
@@ -26,7 +27,10 @@ class CategoriaController extends Controller
 
     public function setCategoria(Request $request)
     {
+
         try {
+            $confeitaria = Auth::User();
+
             if ($request->id != 0) {
                 $categoria = Categoria::find($request->id);
                 $categoria->titulo = $request->titulo;
@@ -38,7 +42,7 @@ class CategoriaController extends Controller
                 ];
             } else {
                 $categoria = Categoria::create([
-                    "id_con" => 1,
+                    "id_con" => $confeitaria->id,
                     'titulo' => $request->titulo
                 ]);
                 return [

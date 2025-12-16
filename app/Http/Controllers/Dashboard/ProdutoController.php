@@ -6,6 +6,7 @@ use App\Models\Opcao;
 use App\Models\Produto;
 use App\Models\Variacao;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
@@ -131,6 +132,8 @@ class ProdutoController extends Controller
 
     public function setProduto(Request $request)
     {
+        $confeitaria = Auth::user();
+
         // CONFIGURAR A IMAGEM AO RECEBER ELA
         $imagem = ' ';
         if ($request->imagem) {
@@ -218,7 +221,7 @@ class ProdutoController extends Controller
 
                 $produto = Produto::create([
                     "nome" =>  $dialogProduto['nome'],
-                    "id_con" => 1, // PEGAR O ID COM BASE NA CONFEITARIA LOGADA
+                    "id_con" => $confeitaria->id, // PEGAR O ID COM BASE NA CONFEITARIA LOGADA
                     "id_cat" =>  $dialogProduto['categoria']['id'],
                     "descricao" => $dialogProduto['descricao'],
                     "valor" =>  $dialogProduto['valor'],
@@ -269,9 +272,11 @@ class ProdutoController extends Controller
 
     public function search(Request $request)
     {
+        $confeitaria = Auth::user();
+
         $produtos = [];
         if ($request->filtro == "nome") {
-            $produtos = Produto::with('categoria')->select('id', 'id_con', 'id_cat', 'nome', "descricao", 'imagem', 'valor', 'valor_desc')->where('nome', 'like', "%$request->valor%")->get();
+            $produtos = Produto::with('categoria')->select('id', 'id_con', 'id_cat', 'nome', "descricao", 'imagem', 'valor', 'valor_desc')->where('nome', 'like', "%$request->valor%")->where('id_con',$confeitaria->id)->get();
             return $produtos;
         } else {
 

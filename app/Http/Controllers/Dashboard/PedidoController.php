@@ -7,6 +7,7 @@ use App\Models\Confeitaria;
 use App\Models\Pedido;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Throwable;
@@ -77,9 +78,9 @@ class PedidoController extends Controller
     public function search(Request $request)
     {
         try {
-
+            $confeitaria = Auth::user();
             $pedidos = [];
-            $pedidos = Pedido::with(['cliente', 'pedidoItem'])->where('code', 'like', "$request->valor%")->get()->select('id', 'code', 'pagamento', 'data', 'status', 'produto', 'pedidoItem', 'cliente');;
+            $pedidos = Pedido::with(['cliente', 'pedidoItem'])->where('code', 'like', "$request->valor%")->where('id_con',$confeitaria->id)->get()->select('id', 'code', 'pagamento', 'data', 'status', 'produto', 'pedidoItem', 'cliente');;
             return $pedidos;
         } catch (Throwable $error) {
             return [

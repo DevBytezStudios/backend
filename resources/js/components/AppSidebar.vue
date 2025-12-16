@@ -14,19 +14,14 @@ import {
     SidebarRail,
 } from '@/components/ui/sidebar';
 import NavProduto from './NavProduto.vue';
-
+import useConfeitariaStore from '@/stores/ConfeitariaStore';
+const confeitariaStore = useConfeitariaStore();
 const props = withDefaults(defineProps<SidebarProps>(), {
     collapsible: 'icon',
 });
 
-// This is sample data.
 const data = {
-    user: {
-        name: 'shadcn',
-        email: 'm@example.com',
-        avatar: '/avatars/shadcn.jpg',
-    },
-
+    user: confeitariaStore.confeitaria,
     navInfo: [
         {
             title: 'Home',
@@ -34,7 +29,7 @@ const data = {
             icon: Home,
         },
         {
-            title: 'Informações da loja',
+            title: 'Informações',
             url: '/informacoes',
             icon: InfoIcon,
         },
@@ -60,21 +55,21 @@ const data = {
                 },
             ],
         },
-        {
-            title: 'Encomenda',
-            url: '#',
-            icon: BookOpen,
-            items: [
-                {
-                    title: 'Pedidos',
-                    url: '#',
-                },
-                {
-                    title: 'Informações',
-                    url: '#',
-                },
-            ],
-        },
+        // {
+        //     title: 'Encomenda',
+        //     url: '#',
+        //     icon: BookOpen,
+        //     items: [
+        //         {
+        //             title: 'Pedidos',
+        //             url: '#',
+        //         },
+        //         {
+        //             title: 'Informações',
+        //             url: '#',
+        //         },
+        //     ],
+        // },
     ],
 };
 </script>
@@ -89,7 +84,7 @@ const data = {
             <NavProduto :items="data.navProdutos" />
         </SidebarContent>
         <SidebarFooter>
-            <NavUser :user="data.user" />
+            <NavUser :confeitaria="data.user" />
         </SidebarFooter>
         <SidebarRail />
     </Sidebar>

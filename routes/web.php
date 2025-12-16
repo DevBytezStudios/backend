@@ -1,22 +1,24 @@
 <?php
 
+use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Dashboard\PedidoController;
 use App\Http\Controllers\Dashboard\CatalogoController;
 use App\Http\Controllers\Dashboard\CategoriaController;
 use App\Http\Controllers\Dashboard\ConfeitariaController;
 use App\Http\Controllers\Dashboard\ProdutoController;
+use App\Http\Middleware\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
 
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->name('dashboard');
+Route::get('/dashboard', [CatalogoController::class,'dashboard'])->name('dashboard')->middleware(Auth::class);
 
 Route::get('/informacoes', function () {
     return Inertia::render('Informacoes');
-})->name('dashboard');
+})->name('dashboard')->middleware(Auth::class);
+
+Route::post('/informacoes/setinfo',[ConfeitariaController::class,'setInfo'])->middleware(Auth::class);
 
 // CATALOGO DE PRODUTOS
 Route::prefix("catalogo/")->group(function () {
@@ -40,4 +42,12 @@ Route::prefix("catalogo/")->group(function () {
     Route::get('/categorias', [CatalogoController::class, "getCategorias"])->name('catalogo.categorias');
     Route::post('/categorias/setcategoria', [CategoriaController::class, "setCategoria"])->name('catalogo.setCategoria');
     Route::post('/categorias/delete', [CategoriaController::class, 'deleteCategoria'])->name('catalogo.deleteCategoria');
+})->middleware(Auth::class);
+
+Route::prefix("auth/")->group(function () {
+    Route::post('/login', [LoginController::class, "authenticate"])->name('auth.login');
+    Route::get('/login', function(){
+        return Inertia::render('auth/Login');
+    })->name('auth.loginForm');
+    Route::get('/logout',[LoginController::class, "logout"])->name('login.logout');
 });

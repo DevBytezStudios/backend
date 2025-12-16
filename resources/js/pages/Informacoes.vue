@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import UploadComponent from '@/components/Dashboard/Produtos/UploadComponent.vue';
+import UploadComponent from '@/components/Dashboard/UploadComponent.vue';
 import { Button } from '@/components/ui/button';
 import {
     Field,
@@ -14,11 +14,29 @@ import FieldTitle from '@/components/ui/field/FieldTitle.vue';
 import Input from '@/components/ui/input/Input.vue';
 
 import AppLayout from '@/layouts/AppLayout.vue';
+import useConfeitariaStore from '@/stores/ConfeitariaStore';
+
+import { toast, Toaster } from 'vue-sonner';
+import 'vue-sonner/style.css';
+
+const confStore = useConfeitariaStore();
+
+const updateConf = async () => {
+    try {
+        const response = await confStore.setConfeitaria();
+        if (response.success) {
+            toast.success(response.success.titulo);
+        } else {
+            toast.error(response.error.titulo);
+        }
+    } catch ($error) {}
+};
 </script>
 
 <template>
-    <AppLayout page="Informações da confeitaria">
+    <AppLayout page="Informações">
         <!-- <SystemLogo />         -->
+        <Toaster />
 
         <form>
             <FieldGroup>
@@ -26,7 +44,9 @@ import AppLayout from '@/layouts/AppLayout.vue';
                     <FieldGroup>
                         <Field>
                             <FieldTitle>Logo</FieldTitle>
-                            <UploadComponent />
+                            <UploadComponent
+                                :imagem="confStore.confeitaria.logo"
+                            />
                         </Field>
                     </FieldGroup>
                     <FieldGroup>
@@ -34,7 +54,10 @@ import AppLayout from '@/layouts/AppLayout.vue';
                             <FieldLabel for="checkout-7j9-card-name-43j">
                                 Nome da confeitaria
                             </FieldLabel>
-                            <Input type="text"/>
+                            <Input
+                                type="text"
+                                v-model="confStore.confeitaria.nome"
+                            />
                         </Field>
                     </FieldGroup>
                     <FieldGroup>
@@ -50,6 +73,7 @@ import AppLayout from '@/layouts/AppLayout.vue';
                                 type="color"
                                 class="colorPicker"
                                 name="corPrincipal"
+                                v-model="confStore.confeitaria.cor_princ"
                             />
                             <FieldLabel for="checkout-7j9-card-name-43j">
                                 Cor segundaria
@@ -58,13 +82,16 @@ import AppLayout from '@/layouts/AppLayout.vue';
                                 type="color"
                                 class="colorPicker"
                                 name="corSecundaria"
+                                v-model="confStore.confeitaria.cor_sec"
                             />
                         </Field>
                     </FieldGroup>
                 </FieldSet>
                 <FieldSeparator />
                 <Field orientation="horizontal">
-                    <Button type="submit"> Salvar </Button>
+                    <Button type="button" @click="updateConf()">
+                        Salvar
+                    </Button>
                     <Button variant="outline" type="button"> Cancelar </Button>
                 </Field>
             </FieldGroup>

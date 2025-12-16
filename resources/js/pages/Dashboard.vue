@@ -1,15 +1,117 @@
 <script setup lang="ts">
-import BarChart from '@/components/Analitycs/BarChart.vue';
+import CardPedido from '@/components/Dashboard/Pedidos/CardPedido.vue';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import AppLayout from '@/layouts/AppLayout.vue';
+import useCofeitariaStrore from '@/stores/ConfeitariaStore';
+import { Confeitaria, Pedido } from '@/types/types';
+import { CalendarIcon, PackageIcon, ShoppingBagIcon } from 'lucide-vue-next';
+const confeitariaStore = useCofeitariaStrore();
+interface Data {
+    totalpedidos: number;
+    pedidoshoje: number;
+    totalprodutos: number;
+}
+interface Props {
+    confeitaria: Confeitaria;
+    pedidos: Pedido[];
+    data: Data;
+}
+
+const props = defineProps<Props>();
+console.log(props.pedidos);
+confeitariaStore.confeitaria = props.confeitaria;
+const totalPedidos = props.data.totalpedidos;
+const pedidosHoje = props.data.pedidoshoje;
+const totalProdutos = props.data.totalprodutos;
 </script>
 
 <template>
     <AppLayout page="Home">
+        <!-- CARDS -->
         <div class="grid auto-rows-min gap-4 md:grid-cols-3">
-           
+            <!-- Total de pedidos -->
+            <Card class="rounded-xl">
+                <CardHeader
+                    class="flex flex-row items-center justify-between pb-2"
+                >
+                    <CardTitle class="text-sm font-medium">
+                        Pedidos totais
+                    </CardTitle>
+                    <PackageIcon class="h-5 w-5 text-muted-foreground" />
+                </CardHeader>
+
+                <CardContent>
+                    <div class="text-2xl font-bold">
+                        {{ totalPedidos }}
+                    </div>
+                </CardContent>
+            </Card>
+
+            <!-- Pedidos hoje -->
+            <Card class="rounded-xl">
+                <CardHeader
+                    class="flex flex-row items-center justify-between pb-2"
+                >
+                    <CardTitle class="text-sm font-medium">
+                        Pedidos hoje
+                    </CardTitle>
+                    <CalendarIcon class="h-5 w-5 text-muted-foreground" />
+                </CardHeader>
+
+                <CardContent>
+                    <div class="text-2xl font-bold">
+                        {{ pedidosHoje }}
+                    </div>
+                </CardContent>
+            </Card>
+
+            <!-- Produtos cadastrados -->
+            <Card class="rounded-xl">
+                <CardHeader
+                    class="flex flex-row items-center justify-between pb-2"
+                >
+                    <CardTitle class="text-sm font-medium">
+                        Produtos ativos
+                    </CardTitle>
+                    <ShoppingBagIcon class="h-5 w-5 text-muted-foreground" />
+                </CardHeader>
+
+                <CardContent>
+                    <div class="text-2xl font-bold">
+                        {{ totalProdutos }}
+                    </div>
+                </CardContent>
+            </Card>
         </div>
-        <div class="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min">
-           
+        <div class="flex w-full flex-col gap-3">
+            <!-- Título -->
+            <div class="flex items-center justify-between">
+                <h2 class="text-sm font-semibold">Pedidos do dia</h2>
+
+                <span class="text-xs text-muted-foreground">
+                    {{ props.pedidos.length }} pedidos
+                </span>
+            </div>
+
+            <!-- Lista de cards -->
+            <div
+                v-if="props.pedidos.length > 0"
+                class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3"
+            >
+                <CardPedido
+                    v-for="pedido in props.pedidos"
+                    :key="pedido.id"
+                    :pedido="pedido"
+                />
+            </div>
+
+            <!-- Estado vazio -->
+            <div
+                v-else
+                class="flex items-center justify-center rounded-lg border border-dashed p-6 text-sm text-muted-foreground"
+            >
+                Nenhum pedido hoje 🍰
+            </div>
         </div>
     </AppLayout>
 </template>
