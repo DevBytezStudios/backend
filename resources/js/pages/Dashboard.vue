@@ -1,4 +1,5 @@
 <script setup lang="ts">
+
 import CardPedido from '@/components/Dashboard/Home/CardPedido.vue'; //CARD DE PEDIDO PAR A HOME
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import AppLayout from '@/layouts/AppLayout.vue';
@@ -37,10 +38,26 @@ const updateStauts = (pedido: Pedido, status: string) => {
     arrPedidos;
     return;
 };
+
+// CONFIGURANDO O WEBSOCKERT - PUSHER
+
+const audio = new Audio('/assets/notification.mp3');
+import { useEcho } from '@laravel/echo-vue';
+import { toast, Toaster } from 'vue-sonner';
+import 'vue-sonner/style.css';
+useEcho(
+    `confeitaria.${confeitariaStore.confeitaria.id}`,
+    'NewPedido',
+    (e: { pedido: Pedido }) => {
+        audio.play();
+        toast.warning('Novo pedido feito agora! Atualize!');
+    },
+);
 </script>
 
 <template>
     <AppLayout page="Home">
+        <Toaster position="bottom-center" />
         <!-- CARDS -->
         <div class="grid auto-rows-min gap-4 md:grid-cols-3">
             <!-- Total de pedidos -->
@@ -97,13 +114,13 @@ const updateStauts = (pedido: Pedido, status: string) => {
             <div class="flex items-center justify-between">
                 <h2 class="text-sm font-semibold">Pedidos do dia</h2>
                 <span class="text-xs text-muted-foreground">
-                    {{ props.pedidos.length }} pedidos
+                    {{ arrPedidos.length }} pedidos
                 </span>
             </div>
             <!-- Lista de cards -->
             <div
                 v-if="arrPedidos.length > 0"
-                class="flex max-w-full flex-row gap-3 overflow-x-auto whitespace-nowrap snap-x snap-mandatory pb-4 md:flex-wrap"
+                class="flex max-w-full snap-x snap-mandatory flex-row gap-3 overflow-x-auto pb-4 whitespace-nowrap md:flex-wrap"
             >
                 <CardPedido
                     v-for="pedido in arrPedidos"

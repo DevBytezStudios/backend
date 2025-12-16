@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\NewPedido;
 use App\Models\Cliente;
 use App\Models\Confeitaria;
 use App\Models\Pedido;
@@ -63,6 +64,7 @@ class PedidoController extends Controller
                     }
                 }
 
+                broadcast(new NewPedido($pedido));
                 return [
                     "infomacoes" => $pedido,
                 ];
