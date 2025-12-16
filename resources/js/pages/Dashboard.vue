@@ -1,16 +1,18 @@
 <script setup lang="ts">
-import CardPedido from '@/components/Dashboard/Pedidos/CardPedido.vue';
+import CardPedido from '@/components/Dashboard/Home/CardPedido.vue'; //CARD DE PEDIDO PAR A HOME
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import AppLayout from '@/layouts/AppLayout.vue';
 import useCofeitariaStrore from '@/stores/ConfeitariaStore';
 import { Confeitaria, Pedido } from '@/types/types';
 import { CalendarIcon, PackageIcon, ShoppingBagIcon } from 'lucide-vue-next';
+import { computed, ref } from 'vue';
 const confeitariaStore = useCofeitariaStrore();
 interface Data {
     totalpedidos: number;
     pedidoshoje: number;
     totalprodutos: number;
 }
+
 interface Props {
     confeitaria: Confeitaria;
     pedidos: Pedido[];
@@ -18,11 +20,23 @@ interface Props {
 }
 
 const props = defineProps<Props>();
-console.log(props.pedidos);
 confeitariaStore.confeitaria = props.confeitaria;
 const totalPedidos = props.data.totalpedidos;
 const pedidosHoje = props.data.pedidoshoje;
 const totalProdutos = props.data.totalprodutos;
+
+// CONFIGURAR OS PEDIDOS
+
+const pedidos = ref([...props.pedidos]);
+const arrPedidos = computed(() => {
+    return pedidos.value.filter((pedido) => pedido.status == 'em_progresso');
+});
+
+const updateStauts = (pedido: Pedido, status: string) => {
+    pedido.status = status;
+    arrPedidos;
+    return;
+};
 </script>
 
 <template>
@@ -39,14 +53,12 @@ const totalProdutos = props.data.totalprodutos;
                     </CardTitle>
                     <PackageIcon class="h-5 w-5 text-muted-foreground" />
                 </CardHeader>
-
                 <CardContent>
                     <div class="text-2xl font-bold">
                         {{ totalPedidos }}
                     </div>
                 </CardContent>
             </Card>
-
             <!-- Pedidos hoje -->
             <Card class="rounded-xl">
                 <CardHeader
@@ -57,14 +69,12 @@ const totalProdutos = props.data.totalprodutos;
                     </CardTitle>
                     <CalendarIcon class="h-5 w-5 text-muted-foreground" />
                 </CardHeader>
-
                 <CardContent>
                     <div class="text-2xl font-bold">
                         {{ pedidosHoje }}
                     </div>
                 </CardContent>
             </Card>
-
             <!-- Produtos cadastrados -->
             <Card class="rounded-xl">
                 <CardHeader
@@ -75,7 +85,6 @@ const totalProdutos = props.data.totalprodutos;
                     </CardTitle>
                     <ShoppingBagIcon class="h-5 w-5 text-muted-foreground" />
                 </CardHeader>
-
                 <CardContent>
                     <div class="text-2xl font-bold">
                         {{ totalProdutos }}
@@ -87,24 +96,22 @@ const totalProdutos = props.data.totalprodutos;
             <!-- Título -->
             <div class="flex items-center justify-between">
                 <h2 class="text-sm font-semibold">Pedidos do dia</h2>
-
                 <span class="text-xs text-muted-foreground">
                     {{ props.pedidos.length }} pedidos
                 </span>
             </div>
-
             <!-- Lista de cards -->
             <div
-                v-if="props.pedidos.length > 0"
-                class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3"
+                v-if="arrPedidos.length > 0"
+                class="flex max-w-full flex-row gap-3 overflow-x-auto whitespace-nowrap snap-x snap-mandatory pb-4 md:flex-wrap"
             >
                 <CardPedido
-                    v-for="pedido in props.pedidos"
+                    v-for="pedido in arrPedidos"
                     :key="pedido.id"
                     :pedido="pedido"
+                    @update-status="updateStauts"
                 />
             </div>
-
             <!-- Estado vazio -->
             <div
                 v-else

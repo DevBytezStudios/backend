@@ -22,7 +22,7 @@ class ConfeitariaFactory extends Factory
             'cor_princ' => fake()->colorName(),
             'cor_sec' => fake()->colorName(),
             'logo' => 'semImagem',
-            'email' => 'teste@gmail.con',
+            'email' => 'teste@gmail.com',
             'password' => bcrypt('senha123'),
         ];
     }

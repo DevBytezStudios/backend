@@ -31,19 +31,24 @@ import { PlusCircleIcon } from 'lucide-vue-next';
 import { ref } from 'vue';
 import { toast, Toaster } from 'vue-sonner';
 import 'vue-sonner/style.css';
+import LoadingBar from '@/components/LoadingBar.vue';
 
 interface Props {
     produtos: Produto[];
     paginator: Paginator;
 }
 
+const loading = ref(false);
+
 const showDialog = ref(false);
 const props = defineProps<Props>();
 const dialogProduto = useDialogProduto();
 
 const addProduto = async () => {
+    loading.value = !loading.value;
     await dialogProduto.getCategorias();
     showDialog.value = true;
+    loading.value = !loading.value;
 };
 
 const navigate = (url: string | null) => {
@@ -65,6 +70,8 @@ const searchProdutos = async () => {
     // BUSCAR PRODUTOS
     try {
         if (pesquisando.value == false && searchValue.value != '') {
+            loading.value = !loading.value;
+
             pesquisando.value = true;
             // PAUSA DE 2 SEGUNDOS
             searchTimeout = setTimeout(async () => {
@@ -80,25 +87,31 @@ const searchProdutos = async () => {
 
                 produtosPesquisa.value = response.data;
                 // SE NÃO ACHAR NADA
-                if(produtosPesquisa.value.length == 0){
+                if (produtosPesquisa.value.length == 0) {
                     toast.warning('Nada Encontrado!...');
                 }
             }, 500);
         } else {
             produtosPesquisa.value = [];
+            loading.value = !loading.value;
+
             toast.warning('Pesquisa vazia!...');
         }
     } catch ($error) {
+        loading.value = !loading.value;
+
         console.log($error);
     } finally {
+        loading.value = !loading.value;
+
         pesquisando.value = false;
     }
 };
 </script>
 
 <template>
+    <LoadingBar :loading="loading"/>
     <Toaster />
-
     <AppLayout page="Produtos">
         <DialogProduct :open="showDialog" @close-dialog="showDialog = false" />
 

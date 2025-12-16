@@ -10,6 +10,7 @@ const emits = defineEmits(['closeDialog', 'saveProduct']);
 
 import useDialogProduto from '@/stores/DialogProduto';
 const dialogProduto = useDialogProduto();
+const loading = ref(false);
 
 // CONFIGURAÇÔES DO FORM
 import { FieldGroup, FieldSet } from '@/components/ui/field';
@@ -25,10 +26,11 @@ import SelectTrigger from '@/components/ui/select/SelectTrigger.vue';
 import SelectValue from '@/components/ui/select/SelectValue.vue';
 import Textarea from '@/components/ui/textarea/Textarea.vue';
 import { PlusSquareIcon } from 'lucide-vue-next';
-import ProductOpitions from './ProductOpitions.vue';
-import UploadComponent from './UploadComponent.vue';
+import { ref } from 'vue';
 import { toast, Toaster } from 'vue-sonner';
 import 'vue-sonner/style.css';
+import ProductOpitions from './ProductOpitions.vue';
+import UploadComponent from './UploadComponent.vue';
 // FECHAR O DIALOG
 const closeDialog = () => {
     dialogProduto.clearDialog();
@@ -83,14 +85,12 @@ const saveProduct = async () => {
     const response = await dialogProduto.saveProduto();
     console.log(response);
     if (response.success) {
-        closeDialog()
+        closeDialog();
         toast.success(response.success.titulo);
     } else {
         toast.error(response.error.titulo);
     }
 };
-
-
 </script>
 
 <template>
@@ -178,8 +178,10 @@ const saveProduct = async () => {
                                                 Categoria
                                             </FieldLabel>
                                             <Select
-
-                                               v-model="dialogProduto.produto.categoria"
+                                                v-model="
+                                                    dialogProduto.produto
+                                                        .categoria
+                                                "
                                             >
                                                 <SelectTrigger id="slCategoria">
                                                     <SelectValue

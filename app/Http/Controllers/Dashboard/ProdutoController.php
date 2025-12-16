@@ -152,11 +152,13 @@ class ProdutoController extends Controller
                 $produto = Produto::find($dialogProduto['id']);
 
                 //excluir imagem antiga 
-                $imagemAntiga = $produto->getRawOriginal('imagem');
-                if ($imagemAntiga && Storage::disk('public')->exists("produtos/" . $imagemAntiga)) {
-                    Storage::disk('public')->delete("produtos/" . $imagemAntiga);
+                if($imagemAntiga = $produto->getRawOriginal('imagem')){
+                    $imagemAntiga = $produto->getRawOriginal('imagem');
+                    if ($imagemAntiga && Storage::disk('public')->exists("produtos/" . $imagemAntiga)) {
+                        Storage::disk('public')->delete("produtos/" . $imagemAntiga);
+                    }
                 }
-
+                
                 $produto->imagem = $imagem;
 
                 $produto->nome = $dialogProduto['nome'];

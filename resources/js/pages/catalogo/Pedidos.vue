@@ -13,6 +13,7 @@ interface Props {
 }
 
 const props = defineProps<Props>();
+const loading = ref(false);
 
 const pedidos = ref([...props.pedidos]);
 // const pedidosFiltrados = ref<Pedido[]>(props.pedidos);
@@ -27,8 +28,10 @@ const pedidosFiltrados = computed(() => {
 });
 
 const updateStauts = (pedido: Pedido, status: string) => {
+    loading.value = true;
     pedido.status = status;
     pedidosFiltrados;
+    loading.value = !loading.value;
     return;
 };
 
@@ -50,6 +53,7 @@ const showAlert = ref({
     active: false,
 });
 
+import LoadingBar from '@/components/LoadingBar.vue';
 import Button from '@/components/ui/button/Button.vue';
 import Input from '@/components/ui/input/Input.vue';
 import { toast, Toaster } from 'vue-sonner';
@@ -57,6 +61,8 @@ import 'vue-sonner/style.css';
 
 const deletePedido = async (idPedido: number) => {
     try {
+        loading.value = !loading.value;
+
         const response = await axios.post('/catalogo/pedidos/delete', {
             id: idPedido,
         });
@@ -65,14 +71,18 @@ const deletePedido = async (idPedido: number) => {
             pedidos.value = pedidos.value.filter(
                 (pedido) => pedido.id != idPedido,
             );
-            ((showAlert.value.idPedido = 0),
-                (showAlert.value.active = false),
-                toast.success(response.data.success.titulo));
+            showAlert.value.idPedido = 0;
+            showAlert.value.active = false;
+            loading.value = false;
+            toast.success(response.data.success.titulo);
         } else {
+            loading.value = !loading.value;
             toast.error(response.data.error.titulo);
         }
     } catch ($error) {
         console.log($error);
+    } finally {
+        loading.value = false;
     }
 };
 
@@ -88,6 +98,8 @@ const searchPedido = async () => {
     // BUSCAR PRODUTOS
     try {
         if (pesquisando.value == false && searchValue.value != '') {
+            loading.value = !loading.value;
+
             pesquisando.value = true;
             // PAUSA DE 2 SEGUNDOS
             searchTimeout = setTimeout(async () => {
@@ -102,6 +114,8 @@ const searchPedido = async () => {
                 console.log(pedidosPesquisa.value);
                 pedidosPesquisa.value = response.data;
 
+                loading.value = !loading.value;
+
                 // SE NÃO ACHAR NADA
                 if (pedidosPesquisa.value.length == 0) {
                     toast.warning('Nada Encontrado!...');
@@ -109,11 +123,15 @@ const searchPedido = async () => {
             }, 500);
         } else {
             pedidosPesquisa.value = [];
+            loading.value = !loading.value;
+
             toast.warning('Pesquisa vazia!...');
         }
     } catch ($error) {
         console.log($error);
     } finally {
+        loading.value = !loading.value;
+
         pesquisando.value = false;
     }
 };
@@ -121,6 +139,7 @@ const searchPedido = async () => {
 
 <template>
     <AppLayout page="Pedidos">
+        <LoadingBar :loading="loading" />
         <Toaster />
         <AlertDialog :open="showAlert.active">
             <AlertDialogContent>
@@ -197,10 +216,7 @@ const searchPedido = async () => {
                         "
                     />
                 </div>
-                <div
-                    class="flex w-full flex-row flex-wrap gap-3"
-                    v-else
-                >
+                <div class="flex w-full flex-row flex-wrap gap-3" v-else>
                     <CardPedido
                         v-for="(pedido, index) in pedidosPesquisa"
                         :key="index"

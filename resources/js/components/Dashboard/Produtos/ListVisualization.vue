@@ -44,24 +44,34 @@ import {
 } from '@/components/ui/alert-dialog';
 
 const editProduto = async (produto: Produto) => {
+    loading.value = !loading.value;
+
     dialogProduto.produto = produto;
     await dialogProduto.getVariacao();
     showDialog.value = true;
+    loading.value = !loading.value;
 };
 
+import LoadingBar from '@/components/LoadingBar.vue';
 import { toast, Toaster } from 'vue-sonner';
 import 'vue-sonner/style.css';
+const loading = ref(false);
 // DELETAR PRODUTO
 const alertDialog = ref(false);
 
 const deletarProduto = async () => {
     try {
+        loading.value = !loading.value;
         const response = await dialogProduto.deleteProduto();
         if (response.success) {
             alertDialog.value = false;
             dialogProduto.produto.id = 0;
+            loading.value = !loading.value;
+
             toast.success(response.success.titulo);
         } else {
+            loading.value = !loading.value;
+
             toast.error(response.error.titulo);
         }
     } catch ($error) {}
@@ -69,6 +79,7 @@ const deletarProduto = async () => {
 </script>
 
 <template>
+    <LoadingBar :loading="loading" />
     <div class="w-full overflow-x-auto">
         <Toaster />
         <DialogProduct :open="showDialog" @close-dialog="showDialog = false" />

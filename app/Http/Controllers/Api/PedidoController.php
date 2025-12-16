@@ -45,26 +45,34 @@ class PedidoController extends Controller
             ]);
 
 
-            $produtos = $request['produtos'];
-            foreach ($produtos as $produto) {
-                $pedidoItem = pedido_item::create([
-                    'id_pedido' => $pedido->id,
-                    'id_produto' => $produto['id'],
-                    'quantidade' => $produto['quant']
-                ]);
-                foreach ($produto['opcoes'] ?? [] as $opcao) {
-                    if (!isset($opcao['id'])) continue;
-
-                    PedidoItemOpcao::create([
-                        'id_pedido_item' => $pedidoItem->id,
-                        'id_opcao' => $opcao['id'],
+            if ($pedido) {
+                $produtos = $request['produtos'];
+                foreach ($produtos as $produto) {
+                    $pedidoItem = pedido_item::create([
+                        'id_pedido' => $pedido->id,
+                        'id_produto' => $produto['id'],
+                        'quantidade' => $produto['quant']
                     ]);
-                }
-            }
+                    foreach ($produto['opcoes'] ?? [] as $opcao) {
+                        if (!isset($opcao['id'])) continue;
 
-            return [
-                "infomacoes" => $pedido,
-            ];
+                        PedidoItemOpcao::create([
+                            'id_pedido_item' => $pedidoItem->id,
+                            'id_opcao' => $opcao['id'],
+                        ]);
+                    }
+                }
+
+                return [
+                    "infomacoes" => $pedido,
+                ];
+            } else {
+                return [
+                    'error' => [
+                        'titulo' => 'Erro ao realizar o pedido!',
+                    ]
+                ];
+            }
         } catch (Throwable $error) {
             return [
                 'error' => [

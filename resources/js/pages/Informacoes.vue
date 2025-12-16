@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import UploadComponent from '@/components/Dashboard/UploadComponent.vue';
+import LoadingBar from '@/components/LoadingBar.vue';
 import { Button } from '@/components/ui/button';
 import {
     Field,
@@ -12,21 +13,27 @@ import FieldDescription from '@/components/ui/field/FieldDescription.vue';
 import FieldLegend from '@/components/ui/field/FieldLegend.vue';
 import FieldTitle from '@/components/ui/field/FieldTitle.vue';
 import Input from '@/components/ui/input/Input.vue';
-
 import AppLayout from '@/layouts/AppLayout.vue';
 import useConfeitariaStore from '@/stores/ConfeitariaStore';
+import { ref } from 'vue';
 
 import { toast, Toaster } from 'vue-sonner';
 import 'vue-sonner/style.css';
 
 const confStore = useConfeitariaStore();
 
+const loading = ref(false);
 const updateConf = async () => {
     try {
+        loading.value = !loading.value;
         const response = await confStore.setConfeitaria();
         if (response.success) {
+            loading.value = !loading.value;
+
             toast.success(response.success.titulo);
         } else {
+            loading.value = !loading.value;
+
             toast.error(response.error.titulo);
         }
     } catch ($error) {}
@@ -35,9 +42,8 @@ const updateConf = async () => {
 
 <template>
     <AppLayout page="Informações">
-        <!-- <SystemLogo />         -->
+        <LoadingBar :loading="loading" />
         <Toaster />
-
         <form>
             <FieldGroup>
                 <FieldSet>

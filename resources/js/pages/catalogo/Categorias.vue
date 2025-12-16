@@ -36,22 +36,28 @@ interface Props {
 }
 
 const props = defineProps<Props>();
-
+const loading = ref(false);
 const dialogCategoria = useDialogCategoria();
 console.log(dialogCategoria);
 const showDialog = ref(false);
 
 const saveCategoria = async () => {
+    loading.value = !loading.value;
     const response = await dialogCategoria.setCategoria();
     if (response.success) {
         showDialog.value = false;
         dialogCategoria.clearDialog();
+        loading.value != loading.value;
+
         toast.success(response.success.titulo);
     } else {
+        loading.value != loading.value;
+
         toast.error(response.error.titulo);
     }
 };
 
+import LoadingBar from '@/components/LoadingBar.vue';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -69,21 +75,27 @@ const showAlertDialog = ref({
 });
 
 const deletarCategoria = async () => {
+    loading.value = !loading.value;
+
     const response = await dialogCategoria.deleteCategoria(
         showAlertDialog.value.id,
     );
+
     if (response.success) {
         showAlertDialog.value.id = 0;
         showAlertDialog.value.active = false;
         dialogCategoria.clearDialog();
+        loading.value = !loading.value;
         toast.success(response.success.titulo);
     } else {
+        loading.value = !loading.value;
         toast.error(response.error.titulo);
     }
 };
 </script>
 
 <template>
+    <LoadingBar :loading="loading" />
     <AppLayout page="Categorias">
         <Toaster />
         <Dialog :open="showDialog" theme="system">
@@ -93,7 +105,9 @@ const deletarCategoria = async () => {
                 <DialogHeader>
                     <DialogTitle>
                         {{
-                            dialogCategoria.categoria.id ? 'Editar categoria' : 'Nova categoria'
+                            dialogCategoria.categoria.id
+                                ? 'Editar categoria'
+                                : 'Nova categoria'
                         }}
                     </DialogTitle>
                 </DialogHeader>

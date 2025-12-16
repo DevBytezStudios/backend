@@ -20,11 +20,11 @@ class CatalogoController
             $confeitaria = Auth::User();
             $data = [
                 "totalpedidos" => Pedido::where('id_con', $confeitaria->id)->count(),
-                "pedidoshoje" => Pedido::where('id_con', $confeitaria->id)->where('data', today())->where('status','em_progresso')->count(),
+                "pedidoshoje" => Pedido::where('id_con', $confeitaria->id)->where('data', today())->where('status', 'em_progresso')->count(),
                 "totalprodutos" => Produto::where('id_con', $confeitaria->id)->count(),
             ];
 
-            $pedidos = Pedido::with(['cliente', 'pedidoItem'])->where('id_con', $confeitaria->id)->orderBy('data', 'DESC')->where('data', today())->where('status','em_progresso')->get()->select('id', 'code', 'pagamento', 'data', 'status', 'produto', 'pedidoItem', 'cliente');
+            $pedidos = Pedido::with(['cliente', 'pedidoItem'])->where('id_con', $confeitaria->id)->orderBy('data', 'DESC')->where('data', today())->where('status', 'em_progresso')->get()->select('id', 'code', 'pagamento', 'data', 'status', 'produto', 'pedidoItem', 'cliente');
             return Inertia::render('Dashboard', ['confeitaria' => $confeitaria, 'data' => $data, 'pedidos' => $pedidos]);
         } catch (Throwable $error) {
             return redirect()->route('auth.login');
@@ -50,9 +50,13 @@ class CatalogoController
     public function getPedidos()
     {
         $confeitaria = Auth::user();
-        $pedidos = Pedido::with(['cliente', 'pedidoItem'])->where('id_con', $confeitaria->id)->orderBy('data', 'DESC')->get()->select('id', 'code', 'pagamento', 'data', 'status', 'produto', 'pedidoItem', 'cliente');
-        // return $pedidos;
-        return Inertia::render("catalogo/Pedidos", ['pedidos' => $pedidos]);
+        if ($confeitaria) {
+            $pedidos = Pedido::with(['cliente', 'pedidoItem'])->where('id_con', $confeitaria->id)->orderBy('data', 'DESC')->get()->select('id', 'code', 'pagamento', 'data', 'status', 'produto', 'pedidoItem', 'cliente');
+            // return $pedidos;
+            return Inertia::render("catalogo/Pedidos", ['pedidos' => $pedidos]);
+        }else{
+            return redirect()->route('auth.login');
+        }
     }
 
     public function getCategorias()

@@ -11,6 +11,9 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
 
+Route::get('/',function(){
+    return redirect()->route('dashboard');
+});
 
 Route::get('/dashboard', [CatalogoController::class,'dashboard'])->name('dashboard')->middleware(Auth::class);
 

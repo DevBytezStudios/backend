@@ -18,13 +18,16 @@ class LoginController
 
             if (Auth::attempt($credentials)) {
                 $request->session()->regenerate();
-
                 return redirect()->route("dashboard");
             }
+            
+            return back()->withErrors([
+                'titulo' => 'Email ou senha inválidos',
+            ]);
         } catch (Throwable $error) {
             return back()->withErrors([
-                'email' => 'Email ou senha inválidos',
-            ]); 
+                'titulo' => 'Email ou senha inválidos',
+            ]);
         }
     }
 
