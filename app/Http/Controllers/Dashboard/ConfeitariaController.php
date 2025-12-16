@@ -18,14 +18,11 @@ class ConfeitariaController extends Controller
     {
         try {
             $data = json_decode($request->data, true);
-
-            if ($request->logo) {
+            if ($request->hasFile('logo')) {
                 $logo = ' ';
                 if ($request->logo) {
                     $path = Storage::disk('public')->put('confeitarias', $request->logo);
                     $logo = basename($path);
-                } else {
-                    $logo = "semImagem.jpg";
                 }
             }
 
@@ -37,7 +34,7 @@ class ConfeitariaController extends Controller
             $confeitaria->cor_princ = $data['confeitaria']['cor_princ'];
             $confeitaria->cor_sec = $data['confeitaria']['cor_sec'];
 
-            if ($request->logo) {
+            if ($request->hasFile('logo')) {
                 $confeitaria->logo = $logo;
             }
             $confeitaria->save();
