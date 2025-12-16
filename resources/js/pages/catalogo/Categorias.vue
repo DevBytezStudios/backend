@@ -47,11 +47,11 @@ const saveCategoria = async () => {
     if (response.success) {
         showDialog.value = false;
         dialogCategoria.clearDialog();
-        loading.value != loading.value;
+        loading.value = !loading.value;
 
         toast.success(response.success.titulo);
     } else {
-        loading.value != loading.value;
+        loading.value = !loading.value;
 
         toast.error(response.error.titulo);
     }

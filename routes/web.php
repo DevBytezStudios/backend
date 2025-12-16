@@ -19,7 +19,7 @@ Route::get('/dashboard', [CatalogoController::class,'dashboard'])->name('dashboa
 
 Route::get('/informacoes', function () {
     return Inertia::render('Informacoes');
-})->name('dashboard')->middleware(Auth::class);
+})->name('informacoes')->middleware(Auth::class);
 
 Route::post('/informacoes/setinfo',[ConfeitariaController::class,'setInfo'])->middleware(Auth::class);
 
@@ -27,7 +27,7 @@ Route::post('/informacoes/setinfo',[ConfeitariaController::class,'setInfo'])->mi
 Route::prefix("catalogo/")->group(function () {
     // CONFIGURAÇÂO DOS PRODUTOS
     Route::get('/produtos', [CatalogoController::class, 'getProdutos'])->name('catalogo.produtos');
-    Route::post('/categorias', [CategoriaController::class, 'getCategorias'])->name('catalogo.categorias');
+    Route::post('/categorias', [CategoriaController::class, 'getCategorias'])->name('catalogo.produtoCategorias');
     Route::post('/produto/variacao', [ProdutoController::class, 'getVariacao'])->name('catalogo.variacao');
     Route::post('/produto/deleteopcao', [ProdutoController::class, 'deleteOpcao'])->name('catalogo.deleteOpcao');
     Route::post('/produto/deletevariacao', [ProdutoController::class, 'deleteVariacao'])->name('catalogo.deleteVariacao');
