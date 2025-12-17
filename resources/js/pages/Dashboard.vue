@@ -50,7 +50,6 @@ onMounted(() => {
             window.alert("AAAAAAAAAAAAaa")
         })
     );
-    console.log("ADADADAD")
 });
 </script>
 

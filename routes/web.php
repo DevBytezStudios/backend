@@ -11,17 +11,17 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
 
-Route::get('/',function(){
+Route::get('/', function () {
     return redirect()->route('dashboard');
 });
 
-Route::get('/dashboard', [CatalogoController::class,'dashboard'])->name('dashboard')->middleware(Auth::class);
+Route::get('/dashboard', [CatalogoController::class, 'dashboard'])->name('dashboard')->middleware(Auth::class);
 
 Route::get('/informacoes', function () {
     return Inertia::render('Informacoes');
 })->name('informacoes')->middleware(Auth::class);
 
-Route::post('/informacoes/setinfo',[ConfeitariaController::class,'setInfo'])->middleware(Auth::class);
+Route::post('/informacoes/setinfo', [ConfeitariaController::class, 'setInfo'])->middleware(Auth::class);
 
 // CATALOGO DE PRODUTOS
 Route::prefix("catalogo/")->group(function () {
@@ -49,8 +49,10 @@ Route::prefix("catalogo/")->group(function () {
 
 Route::prefix("auth/")->group(function () {
     Route::post('/login', [LoginController::class, "authenticate"])->name('auth.login');
-    Route::get('/login', function(){
+    Route::post('/googlelogin', [LoginController::class, "googleLogin"])->name('auth.google');
+
+    Route::get('/login', function () {
         return Inertia::render('auth/Login');
     })->name('auth.loginForm');
-    Route::get('/logout',[LoginController::class, "logout"])->name('login.logout');
+    Route::get('/logout', [LoginController::class, "logout"])->name('login.logout');
 });

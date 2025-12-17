@@ -31,6 +31,10 @@ class LoginController
         }
     }
 
+    public function googleLogin(Request $request){
+
+    }
+
 
     public function logout()
     {
