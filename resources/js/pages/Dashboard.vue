@@ -44,7 +44,7 @@ const audio = new Audio('/assets/notification.mp3');
 
 console.log(window.Echo);
 onMounted(() => {
-    window.Echo.channel(`confeitaria.1`).listen('NewPedido', () => {
+    window.Echo.channel(`confeitaria.${confeitariaStore.confeitaria.id}`).listen('NewPedido', () => {
         audio.play();
 
         toast.warning('Novo pedido! Atualize a página!');
