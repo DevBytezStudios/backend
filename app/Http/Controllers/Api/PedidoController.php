@@ -65,6 +65,7 @@ class PedidoController extends Controller
                 }
 
                 broadcast(new NewPedido($pedido));
+
                 return [
                     "infomacoes" => $pedido,
                 ];

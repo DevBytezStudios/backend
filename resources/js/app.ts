@@ -1,11 +1,13 @@
 import '../css/app.css';
 
 import { createInertiaApp } from '@inertiajs/vue3';
-import { configureEcho } from '@laravel/echo-vue';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import type { DefineComponent } from 'vue';
 import { createApp, h } from 'vue';
 
+
+import { configureEcho } from "@laravel/echo-vue";
+ 
 configureEcho({
     broadcaster: 'pusher',
     key: import.meta.env.VITE_PUSHER_APP_KEY,
@@ -16,7 +18,6 @@ configureEcho({
     wssPort: import.meta.env.VITE_PUSHER_PORT,
     enabledTransports: ['ws', 'wss'],
 });
-
 import { createPinia } from 'pinia';
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate';
 

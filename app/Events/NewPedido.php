@@ -3,23 +3,26 @@
 namespace App\Events;
 
 use App\Models\Pedido;
-use App\Models\User;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class NewPedido implements ShouldBroadcast
-{
-    use SerializesModels;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 
-    public $pedido;
+
+class NewPedido implements ShouldBroadcastNow
+{
+    use Dispatchable, InteractsWithSockets, SerializesModels;
 
     /**
      * Create a new event instance.
      */
+
+    public $pedido;
     public function __construct(Pedido $pedido)
     {
         $this->pedido = $pedido;
@@ -33,7 +36,11 @@ class NewPedido implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel('confeitaria.' . $this->pedido->id_con),
+            new Channel('confeitaria.' . $this->pedido->id_con),
         ];
+    }
+    public function broadcastAs(): string
+    {
+        return 'NewPedido';
     }
 }

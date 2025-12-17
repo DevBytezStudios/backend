@@ -1,12 +1,14 @@
 <script setup lang="ts">
-
 import CardPedido from '@/components/Dashboard/Home/CardPedido.vue'; //CARD DE PEDIDO PAR A HOME
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import AppLayout from '@/layouts/AppLayout.vue';
 import useCofeitariaStrore from '@/stores/ConfeitariaStore';
 import { Confeitaria, Pedido } from '@/types/types';
+import { useEchoPublic } from '@laravel/echo-vue';
 import { CalendarIcon, PackageIcon, ShoppingBagIcon } from 'lucide-vue-next';
-import { computed, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
+import { Toaster } from 'vue-sonner';
+import 'vue-sonner/style.css';
 const confeitariaStore = useCofeitariaStrore();
 interface Data {
     totalpedidos: number;
@@ -39,20 +41,17 @@ const updateStauts = (pedido: Pedido, status: string) => {
     return;
 };
 
-// CONFIGURANDO O WEBSOCKERT - PUSHER
-
 const audio = new Audio('/assets/notification.mp3');
-import { useEcho } from '@laravel/echo-vue';
-import { toast, Toaster } from 'vue-sonner';
-import 'vue-sonner/style.css';
-useEcho(
-    `confeitaria.${confeitariaStore.confeitaria.id}`,
-    'NewPedido',
-    (e: { pedido: Pedido }) => {
-        audio.play();
-        toast.warning('Novo pedido feito agora! Atualize!');
-    },
-);
+onMounted(() => {
+    audio.play()
+    useEchoPublic(
+        `confeitaria.${confeitariaStore.confeitaria.id}`,
+        "NewPedido",((response)=>{
+            window.alert("AAAAAAAAAAAAaa")
+        })
+    );
+    console.log("ADADADAD")
+});
 </script>
 
 <template>
