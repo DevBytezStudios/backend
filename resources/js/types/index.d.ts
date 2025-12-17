@@ -37,3 +37,12 @@ export interface User {
 }
 
 export type BreadcrumbItemType = BreadcrumbItem;
+
+// CONFIGURAÇÂO DO PUSHER - NOTIFICAÇÔES
+
+declare global {
+    interface Window {
+        Pusher: typeof Pusher;
+        Echo: Echo;
+    }
+}

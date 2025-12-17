@@ -4,10 +4,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import AppLayout from '@/layouts/AppLayout.vue';
 import useCofeitariaStrore from '@/stores/ConfeitariaStore';
 import { Confeitaria, Pedido } from '@/types/types';
-import { useEchoPublic } from '@laravel/echo-vue';
 import { CalendarIcon, PackageIcon, ShoppingBagIcon } from 'lucide-vue-next';
 import { computed, onMounted, ref } from 'vue';
-import { Toaster } from 'vue-sonner';
+import { toast, Toaster } from 'vue-sonner';
 import 'vue-sonner/style.css';
 const confeitariaStore = useCofeitariaStrore();
 interface Data {
@@ -42,14 +41,14 @@ const updateStauts = (pedido: Pedido, status: string) => {
 };
 
 const audio = new Audio('/assets/notification.mp3');
+
+console.log(window.Echo);
 onMounted(() => {
-    audio.play()
-    useEchoPublic(
-        `confeitaria.${confeitariaStore.confeitaria.id}`,
-        "NewPedido",((response)=>{
-            window.alert("AAAAAAAAAAAAaa")
-        })
-    );
+    window.Echo.channel(`confeitaria.1`).listen('NewPedido', () => {
+        audio.play();
+
+        toast.warning('Novo pedido! Atualize a página!');
+    });
 });
 </script>
 
