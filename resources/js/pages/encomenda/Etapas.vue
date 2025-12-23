@@ -162,7 +162,7 @@ const downItem = async (index: number) => {
                             >
                                 Não
                             </Badge>
-                        </TableCell class>
+                        </TableCell>
                         <TableCell> 
                             <Button variant="secondary" v-if="index != 0" @click="upItem(index)">                    
                                 <ArrowUpSquareIcon /> 
