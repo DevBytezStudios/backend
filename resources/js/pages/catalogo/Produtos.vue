@@ -114,7 +114,7 @@ const searchProdutos = async () => {
     <Toaster />
     <AppLayout page="Produtos">
         <DialogProduct :open="showDialog" @close-dialog="showDialog = false" />
-
+        
         <header class="menubar">
             <ButtonGroup class="w-full">
                 <Input
@@ -148,7 +148,7 @@ const searchProdutos = async () => {
             </Button>
         </header>
 
-        <div class="flex flex-col gap-6">
+        <div class="flex flex-col gap-6 h-full">
             <ListVisualization
                 v-if="produtosPesquisa?.length == 0"
                 :produtos="props.produtos"
@@ -214,6 +214,7 @@ const searchProdutos = async () => {
                         </template>
                     </template>
                     <PaginationNext
+
                         @click="navigate(props.paginator.next_page_url)"
                     />
                 </PaginationContent>

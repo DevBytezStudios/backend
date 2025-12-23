@@ -1,14 +1,16 @@
 <script setup lang="ts">
+import CardEncomenda from '@/components/Dashboard/Home/CardEncomenda.vue';
 import CardPedido from '@/components/Dashboard/Home/CardPedido.vue'; //CARD DE PEDIDO PAR A HOME
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import AppLayout from '@/layouts/AppLayout.vue';
 import useCofeitariaStrore from '@/stores/ConfeitariaStore';
-import { Confeitaria, Pedido } from '@/types/types';
+import { Confeitaria, Encomenda, Pedido } from '@/types/types';
 import { CalendarIcon, PackageIcon, ShoppingBagIcon } from 'lucide-vue-next';
 import { computed, onMounted, ref } from 'vue';
 import { toast, Toaster } from 'vue-sonner';
 import 'vue-sonner/style.css';
 const confeitariaStore = useCofeitariaStrore();
+
 interface Data {
     totalpedidos: number;
     pedidoshoje: number;
@@ -19,6 +21,7 @@ interface Props {
     confeitaria: Confeitaria;
     pedidos: Pedido[];
     data: Data;
+    encomendas: Encomenda[];
 }
 
 const props = defineProps<Props>();
@@ -28,9 +31,8 @@ const pedidosHoje = props.data.pedidoshoje;
 const totalProdutos = props.data.totalprodutos;
 
 // CONFIGURAR OS PEDIDOS
-
 const pedidos = ref([...props.pedidos]);
-const arrPedidos = computed(() => {
+const arrPedidos = computed(() => {  
     return pedidos.value.filter((pedido) => pedido.status == 'em_progresso');
 });
 
@@ -39,6 +41,19 @@ const updateStauts = (pedido: Pedido, status: string) => {
     arrPedidos;
     return;
 };
+
+// CONFIGURAR ENCOMENDAS
+const encomendas = ref(props.encomendas);
+const arrEncomendas = computed(() => {  
+    return encomendas.value.filter((encomenda) => encomenda.status == 'em_progresso');
+});
+
+const updateStatusEncomenda = (encomenda: Encomenda, status: string) => {
+    encomenda.status = status;
+    arrEncomendas;
+    return;
+};
+
 
 const audio = new Audio('/assets/notification.mp3');
 
@@ -132,6 +147,34 @@ onMounted(() => {
                 class="flex items-center justify-center rounded-lg border border-dashed p-6 text-sm text-muted-foreground"
             >
                 Nenhum pedido hoje 🍰
+            </div>
+        </div>
+         <div class="flex w-full flex-col gap-3">
+            <!-- Título -->
+            <div class="flex items-center justify-between">
+                <h2 class="text-sm font-semibold">Encomendas Proximas</h2>
+                <span class="text-xs text-muted-foreground">
+                    {{ arrEncomendas.length }} Encomendas
+                </span>
+            </div>
+            <!-- Lista de cards -->
+            <div
+                v-if="arrEncomendas.length > 0"
+                class="flex max-w-full snap-x snap-mandatory flex-row gap-3 overflow-x-auto pb-4 whitespace-nowrap md:flex-wrap"
+            >
+                     <CardEncomenda
+                        v-for="(encomenda, index) in arrEncomendas"
+                        :key="index"
+                        :encomenda="encomenda"
+                        @updateStatus="updateStauts"
+                    />
+            </div>
+            <!-- Estado vazio -->
+            <div
+                v-else
+                class="flex items-center justify-center rounded-lg border border-dashed p-6 text-sm text-muted-foreground"
+            >
+                Nenhuma encomenda proxima 🎂
             </div>
         </div>
     </AppLayout>

@@ -116,7 +116,6 @@ const deletarProduto = async () => {
                     <TableHead>Imagem</TableHead>
                     <TableHead>Nome</TableHead>
                     <!-- <TableHead>Descrição</TableHead> -->
-
                     <TableHead class="hidden md:table-cell"
                         >Categoria</TableHead
                     >
@@ -124,7 +123,7 @@ const deletarProduto = async () => {
                     <TableHead class="hidden md:table-cell"
                         >Valor desconto</TableHead
                     >
-                    <TableHead class="text-right">Ações</TableHead>
+                    <TableHead class="text-right"></TableHead>
                 </TableRow>
             </TableHeader>
 
@@ -167,7 +166,7 @@ const deletarProduto = async () => {
                             <DropdownMenuTrigger
                                 class="flex items-center gap-2 rounded-md border border-muted-foreground/20 bg-muted/40 px-4 py-2 text-sm font-medium transition-colors hover:bg-muted/60"
                             >
-                                <span>Opção</span>
+                                <span>Ações</span>
                                 <svg
                                     class="h-4 w-4 opacity-70"
                                     viewBox="0 0 24 24"

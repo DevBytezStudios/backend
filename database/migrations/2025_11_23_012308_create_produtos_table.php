@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('nome');
             $table->string('imagem');
             $table->string('descricao');
-            $table->float('valor');
+            $table->decimal('valor',10,2);
             $table->float('valor_desc');
             $table->timestamps();
         });

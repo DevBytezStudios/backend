@@ -22,7 +22,7 @@ import { Separator } from '@/components/ui/separator';
 import { Pedido } from '@/types/types';
 import axios from 'axios';
 import { Trash2Icon, User2Icon } from 'lucide-vue-next';
-import CardCliente from './CardCliente.vue';
+import CardCliente from '../CardCliente.vue';
 
 interface Props {
     pedido: Pedido;
@@ -68,7 +68,6 @@ function calcularTotal(pedido: Pedido): number {
 
 const atualizarStatus = async () => {
     try {
-        console.log(statusPedido.value);
         const response = await axios.post('/catalogo/pedidos/updatestatus', {
             id: props.pedido.id,
             status: statusPedido.value,

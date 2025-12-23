@@ -22,7 +22,7 @@ import { Separator } from '@/components/ui/separator';
 import { Pedido } from '@/types/types';
 import axios from 'axios';
 import { Trash2Icon, User2Icon } from 'lucide-vue-next';
-import CardCliente from '../Pedidos/CardCliente.vue';
+import CardCliente from '../CardCliente.vue';
 interface Props {
     pedido: Pedido;
 }

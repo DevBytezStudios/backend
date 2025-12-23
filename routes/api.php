@@ -1,17 +1,30 @@
 <?php
 
-use App\Http\Controllers\API\ConfeitariaController;
+use App\Http\Controllers\Api\ConfeitariaController;
+use App\Http\Controllers\Api\EncomendaController;
 use App\Http\Controllers\Api\PedidoController as ApiPedidoController;
 use App\Http\Controllers\API\ProdutoController;
 use App\Models\Confeitaria;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+
+
 Route::prefix('{slug}/')->group(function () {
+    //CATALOGO DE PRODUTOS
     Route::get('index', [ConfeitariaController::class, 'index']);
     Route::get('{idcat}/produtos', [ConfeitariaController::class, 'getProdutos']);
     Route::get('{idproduto}/produto', [ProdutoController::class, 'getProduto']);
-    Route::post('/newpedido', [ApiPedidoController::class, 'setPedido']);
+    Route::post('newpedido', [ApiPedidoController::class, 'setPedido']);
+
+    // ENCOMENDAS
+    Route::get('encomenda', [ConfeitariaController::class, 'getEtapas']);
+    Route::post('encomenda/{idetapa}', [ConfeitariaController::class, 'getOpcoes']);
+    Route::get('encomenda/estilos', [ConfeitariaController::class, 'getEstilos']);
+    Route::post('newencomenda',[EncomendaController::class,'setEncomenda']);
+
 });
+
+
 
 Route::post('/produto/getvariacao', [ProdutoController::class, 'geVariacao']);

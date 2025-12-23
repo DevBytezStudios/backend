@@ -108,3 +108,64 @@ export interface OpcaoPedido{
     nome: string
 }
 
+
+// CONFIGURAÇÂO ENCOMENDAS
+export interface Etapa{
+    id: number,
+    id_con:number,
+    nome: string,
+    ordem: number,
+    required: boolean,
+    multiple: boolean,
+    icone: string
+}
+
+export interface OpcaoEtapa{
+    id: number,
+    etapa:{
+        id: number,
+        nome: string,
+    }
+    nome: string,
+    valor: number,
+    descricao: string,
+    active:boolean
+}
+
+export interface Estilo{
+    id: number,
+    id_con: number,
+    titulo: string,
+    valor: number,
+    imagem: string,
+    descricao: string,
+    file:null | File,
+    active: boolean
+}
+
+// ENCOMENDAS
+
+export interface Encomenda{
+    id: number,
+    cliente: Cliente
+    id_con: number,
+    observacao: string,
+    data_entrega: Date,
+    pagamento: string,
+    status: string,
+    code:string
+    opcoes: EncomendaOpcoes[]
+    estilo:{
+        titulo: string,
+        imagem: string,
+        valor: number
+    }
+}
+
+export interface EncomendaOpcoes{
+    id: number,
+    id_encomenda: number,
+    etapa: string,
+    nome: string,
+    valor: number
+}
