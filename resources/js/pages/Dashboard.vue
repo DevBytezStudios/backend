@@ -32,7 +32,7 @@ const totalProdutos = props.data.totalprodutos;
 
 // CONFIGURAR OS PEDIDOS
 const pedidos = ref([...props.pedidos]);
-const arrPedidos = computed(() => {  
+const arrPedidos = computed(() => {
     return pedidos.value.filter((pedido) => pedido.status == 'em_progresso');
 });
 
@@ -44,8 +44,10 @@ const updateStauts = (pedido: Pedido, status: string) => {
 
 // CONFIGURAR ENCOMENDAS
 const encomendas = ref(props.encomendas);
-const arrEncomendas = computed(() => {  
-    return encomendas.value.filter((encomenda) => encomenda.status == 'em_progresso');
+const arrEncomendas = computed(() => {
+    return encomendas.value.filter(
+        (encomenda) => encomenda.status == 'em_progresso',
+    );
 });
 
 const updateStatusEncomenda = (encomenda: Encomenda, status: string) => {
@@ -54,16 +56,21 @@ const updateStatusEncomenda = (encomenda: Encomenda, status: string) => {
     return;
 };
 
-
-const audio = new Audio('/assets/notification.mp3');
-
-console.log(window.Echo);
 onMounted(() => {
-    window.Echo.channel(`confeitaria.${confeitariaStore.confeitaria.id}`).listen('NewPedido', () => {
-        audio.play();
-
-        toast.warning('Novo pedido! Atualize a página!');
-    });
+    const audio = new Audio('/assets/notification.mp3');
+    window.Echo.channel(`confeitaria.${confeitariaStore.confeitaria.id}`)
+        .listen('NewPedido', () => {
+            if (confeitariaStore.notification == true) {
+                audio.play();
+                toast.warning('Novo pedido! Atualize a página!');
+            }
+        })
+        .listen('NewEncomenda', () => {
+            if (confeitariaStore.notification == true) {
+                audio.play();
+                toast.warning('Nova Encomenda! Atualize a página!');
+            }
+        });
 });
 </script>
 
@@ -149,7 +156,7 @@ onMounted(() => {
                 Nenhum pedido hoje 🍰
             </div>
         </div>
-         <div class="flex w-full flex-col gap-3">
+        <div class="flex w-full flex-col gap-3">
             <!-- Título -->
             <div class="flex items-center justify-between">
                 <h2 class="text-sm font-semibold">Encomendas Proximas</h2>
@@ -162,12 +169,12 @@ onMounted(() => {
                 v-if="arrEncomendas.length > 0"
                 class="flex max-w-full snap-x snap-mandatory flex-row gap-3 overflow-x-auto pb-4 whitespace-nowrap md:flex-wrap"
             >
-                     <CardEncomenda
-                        v-for="(encomenda, index) in arrEncomendas"
-                        :key="index"
-                        :encomenda="encomenda"
-                        @updateStatus="updateStauts"
-                    />
+                <CardEncomenda
+                    v-for="(encomenda, index) in arrEncomendas"
+                    :key="index"
+                    :encomenda="encomenda"
+                    @updateStatus="updateStatusEncomenda"
+                />
             </div>
             <!-- Estado vazio -->
             <div

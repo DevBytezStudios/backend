@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Api;
 use App\Events\NewPedido;
 use App\Models\Cliente;
 use App\Models\Confeitaria;
+use App\Models\Opcao;
 use App\Models\Pedido;
 use App\Models\pedido_item;
 use App\Models\PedidoItemOpcao;
+use App\Models\Produto;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
@@ -49,26 +51,33 @@ class PedidoController extends Controller
             if ($pedido) {
                 $produtos = $request['produtos'];
                 foreach ($produtos as $produto) {
-                    $pedidoItem = pedido_item::create([
-                        'id_pedido' => $pedido->id,
-                        'id_produto' => $produto['id'],
-                        'quantidade' => $produto['quant']
-                    ]);
-                    foreach ($produto['opcoes'] ?? [] as $opcao) {
-                        if (!isset($opcao['id'])) continue;
-
-                        PedidoItemOpcao::create([
-                            'id_pedido_item' => $pedidoItem->id,
-                            'id_opcao' => $opcao['id'],
+                    if (Produto::find($produto['id'])) {
+                        $pedidoItem = pedido_item::create([
+                            'id_pedido' => $pedido->id,
+                            'id_produto' => $produto['id'],
+                            'quantidade' => $produto['quant']
                         ]);
+                        foreach ($produto['opcoes'] as $opcao) {
+                            if (!isset($opcao['id'])) continue;
+
+                            if (Opcao::find($opcao['id'])) {
+                                PedidoItemOpcao::create([
+                                    'id_pedido_item' => $pedidoItem->id,
+                                    'id_opcao' => $opcao['id'],
+                                ]);
+                            } else {
+                                dd("SEM OPÇÂO");
+                            }
+                        }
                     }
+
+
+                    broadcast(new NewPedido($pedido));
+
+                    return [
+                        "infomacoes" => $pedido,
+                    ];
                 }
-
-                broadcast(new NewPedido($pedido));
-
-                return [
-                    "infomacoes" => $pedido,
-                ];
             } else {
                 return [
                     'error' => [

@@ -1,12 +1,5 @@
 <script setup lang="ts">
-import {
-    BadgeCheck,
-    Bell,
-    ChevronsUpDown,
-    CreditCard,
-    LogOut,
-    Sparkles,
-} from 'lucide-vue-next';
+import { BellIcon, ChevronsUpDown, LogOut } from 'lucide-vue-next';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
@@ -25,6 +18,9 @@ import {
     useSidebar,
 } from '@/components/ui/sidebar';
 import { Confeitaria } from '@/types/types';
+import Label from './ui/label/Label.vue';
+import Switch from './ui/switch/Switch.vue';
+import useConfeitariaStore from '@/stores/ConfeitariaStore';
 
 interface Props {
     confeitaria: Confeitaria;
@@ -32,6 +28,8 @@ interface Props {
 const props = defineProps<Props>();
 
 const { isMobile } = useSidebar();
+
+const confeitariaStore = useConfeitariaStore();
 </script>
 
 <template>
@@ -98,18 +96,20 @@ const { isMobile } = useSidebar();
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     <DropdownMenuGroup>
-                        <!-- <DropdownMenuItem>
-              <BadgeCheck />
-              Account
-            </DropdownMenuItem> -->
+                        <!-- <DropdownMenuItem> -->
+                            <div class="flex items-center space-x-2">
+                                <Switch id="swNotificacao" v-model="confeitariaStore.notification"/>
+                                <Label for="swNotificacao">Notificações <BellIcon class="w-4"/></Label>
+                            </div>
+                        <!-- </DropdownMenuItem> -->
                     </DropdownMenuGroup>
                     <DropdownMenuSeparator />
+
                     <a href="/auth/logout">
-                    <DropdownMenuItem>
-                        
-                        <LogOut />
-                        Sair
-                      </DropdownMenuItem>
+                        <DropdownMenuItem>
+                            <LogOut />
+                            Sair
+                        </DropdownMenuItem>
                     </a>
                 </DropdownMenuContent>
             </DropdownMenu>

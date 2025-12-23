@@ -5,6 +5,7 @@ import { defineStore } from 'pinia';
 interface ConfeitariaState {
     confeitaria: Confeitaria;
     file: File | null;
+    notification: boolean;
 }
 
 const useConfeitariaStore = defineStore('confeitariaStore', {
@@ -19,6 +20,7 @@ const useConfeitariaStore = defineStore('confeitariaStore', {
             slug: ' ',
         },
         file: null,
+        notification: true,
     }),
     actions: {
         async setConfeitaria() {

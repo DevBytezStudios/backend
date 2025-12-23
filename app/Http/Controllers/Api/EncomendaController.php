@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\NewEncomenda;
 use App\Models\Cliente;
 use App\Models\Confeitaria;
 use App\Models\Encomenda;
@@ -40,6 +41,7 @@ class EncomendaController extends Controller
                     'cidade'      => $dataCliente['cidade'],
                 ]);
             }
+
             if ($confeitaria != null) {
                 $encomenda = Encomenda::create([
                     "id_con" => $confeitaria->id,
@@ -65,6 +67,7 @@ class EncomendaController extends Controller
                     }
                 }
 
+                broadcast(new NewEncomenda($encomenda));
                 return $encomenda;
             }
         } catch (Throwable $error) {
