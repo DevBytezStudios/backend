@@ -92,7 +92,7 @@ const setEstilo = async () => {
                                         </FieldLabel>
                                         <Input
                                             id="txtTitulo"
-                                            placeholder="Ex.. Chocolate"
+                                            placeholder="Ex.. Bolo Florido, Temático"
                                             v-model="estiloStore.estilo.titulo"
                                         />
                                     </Field>
@@ -102,7 +102,7 @@ const setEstilo = async () => {
                                         </FieldLabel>
                                         <Textarea
                                             id="txtDesc"
-                                            placeholder="Ex.. Feito com KitKat"
+                                            placeholder="Ex.. Bolo com flores de chantilly"
                                             class="resize-none"
                                             v-model="
                                                 estiloStore.estilo.descricao

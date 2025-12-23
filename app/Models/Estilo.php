@@ -11,6 +11,7 @@ class Estilo extends Model
 {
 
     protected $fillable = [
+        'id_con',
         'titulo',
         'descricao',
         'imagem',

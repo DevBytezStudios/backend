@@ -22,6 +22,7 @@ class EstiloController
 
     public function setEstilo(Request $request)
     {
+                            $confeitaria = Auth::User();
         try {
             $data = json_decode($request->data);
             $estilo = $data->estilo;
@@ -63,8 +64,8 @@ class EstiloController
                 ];
             } else {
                 $newEstilo = Estilo::create([
-                    'id_con' => 1,
-                    'titulo' => $estilo->id,
+                    'id_con' => $confeitaria->id,
+                    'titulo' => $estilo->titulo,
                     'descricao' => $estilo->descricao,
                     'valor' => $estilo->valor,
                     'imagem' => $imagem,

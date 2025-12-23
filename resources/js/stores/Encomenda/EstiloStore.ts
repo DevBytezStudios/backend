@@ -3,7 +3,7 @@ import axios from 'axios';
 import { defineStore } from 'pinia';
 
 interface EstiloState {
-    estilos: Estilo[] | [];
+    estilos: Estilo[];
     estilo: Estilo;
 }
 
@@ -17,7 +17,7 @@ const useEstiloStore = defineStore('estiloStore', {
             imagem: '',
             valor: 0,
             descricao: '',
-            active: false,
+            active: true,
             file: null,
         },
     }),
@@ -33,10 +33,16 @@ const useEstiloStore = defineStore('estiloStore', {
                 if (this.estilo.file != null) {
                     formData.append('imagem', this.estilo.file);
                 }
+
                 const response = await axios.post(
                     '/encomenda/estilos/setestilo',
                     formData,
                 );
+                if (response.data.success) {
+                    if(response.data.estilo){
+                        this.estilos.push(response.data.estilo);
+                    }
+                }
 
                 return response.data;
             } catch ($error) {}
@@ -51,10 +57,12 @@ const useEstiloStore = defineStore('estiloStore', {
                         },
                     );
 
-                    if(response.data.success){
-                        this.estilos = this.estilos.filter((e:Estilo)=> e.id != this.estilo.id );
+                    if (response.data.success) {
+                        this.estilos = this.estilos.filter(
+                            (e: Estilo) => e.id != this.estilo.id,
+                        );
                     }
-                    
+
                     return response.data;
                 }
             } catch ($error) {}
@@ -67,7 +75,7 @@ const useEstiloStore = defineStore('estiloStore', {
                 imagem: '',
                 descricao: '',
                 valor: 0,
-                active: false,
+                active: true,
                 file: null,
             };
         },

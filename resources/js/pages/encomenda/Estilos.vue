@@ -11,9 +11,11 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
+import Button from '@/components/ui/button/Button.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import useEstiloStore from '@/stores/Encomenda/EstiloStore';
 import { Estilo } from '@/types/types';
+import { PlusCircleIcon } from 'lucide-vue-next';
 import { ref } from 'vue';
 import { toast, Toaster } from 'vue-sonner';
 
@@ -56,6 +58,12 @@ const deleteEstilo = async () => {
 <template>
     <AppLayout page="Estilos">
         <Toaster />
+        <DialogEstilo @close="showDialog = false" :open="showDialog" />
+        <header class="menubar">
+            <Button variant="outline" type="button" @click="showDialog = true">
+                <PlusCircleIcon />
+            </Button>
+        </header>
 
         <AlertDialog :open="showAlert">
             <AlertDialogContent>
@@ -82,7 +90,7 @@ const deleteEstilo = async () => {
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>
-        <DialogEstilo @close="showDialog = false" :open="showDialog" />
+
         <div class="flex max-w-full flex-wrap gap-10">
             <CardEstilo
                 v-for="(estilo, index) in estiloStore.estilos"
@@ -99,3 +107,16 @@ const deleteEstilo = async () => {
         </div>
     </AppLayout>
 </template>
+
+<style lang="css" scoped>
+.menubar {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    gap: 1rem;
+    padding: 10px;
+    /* border: white 1px solid; */
+    border-radius: 5px;
+}
+</style>
