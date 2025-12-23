@@ -17,10 +17,12 @@ import {
     SidebarMenuItem,
     useSidebar,
 } from '@/components/ui/sidebar';
-import { Confeitaria } from '@/types/types';
-import Label from './ui/label/Label.vue';
-import Switch from './ui/switch/Switch.vue';
 import useConfeitariaStore from '@/stores/ConfeitariaStore';
+import { Confeitaria } from '@/types/types';
+import { Icon } from '@iconify/vue';
+import { useColorMode } from '@vueuse/core';
+import Button from './ui/button/Button.vue';
+import Switch from './ui/switch/Switch.vue';
 
 interface Props {
     confeitaria: Confeitaria;
@@ -30,6 +32,12 @@ const props = defineProps<Props>();
 const { isMobile } = useSidebar();
 
 const confeitariaStore = useConfeitariaStore();
+
+const mode = useColorMode();
+
+function toggleTheme() {
+    mode.value = mode.value === 'dark' ? 'light' : 'dark';
+}
 </script>
 
 <template>
@@ -95,16 +103,64 @@ const confeitariaStore = useConfeitariaStore();
                         </div>
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                    <DropdownMenuGroup>
-                        <!-- <DropdownMenuItem> -->
-                            <div class="flex items-center space-x-2">
-                                <Switch id="swNotificacao" v-model="confeitariaStore.notification"/>
-                                <Label for="swNotificacao">Notificações <BellIcon class="w-4"/></Label>
+                    <DropdownMenuGroup class="space-y-3">
+                        <!-- Notificações -->
+                        <div
+                            class="flex w-full items-center justify-between gap-3"
+                        >
+                            <div class="flex flex-col leading-tight">
+                                <span
+                                    class="flex items-center gap-2 text-sm font-medium"
+                                >
+                                    Notificações
+                                    <BellIcon class="h-4 w-4" />
+                                </span>
+
+                                <span class="text-xs text-muted-foreground">
+                                    {{
+                                        confeitariaStore.notification
+                                            ? 'Ativadas'
+                                            : 'Desativadas'
+                                    }}
+                                </span>
                             </div>
-                        <!-- </DropdownMenuItem> -->
+
+                            <Switch
+                                id="swNotificacao"
+                                v-model="confeitariaStore.notification"
+                            />
+                        </div>
+
+                        <!-- Tema -->
+                        <div
+                            class="flex w-full items-center justify-between gap-3"
+                        >
+                            <div class="flex flex-col leading-tight">
+                                <span class="text-sm font-medium">Tema</span>
+                                <span class="text-xs text-muted-foreground">
+                                    {{ mode === 'dark' ? 'Escuro' : 'Claro' }}
+                                </span>
+                            </div>
+
+                            <Button
+                                variant="outline"
+                                size="icon"
+                                @click="toggleTheme"
+                                class="relative"
+                            >
+                                <Icon
+                                    icon="radix-icons:moon"
+                                    class="h-[1.2rem] w-[1.2rem] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90"
+                                />
+
+                                <Icon
+                                    icon="radix-icons:sun"
+                                    class="absolute h-[1.2rem] w-[1.2rem] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0"
+                                />
+                            </Button>
+                        </div>
                     </DropdownMenuGroup>
                     <DropdownMenuSeparator />
-
                     <a href="/auth/logout">
                         <DropdownMenuItem>
                             <LogOut />
