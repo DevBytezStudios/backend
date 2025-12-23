@@ -6,9 +6,8 @@ import { ButtonGroup } from '@/components/ui/button-group';
 import Button from '@/components/ui/button/Button.vue';
 import Input from '@/components/ui/input/Input.vue';
 import { SearchIcon } from 'lucide-vue-next';
-
 import DialogProduct from '@/components/Dashboard/Produtos/DialogProduct.vue';
-import ListVisualization from '@/components/Dashboard/Produtos/ListVisualization.vue';
+import ListVisualization from '@/components/Dashboard/Produtos/ListVisualization.vue'; 
 import {
     Pagination,
     PaginationContent,
