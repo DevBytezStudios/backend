@@ -79,7 +79,7 @@ Route::prefix("encomenda/")->group(function () {
 
     Route::post('/opcoes/setopcao', [EtapaOpcaoController::class, 'setOpcao'])->name('encomenda.setOpcao');
     
-    Route::post('/opcoes/search', [EtapaOpcaoController::class, 'search'])->name('encomenda.search');
+    Route::post('/opcoes/search', [EtapaOpcaoController::class, 'search'])->name('opcoes.search');
 
     // ESTILOS
     Route::get('/estilos', [EstiloController::class, 'getEstilos'])->name('encomenda.estilos');
