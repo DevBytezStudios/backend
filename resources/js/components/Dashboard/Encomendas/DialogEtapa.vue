@@ -18,17 +18,9 @@ import {
     FieldSeparator,
     FieldSet,
 } from '@/components/ui/field';
-import FieldDescription from '@/components/ui/field/FieldDescription.vue';
 import FieldTitle from '@/components/ui/field/FieldTitle.vue';
 import { Input } from '@/components/ui/input';
 import Label from '@/components/ui/label/Label.vue';
-import {
-    Select,
-    SelectContent,
-    SelectTrigger,
-    SelectValue,
-} from '@/components/ui/select';
-import SelectItem from '@/components/ui/select/SelectItem.vue';
 import { Switch } from '@/components/ui/switch';
 import {
     Tooltip,
@@ -89,12 +81,13 @@ const setEtapa = async () => {
                     <FieldSet>
                         <FieldGroup>
                             <FieldGroup>
-                                <Field>
+                                <!-- CONFIGURAR ICONE DEPOIS -->
+                                <!-- <Field>
                                     <FieldTitle>Icone</FieldTitle>
                                     <div class="w-100">
                                         <IconPicker v-model="icon" />
                                     </div>
-                                </Field>
+                                </Field> -->
                                 <Field>
                                     <FieldLabel for="txtNome">
                                         Nome da Etapa

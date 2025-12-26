@@ -29,6 +29,7 @@ const useEtapaStore = defineStore('etapaStore', {
                 if (this.etapa.ordem == 0) {
                     this.etapa.ordem = this.etapas.length + 1;
                 }
+                
                 const data = {
                     etapa: this.etapa,
                 };

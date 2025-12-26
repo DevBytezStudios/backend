@@ -50,14 +50,14 @@ class EtapaController
                     "required" => $etapa["required"],
                     "multiple" => $etapa["multiple"],
                     "ordem" => $etapa["ordem"],
-                    "icone" => "semImagem.jpg" //CONFIGURAR DEPOIS
+                    "icone" => "" //CONFIGURAR DEPOIS
                 ]);
 
                 return [
                     'success' => [
                         'titulo' => 'Etapa Criada!',
                         'code' => 200,
-                    ]
+                    ],
                 ];
             }
         } catch (Throwable $error) {

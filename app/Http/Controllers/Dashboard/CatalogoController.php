@@ -25,7 +25,7 @@ class CatalogoController
                 "totalprodutos" => Produto::where('id_con', $confeitaria->id)->count(),
             ];
 
-            $pedidos = Pedido::with(['cliente', 'pedidoItem'])->where('id_con', $confeitaria->id)->orderBy('data', 'DESC')->where('data', today())->where('status', 'em_progresso')->get()->select('id', 'code', 'pagamento', 'data', 'status', 'produto', 'pedidoItem', 'cliente');
+            $pedidos = Pedido::with(['cliente', 'pedidoItem'])->where('id_con', $confeitaria->id)->orderBy('data', 'DESC')->where('data', today())->where('status', 'em_progresso')->select('id', 'code', 'pagamento', 'data', 'status', 'produto', 'pedidoItem', 'cliente')->get();
 
             $encomendas = Encomenda::with(['opcoes', 'cliente', 'estilo'])->where("data_entrega",">",now())->where('id_con', $confeitaria->id)->get();
 
