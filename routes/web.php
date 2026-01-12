@@ -72,7 +72,7 @@ Route::prefix("encomenda/")->group(function () {
 
     Route::post('/etapas/setordem', [EtapaController::class, 'setOrdem'])->name('encomenda.setOrdem');
 
-    Route::post('/etapas/delete', [EtapaController::class, 'delete'])->name('encomenda.delete');
+    Route::post('/etapas/delete', [EtapaController::class, 'delete'])->name('encomenda.etapa.delete');
 
     // OPCOES
     Route::get('/opcoes', [EtapaOpcaoController::class, 'getOpcoes'])->name('encomenda.opcoes');
