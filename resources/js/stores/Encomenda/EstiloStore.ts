@@ -5,6 +5,7 @@ import { defineStore } from 'pinia';
 interface EstiloState {
     estilos: Estilo[];
     estilo: Estilo;
+    file: File | null
 }
 
 const useEstiloStore = defineStore('estiloStore', {
@@ -18,8 +19,8 @@ const useEstiloStore = defineStore('estiloStore', {
             valor: 0,
             descricao: '',
             active: true,
-            file: null,
         },
+        file: null,
     }),
     actions: {
         async setEstilo() {
@@ -30,8 +31,8 @@ const useEstiloStore = defineStore('estiloStore', {
                 };
 
                 formData.append('data', JSON.stringify(data));
-                if (this.estilo.file != null) {
-                    formData.append('imagem', this.estilo.file);
+                if (this.file != null) {
+                    formData.append('imagem', this.file);
                 }
 
                 const response = await axios.post(
@@ -39,7 +40,7 @@ const useEstiloStore = defineStore('estiloStore', {
                     formData,
                     {
                         headers: {
-                            'Content-Type': "multipart/form-data",
+                            'Content-Type': 'multipart/form-data',
                         },
                     },
                 );
@@ -81,8 +82,8 @@ const useEstiloStore = defineStore('estiloStore', {
                 descricao: '',
                 valor: 0,
                 active: true,
-                file: null,
             };
+            this.file = null
         },
     },
 });

@@ -54,16 +54,14 @@ opcaoStore.getEtapas();
 
 const setOpcao = async () => {
     loading.value = !loading.value;
-
+    emits('close');
     const response = await opcaoStore.setOpcao();
     if (response.success) {
-        loading.value = !loading.value;
         opcaoStore.clear();
-        emits('close');
+        loading.value = !loading.value;
         toast.success(response.success.titulo);
     } else {
         opcaoStore.clear();
-        emits('close');
         loading.value = !loading.value;
         toast.error(response.error.titulo);
     }

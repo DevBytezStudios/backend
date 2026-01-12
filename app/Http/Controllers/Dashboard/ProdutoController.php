@@ -133,16 +133,12 @@ class ProdutoController extends Controller
     public function setProduto(Request $request)
     {
         $confeitaria = Auth::user();
-
         // CONFIGURAR A IMAGEM AO RECEBER ELA
-        $imagem = ' ';
-        if ($request->imagem) {
+        if ($request->file('imagem')) {
             $path = Storage::disk('public')->put('produtos', $request->imagem);
             $imagem = basename($path);
-        } else {
-            $magem = "semImagem.jpg";
         }
-
+        
         try {
             $data = json_decode($request->data, true);
             $dialogProduto = $data['produto'];

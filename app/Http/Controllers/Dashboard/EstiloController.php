@@ -27,8 +27,7 @@ class EstiloController
             $data = json_decode($request->data);
             $estilo = $data->estilo;
             // CONFIGURAR A IMAGEM AO RECEBER ELA
-            $imagem = '';
-            if ($request->imagem) {
+            if ($request->file('imagem')) {
                 $path = Storage::disk('public')->put('estilos', $request->imagem);
                 $imagem = basename($path);
             }
@@ -42,11 +41,12 @@ class EstiloController
 
                 // IMAGEM
                 //excluir imagem antiga 
-                if ($request->imagem) {
+                if ($request->file('imagem')) {
                     if ($imagemAntiga = $ormEstilo->getRawOriginal('imagem')) {
                         if ($imagemAntiga && Storage::disk('public')->exists("estilos/" . $imagemAntiga)) {
                             Storage::disk('public')->delete("estilos/" . $imagemAntiga);
                         }
+
                         $ormEstilo->imagem = $imagem;
                     }
                 }
@@ -60,7 +60,9 @@ class EstiloController
                         'code' => 200,
                     ]
                 ];
+
             } else {
+
                 $newEstilo = Estilo::create([
                     'id_con' => $confeitaria->id,
                     'titulo' => $estilo->titulo,

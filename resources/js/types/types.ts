@@ -139,7 +139,6 @@ export interface Estilo{
     valor: number,
     imagem: string,
     descricao: string,
-    file:null | File,
     active: boolean
 }
 

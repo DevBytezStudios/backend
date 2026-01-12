@@ -43,9 +43,9 @@ const showDialog = ref(false);
 
 const saveCategoria = async () => {
     loading.value = !loading.value;
+    showDialog.value = false;
     const response = await dialogCategoria.setCategoria();
     if (response.success) {
-        showDialog.value = false;
         dialogCategoria.clearDialog();
         loading.value = !loading.value;
 
@@ -78,13 +78,13 @@ const showAlertDialog = ref({
 const deletarCategoria = async () => {
     loading.value = !loading.value;
 
+    showAlertDialog.value.active = false;
     const response = await dialogCategoria.deleteCategoria(
         showAlertDialog.value.id,
     );
 
     if (response.success) {
         showAlertDialog.value.id = 0;
-        showAlertDialog.value.active = false;
         dialogCategoria.clearDialog();
         loading.value = !loading.value;
         toast.success(response.success.titulo);

@@ -49,15 +49,14 @@ const loading = ref(false);
 
 const setEstilo = async () => {
     loading.value = !loading.value;
+    emits('close');
     const response = await estiloStore.setEstilo();
     if (response.success) {
         loading.value = !loading.value;
         estiloStore.clear();
-        emits('close');
         toast.success(response.success.titulo);
     } else {
         estiloStore.clear();
-        emits('close');
         loading.value = !loading.value;
         toast.error(response.error.titulo);
     }

@@ -15,7 +15,7 @@ function handleFileChange(e: Event) {
     if (!input.files?.length) return;
 
     file.value = input.files[0];
-    estiloStore.estilo.file = file.value;
+    estiloStore.file = file.value;
     if (file.value.type.startsWith('image/')) {
         previewUrl.value = URL.createObjectURL(file.value);
     }
