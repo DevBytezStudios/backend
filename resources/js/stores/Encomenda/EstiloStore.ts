@@ -5,7 +5,7 @@ import { defineStore } from 'pinia';
 interface EstiloState {
     estilos: Estilo[];
     estilo: Estilo;
-    file: File | null
+    file: File | null;
 }
 
 const useEstiloStore = defineStore('estiloStore', {
@@ -83,7 +83,7 @@ const useEstiloStore = defineStore('estiloStore', {
                 valor: 0,
                 active: true,
             };
-            this.file = null
+            this.file = null;
         },
     },
 });

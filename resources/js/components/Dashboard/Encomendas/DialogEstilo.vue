@@ -61,6 +61,7 @@ const setEstilo = async () => {
         toast.error(response.error.titulo);
     }
 };
+
 </script>
 
 <template>

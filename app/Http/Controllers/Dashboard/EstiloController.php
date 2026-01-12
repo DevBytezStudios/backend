@@ -26,10 +26,14 @@ class EstiloController
         try {
             $data = json_decode($request->data);
             $estilo = $data->estilo;
+
             // CONFIGURAR A IMAGEM AO RECEBER ELA
-            if ($request->file('imagem')) {
+            $imagem = "semImagem.jpg";
+            if ($request->hasFile('imagem')) {
                 $path = Storage::disk('public')->put('estilos', $request->imagem);
                 $imagem = basename($path);
+            }else if($estilo->imagem != null || $estilo->imagem != ''){
+                $imagem = basename($estilo->imagem);
             }
 
             if ($estilo->id != 0) {

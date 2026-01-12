@@ -134,7 +134,7 @@ class ProdutoController extends Controller
     {
         $confeitaria = Auth::user();
         // CONFIGURAR A IMAGEM AO RECEBER ELA
-        if ($request->file('imagem')) {
+        if ($request->hasFile('imagem')) {
             $path = Storage::disk('public')->put('produtos', $request->imagem);
             $imagem = basename($path);
         }
