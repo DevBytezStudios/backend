@@ -37,9 +37,14 @@ const useEstiloStore = defineStore('estiloStore', {
                 const response = await axios.post(
                     '/encomenda/estilos/setestilo',
                     formData,
+                    {
+                        headers: {
+                            'Content-Type': "multipart/form-data",
+                        },
+                    },
                 );
                 if (response.data.success) {
-                    if(response.data.estilo){
+                    if (response.data.estilo) {
                         this.estilos.push(response.data.estilo);
                     }
                 }

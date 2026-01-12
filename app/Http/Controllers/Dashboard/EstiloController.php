@@ -22,17 +22,15 @@ class EstiloController
 
     public function setEstilo(Request $request)
     {
-                            $confeitaria = Auth::User();
+        $confeitaria = Auth::User();
         try {
             $data = json_decode($request->data);
             $estilo = $data->estilo;
             // CONFIGURAR A IMAGEM AO RECEBER ELA
-            $imagem = ' ';
+            $imagem = '';
             if ($request->imagem) {
                 $path = Storage::disk('public')->put('estilos', $request->imagem);
                 $imagem = basename($path);
-            } else {
-                $magem = "semImagem.jpg";
             }
 
             if ($estilo->id != 0) {
