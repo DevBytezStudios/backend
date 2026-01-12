@@ -19,10 +19,6 @@ import {
 } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
 
-/* =====================
-   PROPS / EMITS
-===================== */
-
 const props = defineProps<{
     open: boolean;
 }>();

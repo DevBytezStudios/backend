@@ -5,6 +5,7 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
+import { Link } from '@inertiajs/vue3';
 import type { LucideIcon } from 'lucide-vue-next';
 
 defineProps<{
@@ -19,6 +20,7 @@ defineProps<{
         }[];
     }[];
 }>();
+
 </script>
 
 <template>
@@ -26,10 +28,10 @@ defineProps<{
         <SidebarGroupLabel>Inicio</SidebarGroupLabel>
         <SidebarMenuItem v-for="item in items" :key="item.title">
             <SidebarMenuButton as-child>
-                <a :href="item.url">
+                <Link :href="item.url">
                     <component :is="item.icon" />
                     <span>{{ item.title }}</span>
-                </a>
+                </Link>
             </SidebarMenuButton>
         </SidebarMenuItem>
     </SidebarGroup>

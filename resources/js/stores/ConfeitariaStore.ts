@@ -6,6 +6,7 @@ interface ConfeitariaState {
     confeitaria: Confeitaria;
     file: File | null;
     notification: boolean;
+    theme: 'light' | 'dark';
 }
 
 const useConfeitariaStore = defineStore('confeitariaStore', {
@@ -21,6 +22,7 @@ const useConfeitariaStore = defineStore('confeitariaStore', {
         },
         file: null,
         notification: true,
+        theme: 'light',
     }),
     actions: {
         async setConfeitaria() {
@@ -44,8 +46,8 @@ const useConfeitariaStore = defineStore('confeitariaStore', {
                     },
                 );
 
-                if(response.data.confeitaria){
-                    this.confeitaria = response.data.confeitaria
+                if (response.data.confeitaria) {
+                    this.confeitaria = response.data.confeitaria;
                 }
                 return response.data;
             } catch ($error) {

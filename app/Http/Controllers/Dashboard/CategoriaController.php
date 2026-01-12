@@ -48,7 +48,8 @@ class CategoriaController extends Controller
                 return [
                     'success' => [
                         'titulo' => 'Categoria Criada!'
-                    ]
+                    ],
+                    'categoria' => $categoria
                 ];
             }
         } catch (Throwable $error) {

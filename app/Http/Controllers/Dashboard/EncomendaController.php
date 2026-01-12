@@ -12,11 +12,16 @@ class EncomendaController
 {
     public function getEncomendas()
     {
-        $confeitaria = Auth::User();
+        try {
+            $confeitaria = Auth::User();
 
-        $encomendas = Encomenda::with(['opcoes', 'cliente', 'estilo'])->where('id_con', $confeitaria->id)->orderBy('id', 'DESC')->get();
+            $encomendas = Encomenda::with(['opcoes', 'cliente', 'estilo'])->where('id_con', $confeitaria->id)->orderBy('id', 'DESC')->get();
 
-        return Inertia::render('encomenda/Encomendas', ['encomendas' => $encomendas]);
+            return Inertia::render('encomenda/Encomendas', ['encomendas' => $encomendas]);
+        } catch (Throwable $error) {
+
+            return redirect()->route('auth.login');
+        }
     }
 
 
@@ -32,7 +37,7 @@ class EncomendaController
                 return [
                     'success' => [
                         'titulo' => 'Atualizado!',
-                    ]   
+                    ]
                 ];
             } else {
                 return [
@@ -52,8 +57,9 @@ class EncomendaController
         }
     }
 
-    public function deleteEncomenda(Request $request){
-          try {
+    public function deleteEncomenda(Request $request)
+    {
+        try {
             $encomenda = Encomenda::where("id", $request->id)->first();
             if ($encomenda) {
                 $encomenda->delete();
@@ -86,7 +92,7 @@ class EncomendaController
         try {
             $confeitaria = Auth::user();
             $encomenda = [];
-            $encomenda = Encomenda::with(['opcoes', 'cliente', 'estilo'])->where('code', 'like', "$request->valor%")->where('id_con',$confeitaria->id)->get();
+            $encomenda = Encomenda::with(['opcoes', 'cliente', 'estilo'])->where('code', 'like', "$request->valor%")->where('id_con', $confeitaria->id)->get();
             return $encomenda;
         } catch (Throwable $error) {
             return [

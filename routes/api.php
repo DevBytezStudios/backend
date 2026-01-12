@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\Admin\AdminController;
 use App\Http\Controllers\Api\ConfeitariaController;
 use App\Http\Controllers\Api\EncomendaController;
 use App\Http\Controllers\Api\PedidoController as ApiPedidoController;
@@ -21,10 +22,15 @@ Route::prefix('{slug}/')->group(function () {
     Route::get('encomenda', [ConfeitariaController::class, 'getEtapas']);
     Route::post('encomenda/{idetapa}', [ConfeitariaController::class, 'getOpcoes']);
     Route::get('encomenda/estilos', [ConfeitariaController::class, 'getEstilos']);
-    Route::post('newencomenda',[EncomendaController::class,'setEncomenda']);
-
+    Route::post('newencomenda', [EncomendaController::class, 'setEncomenda']);
 });
 
-
-
+// PEGAR VARIACAO DOS PRODUTOS
 Route::post('/produto/getvariacao', [ProdutoController::class, 'geVariacao']);
+
+// CONFIGURAÇÔES PARA OS ADMINISTRADORES
+Route::prefix('/admin')->group(function () {
+    Route::get('/getconfeitaria', [AdminController::class, 'getConfeitarias']);
+    Route::post('/setconfeitaria', [AdminController::class, 'setConfeitaria']);
+    Route::post('/deleteconfeitaria', [AdminController::class, 'deleteConfeitaria']);
+});

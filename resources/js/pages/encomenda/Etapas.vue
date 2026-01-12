@@ -18,21 +18,33 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
+import DialogEtapa from '@/components/Dashboard/Encomendas/DialogEtapa.vue';
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+import Button from '@/components/ui/button/Button.vue';
+import useEtapaStore from '@/stores/Encomenda/EtapaStore';
+import { Etapa } from '@/types/types';
 import {
     ArrowDownSquareIcon,
-    ArrowUpDown,
     ArrowUpSquareIcon,
     Edit2Icon,
     PlusCircleIcon,
     Trash2,
 } from 'lucide-vue-next';
+import { ref } from 'vue';
 import { toast, Toaster } from 'vue-sonner';
 import 'vue-sonner/style.css';
-import DialogEtapa from '@/components/Dashboard/Encomendas/DialogEtapa.vue';
-import Button from '@/components/ui/button/Button.vue';
-import useEtapaStore from '@/stores/Encomenda/EtapaStore';
-import { Etapa } from '@/types/types';
-import { ref } from 'vue';
+
+import Empty from '@/components/Empty.vue';
+import LoadingBar from '@/components/LoadingBar.vue';
 
 const showDialog = ref(false);
 
@@ -44,13 +56,12 @@ const props = defineProps<Props>();
 const etapaStore = useEtapaStore();
 etapaStore.etapas = props.etapas;
 
-console.info(props.etapas);
 const editEtapa = (etapa: Etapa) => {
     etapaStore.etapa = etapa;
     showDialog.value = true;
 };
 
-const upItem =async (index: number) => {
+const upItem = async (index: number) => {
     if (index === 0) return;
 
     const etapas = etapaStore.etapas;
@@ -63,8 +74,6 @@ const upItem =async (index: number) => {
 
     current.ordem = index;
     previous.ordem = index + 1;
-
-    
 
     const response = await etapaStore.setOrdem(current, previous);
     if (response.success) {
@@ -87,19 +96,72 @@ const downItem = async (index: number) => {
 
     current.ordem = index + 2;
     next.ordem = index + 1;
- const response = await etapaStore.setOrdem(current, next);
+    const response = await etapaStore.setOrdem(current, next);
     if (response.success) {
         toast.success(response.success.titulo);
     } else {
         toast.error(response.error.titulo);
-    }};
+    }
+};
+
+// excluir etapa
+const showAlertDialog = ref({
+    id: 0,
+    active: false,
+});
+
+const loading = ref(false);
+const deleteEtapa = async () => {
+    loading.value = !loading.value;
+
+    showAlertDialog.value.active = false;
+    const response = await etapaStore.delete(showAlertDialog.value.id);
+
+    if (response.success) {
+        showAlertDialog.value.id = 0;
+        showAlertDialog.value.active = false;
+        loading.value = !loading.value;
+        etapaStore.clear();
+        toast.success(response.success.titulo);
+    } else {
+        loading.value = !loading.value;
+        toast.error(response.error.titulo);
+    }
+};
 </script>
 
 <template>
     <AppLayout page="Etapas">
-            <Toaster theme="system" />
+        <Toaster />
+        <LoadingBar :loading="loading" />
 
         <DialogEtapa :open="showDialog" @close="showDialog = false" />
+
+        <AlertDialog :open="showAlertDialog.active">
+            <AlertDialogContent>
+                <AlertDialogHeader>
+                    <AlertDialogTitle
+                        >Deseja deletar essa etapa?</AlertDialogTitle
+                    >
+                    <AlertDialogDescription>
+                        Essa ação irá deletar a etapa PARA SEMPRE, tem certeza?
+                    </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                    <AlertDialogCancel
+                        @click="
+                            ((showAlertDialog.id = 0),
+                            (showAlertDialog.active = false))
+                        "
+                        >Cancelar</AlertDialogCancel
+                    >
+                    <AlertDialogAction @click="deleteEtapa"
+                        >Continuar</AlertDialogAction
+                    >
+                </AlertDialogFooter>
+            </AlertDialogContent>
+        </AlertDialog>
+
         <header class="menubar">
             <Button variant="outline" @click="showDialog = true" type="button">
                 <PlusCircleIcon />
@@ -107,7 +169,7 @@ const downItem = async (index: number) => {
         </header>
 
         <div class="w-full overflow-x-auto">
-            <Table>
+            <Table v-if="etapaStore.etapas.length > 0">
                 <TableHeader>
                     <TableRow>
                         <TableHead>Ordem</TableHead>
@@ -118,7 +180,7 @@ const downItem = async (index: number) => {
                         <TableHead class="hidden md:table-cell">
                             Multiplas escolhas
                         </TableHead>
-                        <TableHead> Organizar </TableHead>
+                        <TableHead></TableHead>
                         <TableHead class="text-right"></TableHead>
                     </TableRow>
                 </TableHeader>
@@ -163,14 +225,24 @@ const downItem = async (index: number) => {
                                 Não
                             </Badge>
                         </TableCell>
-                        <TableCell> 
-                            <Button variant="secondary" v-if="index != 0" @click="upItem(index)">                    
-                                <ArrowUpSquareIcon /> 
-                            </Button>
-                            <Button variant="secondary"  v-if=" index != etapaStore.etapas.length - 1"  
-                            @click="downItem(index)"> 
-                                <ArrowDownSquareIcon />
-                            </Button>
+                        <TableCell class="">
+                            <div class="flex gap-5">
+                                <Button
+                                    variant="secondary"
+                                    v-if="index != 0"
+                                    @click="upItem(index)"
+                                >
+                                    <ArrowUpSquareIcon />
+                                </Button>
+
+                                <Button
+                                    variant="secondary"
+                                    v-if="index != etapaStore.etapas.length - 1"
+                                    @click="downItem(index)"
+                                >
+                                    <ArrowDownSquareIcon />
+                                </Button>
+                            </div>
                         </TableCell>
                         <TableCell class="flex justify-end gap-2 text-right">
                             <DropdownMenu>
@@ -196,7 +268,12 @@ const downItem = async (index: number) => {
                                     <DropdownMenuItem @click="editEtapa(etapa)"
                                         ><Edit2Icon /> Editar</DropdownMenuItem
                                     >
-                                    <DropdownMenuItem class="bg-red-500"
+                                    <DropdownMenuItem
+                                        class="bg-red-500"
+                                        @click="
+                                            ((showAlertDialog.id = etapa.id),
+                                            (showAlertDialog.active = true))
+                                        "
                                         ><Trash2 />Deletar</DropdownMenuItem
                                     >
                                 </DropdownMenuContent>
@@ -205,6 +282,11 @@ const downItem = async (index: number) => {
                     </TableRow>
                 </TableBody>
             </Table>
+
+            <Empty
+                v-if="etapaStore.etapas.length == 0"
+                msg="Nehuma etapa encontrada"
+            />
         </div>
     </AppLayout>
 </template>

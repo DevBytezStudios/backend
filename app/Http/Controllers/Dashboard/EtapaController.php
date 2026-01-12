@@ -43,8 +43,16 @@ class EtapaController
                     ]
                 ];
             } else {
+                // VERIFICA SE EXISTE 
+                if (Etapa::where('nome', $etapa["nome"])->exists()) {
+                    return [
+                        'error' => [
+                            'titulo' => 'Etapa já existe!',
+                        ]
+                    ];
+                }
                 // CRIA
-                Etapa::create([
+                $newEtapa = Etapa::create([
                     "id_con" => $confeitaria->id,
                     "nome" => $etapa["nome"],
                     "required" => $etapa["required"],
@@ -53,14 +61,24 @@ class EtapaController
                     "icone" => "" //CONFIGURAR DEPOIS
                 ]);
 
-                return [
-                    'success' => [
-                        'titulo' => 'Etapa Criada!',
-                        'code' => 200,
-                    ],
-                ];
+                if ($newEtapa) {
+                    return [
+                        'success' => [
+                            'titulo' => 'Etapa Criada!',
+                            'code' => 200,
+                        ],
+                        'etapa' => $newEtapa,
+                    ];
+                }
             }
         } catch (Throwable $error) {
+            if ($error->getCode() == "23000") {
+                return [
+                    'error' => [
+                        'titulo' => 'Etapa já existe!',
+                    ]
+                ];
+            }
             return [
                 'error' => [
                     'titulo' => 'Algo de errado!',
@@ -74,7 +92,6 @@ class EtapaController
 
     public function setOrdem(Request $request)
     {
-
         try {
             $data = json_decode($request->data, true);
             $atual = $data['atual'];
@@ -93,6 +110,28 @@ class EtapaController
                 'success' => [
                     'titulo' => 'Ordem Atualizada!',
                     'code' => 200,
+                ]
+            ];
+        } catch (Throwable $error) {
+            return [
+                'error' => [
+                    'titulo' => 'Algo de errado!',
+                    'message' => $error->getMessage(),
+                    'code' => $error->getCode(),
+                ]
+            ];
+        }
+    }
+
+    public function delete(Request $request)
+    {
+        try {
+            $etapa = Etapa::find($request->id);
+            $etapa->delete();
+
+            return [
+                'success' => [
+                    'titulo' => 'Etapa Deletada!',
                 ]
             ];
         } catch (Throwable $error) {

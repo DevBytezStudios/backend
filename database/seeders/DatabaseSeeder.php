@@ -12,6 +12,7 @@ use App\Models\Etapa;
 use App\Models\EtapaOpcao;
 use App\Models\Opcao;
 use App\Models\Produto;
+use App\Models\State;
 use App\Models\User;
 use App\Models\Variacao;
 use Illuminate\Database\Seeder;
@@ -24,6 +25,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         Confeitaria::factory(1)->create();
+        State::factory(1)->create();
         // categoria::factory(5)->create();
         // Produto::factory(30)->create();
         // Variacao::factory(5)->create();

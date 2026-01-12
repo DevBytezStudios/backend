@@ -3,7 +3,7 @@ import axios from 'axios';
 import { defineStore } from 'pinia';
 
 interface EtapaState {
-    etapas: Etapa[] | [];
+    etapas: Etapa[];
     etapa: Etapa;
 }
 
@@ -13,17 +13,16 @@ const useEtapaStore = defineStore('etapaStore', {
         etapa: {
             id: 0,
             id_con: 0,
-            nome: '',
+            nome: 'tamanho',
             icone: '',
             ordem: 0,
             multiple: false,
-            required: false,
+            required: true,
         },
     }),
     actions: {
         async setEtapa() {
             try {
-                console.log(this.etapa);
                 const formData = new FormData();
 
                 if (this.etapa.ordem == 0) {
@@ -41,12 +40,18 @@ const useEtapaStore = defineStore('etapaStore', {
                     formData,
                 );
 
+                if(response.data.success){
+                    const newEtapa: Etapa = response.data.etapa;
+                    this.etapas.push(newEtapa);
+                }
+
+                this.clear();
+
                 return response.data;
             } catch ($error) {}
         },
         async setOrdem(current:Etapa, novo:Etapa) {
             try {
-                console.log(this.etapa);
                 const formData = new FormData();
 
                 if (this.etapa.ordem == 0) {
@@ -68,15 +73,28 @@ const useEtapaStore = defineStore('etapaStore', {
                 return response.data;
             } catch ($error) {}
         },
+        async delete(idEtapa:number){
+                const response = await axios.post(
+                    '/encomenda/etapas/delete',
+                    {
+                        id:idEtapa
+                    },
+                );
+
+                if(response.data.success){
+                    this.etapas = this.etapas.filter((etapa:Etapa) => etapa.id != idEtapa);
+                }
+                return response.data;
+        },
         clear() {
             this.etapa = {
                 id: 0,
                 id_con: 0,
-                nome: '',
+                nome: 'tamanho',
                 icone: '',
                 ordem: 0,
                 multiple: false,
-                required: false,
+                required: true,
             };
         },
     },

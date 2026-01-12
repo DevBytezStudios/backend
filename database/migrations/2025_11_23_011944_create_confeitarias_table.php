@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('nome');
             $table->string('slug');
-            $table->string('cor_princ');
-            $table->string('cor_sec');
-            $table->string('logo');
+            $table->string('cor_princ')->default('black');
+            $table->string('cor_sec')->default('black');
+            $table->string('logo')->default('');
             $table->string('email');
             $table->string('password');
             $table->timestamps();

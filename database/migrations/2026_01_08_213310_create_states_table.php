@@ -11,15 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('etapas', function (Blueprint $table) {
+        Schema::create('states', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('id_con');
             $table->foreign('id_con')->references('id')->on('confeitarias')->onDelete('cascade')->onUpdate('cascade');
-            $table->string('nome')->unique();
-            $table->integer('ordem');
-            $table->boolean('required');
-            $table->boolean('multiple');
-            $table->string('icone');
+            $table->string('state')->default('inactive');
             $table->timestamps();
         });
     }
@@ -29,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('etapas');
+        Schema::dropIfExists('states');
     }
 };

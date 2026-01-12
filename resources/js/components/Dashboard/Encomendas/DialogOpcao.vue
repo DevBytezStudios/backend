@@ -38,7 +38,7 @@ import {
 } from '@/components/ui/tooltip';
 import useOpcaoStore from '@/stores/Encomenda/OpcaoStore';
 import { InfoIcon } from 'lucide-vue-next';
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { Toaster, toast } from 'vue-sonner';
 import 'vue-sonner/style.css';
 
@@ -50,6 +50,7 @@ const props = defineProps<Props>();
 
 const opcaoStore = useOpcaoStore();
 const loading = ref(false);
+opcaoStore.getEtapas();
 
 const setOpcao = async () => {
     loading.value = !loading.value;
@@ -67,12 +68,21 @@ const setOpcao = async () => {
         toast.error(response.error.titulo);
     }
 };
+
+watch(props, (newValue) => {
+    if (opcaoStore.etapas.length == 0 && newValue.open == true) {
+        opcaoStore.clear();
+        emits('close');
+        toast.success('Crie etapas primeiro!');
+        return;
+    }
+});
 </script>
 
 <template>
     <Dialog :open="props.open">
         <LoadingBar :loading="loading" />
-        <Toaster theme="system" />
+        <Toaster />
         <DialogContent
             class="max-h-[90vh] max-w-[90vw] overflow-y-auto rounded-lg p-6 md:max-w-150"
         >

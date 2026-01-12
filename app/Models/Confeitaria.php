@@ -5,12 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\Storage;
 
 class Confeitaria extends Authenticatable
 {
     protected $fillable = [
+        'id',
         'nome',
         'slug',
         'cor_princ',
@@ -27,7 +30,7 @@ class Confeitaria extends Authenticatable
     /** @use HasFactory<\Database\Factories\ConfeitariaFactory> */
     use HasFactory;
 
-     protected function logo(): Attribute
+    protected function logo(): Attribute
     {
         // PEGAR A URL DA logo COMPLETA AO PEDIR ELA
         return Attribute::make(
@@ -42,4 +45,10 @@ class Confeitaria extends Authenticatable
             set: fn($logo) => $logo
         );
     }
+
+    public function state(): BelongsTo
+    {
+        return $this->belongsTo(State::class, 'id', 'id_con');
+    }
+
 }

@@ -1,16 +1,6 @@
 <script setup lang="ts">
-import Button from '@/components/ui/button/Button.vue';
-import {
-    Sheet,
-    SheetClose,
-    SheetContent,
-    SheetDescription,
-    SheetFooter,
-    SheetHeader,
-    SheetTitle,
-} from '@/components/ui/sheet';
-
 import LoadingBar from '@/components/LoadingBar.vue';
+import Button from '@/components/ui/button/Button.vue';
 import {
     Field,
     FieldGroup,
@@ -21,6 +11,22 @@ import {
 import FieldTitle from '@/components/ui/field/FieldTitle.vue';
 import { Input } from '@/components/ui/input';
 import Label from '@/components/ui/label/Label.vue';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
+import {
+    Sheet,
+    SheetClose,
+    SheetContent,
+    SheetDescription,
+    SheetFooter,
+    SheetHeader,
+    SheetTitle,
+} from '@/components/ui/sheet';
 import { Switch } from '@/components/ui/switch';
 import {
     Tooltip,
@@ -30,10 +36,9 @@ import {
 } from '@/components/ui/tooltip';
 import useEtapaStore from '@/stores/Encomenda/EtapaStore';
 import { InfoIcon } from 'lucide-vue-next';
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { toast, Toaster } from 'vue-sonner';
 import 'vue-sonner/style.css';
-import IconPicker from './IconPicker.vue';
 interface Props {
     open: boolean;
 }
@@ -41,13 +46,41 @@ const loading = ref(false);
 
 const props = defineProps<Props>();
 const emit = defineEmits(['close']);
-
 const icon = ref('');
-
 const etapaStore = useEtapaStore();
+
+// CONFIGURAÇÂO DO SELECT DAS ETAPAS
+const options = [
+    { value: 'tamanho', label: 'Tamanho do bolo' },
+    { value: 'formato', label: 'Formato' },
+    { value: 'massa', label: 'Sabor da massa' },
+    { value: 'recheio', label: 'Recheio' },
+    { value: 'cobertura', label: 'Cobertura' },
+    { value: 'camadas', label: 'Quantidade de camadas' },
+    { value: 'outro', label: 'Outro' },
+];
+
+const selectdEtapa = ref('');
+
+// SELECT DA ETAPA
+watch(
+    () => etapaStore.etapa.nome,
+    (value) => {
+        if (!value) return;
+
+        const option = options.find((option) => option.value === value);
+
+        selectdEtapa.value = option ? option.value : 'outro';
+    },
+    { immediate: true },
+);
+
 const setEtapa = async () => {
     loading.value = true;
     emit('close');
+    if (selectdEtapa.value != 'outro') {
+        etapaStore.etapa.nome = selectdEtapa.value;
+    }
 
     const response = await etapaStore.setEtapa();
     etapaStore.clear();
@@ -62,8 +95,7 @@ const setEtapa = async () => {
 </script>
 
 <template>
-    <Toaster theme="system" />
-
+    <Toaster />
     <LoadingBar :loading="loading" />
     <Sheet :modal="true" v-model:open="props.open">
         <SheetContent>
@@ -75,7 +107,6 @@ const setEtapa = async () => {
                     Configure a etapa que ira aparecer para os clientes
                 </SheetDescription>
             </SheetHeader>
-
             <div>
                 <FieldGroup>
                     <FieldSet>
@@ -92,10 +123,32 @@ const setEtapa = async () => {
                                     <FieldLabel for="txtNome">
                                         Nome da Etapa
                                     </FieldLabel>
+                                    <div>
+                                        <Select
+                                            name="slEtapa"
+                                            v-model="selectdEtapa"
+                                        >
+                                            <SelectTrigger
+                                                class="h-8 w-50 px-2"
+                                            >
+                                                <SelectValue />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem
+                                                    v-for="option in options"
+                                                    :key="option.value"
+                                                    :value="option.value"
+                                                >
+                                                    {{ option.label }}
+                                                </SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
                                     <Input
                                         id="txtNome"
                                         placeholder="Ex.. Tamahos, Recheios"
                                         v-model="etapaStore.etapa.nome"
+                                        v-if="selectdEtapa == 'outro'"
                                     />
                                 </Field>
                                 <Field>

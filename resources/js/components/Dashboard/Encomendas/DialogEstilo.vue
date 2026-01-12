@@ -67,7 +67,7 @@ const setEstilo = async () => {
 <template>
     <Dialog :open="props.open">
         <LoadingBar :loading="loading" />
-        <Toaster theme="system" />
+        <Toaster/>
         <DialogContent
             class="max-h-[90vh] max-w-[90vw] overflow-y-auto rounded-lg p-6 md:max-w-150"
         >

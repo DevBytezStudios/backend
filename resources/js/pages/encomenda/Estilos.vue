@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import CardEstilo from '@/components/Dashboard/Encomendas/CardEstilo.vue';
 import DialogEstilo from '@/components/Dashboard/Encomendas/DialogEstilo.vue';
+import Empty from '@/components/Empty.vue';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -104,6 +105,8 @@ const deleteEstilo = async () => {
                     }
                 "
             />
+
+            <Empty v-if="estiloStore.estilos.length == 0" />
         </div>
     </AppLayout>
 </template>

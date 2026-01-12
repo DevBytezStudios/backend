@@ -87,8 +87,6 @@ class EtapaOpcaoController
         }
     }
 
-
-
     protected string $valor;
     public function search(Request $request)
     {
@@ -101,7 +99,6 @@ class EtapaOpcaoController
                         $confeitaria = Auth::User();
                         $query->where('id_con', $confeitaria->id);
                     })->where("nome", 'like', "$request->valor%")->get();
-                dd($opcoes);
             } else {
                 $this->valor = $request->valor;
                 $opcoes = EtapaOpcao::with('etapa')
@@ -111,6 +108,29 @@ class EtapaOpcaoController
                     })->get();
             }
             return $opcoes;
+        } catch (Throwable $error) {
+            return [
+                'error' => [
+                    'titulo' => 'Algo de errado!',
+                    'message' => $error->getMessage(),
+                    'code' => $error->getCode(),
+                ]
+            ];
+        }
+    }
+
+    
+    public function delete(Request $request)
+    {
+        try {
+            $opcao = EtapaOpcao::find($request->id);
+            $opcao->delete();
+
+            return [
+                'success' => [
+                    'titulo' => 'Opção Deletada!',
+                ]
+            ];
         } catch (Throwable $error) {
             return [
                 'error' => [

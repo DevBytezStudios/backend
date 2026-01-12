@@ -4,6 +4,7 @@ import { defineStore } from 'pinia';
 
 interface DialogCategoriaState {
     categoria: Categoria;
+    categorias: Categoria[];
 }
 
 const useDialogCategoria = defineStore('dialogCategoria', {
@@ -12,6 +13,7 @@ const useDialogCategoria = defineStore('dialogCategoria', {
             id: 0,
             titulo: '',
         },
+        categorias: [],
     }),
 
     actions: {
@@ -30,9 +32,13 @@ const useDialogCategoria = defineStore('dialogCategoria', {
                     '/catalogo/categorias/setcategoria',
                     {
                         id: this.categoria.id,
-                        titulo: this.categoria.titulo
+                        titulo: this.categoria.titulo,
                     },
                 );
+
+                if (response.data.success) {
+                    this.categorias.push(response.data.categoria)
+                }
 
                 return response.data;
             } catch (error) {
@@ -41,7 +47,7 @@ const useDialogCategoria = defineStore('dialogCategoria', {
         },
 
         /** Deletar */
-        async deleteCategoria(idCat:number) {
+        async deleteCategoria(idCat: number) {
             if (idCat == 0) {
                 return {
                     error: {
@@ -59,13 +65,17 @@ const useDialogCategoria = defineStore('dialogCategoria', {
                     },
                 );
 
+                if (response.data.success) {
+                    this.categorias = this.categorias.filter(
+                        (cat: Categoria) => cat.id != idCat,
+                    );
+                }
+
                 return response.data;
             } catch (error) {
                 console.log(error);
             }
         },
-
-        /** Validação */
         verificacao() {
             const error = (mensagem: string) => ({
                 error: {

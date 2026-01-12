@@ -27,9 +27,9 @@ class CatalogoController
 
             $pedidos = Pedido::with(['cliente', 'pedidoItem'])->where('id_con', $confeitaria->id)->orderBy('data', 'DESC')->where('data', today())->where('status', 'em_progresso')->get()->select('id', 'code', 'pagamento', 'data', 'status', 'produto', 'pedidoItem', 'cliente');
 
-            $encomendas = Encomenda::with(['opcoes', 'cliente', 'estilo'])->where("data_entrega",">",now())->where('id_con', $confeitaria->id)->get();
+            $encomendas = Encomenda::with(['opcoes', 'cliente', 'estilo'])->where("data_entrega", ">", now())->where('id_con', $confeitaria->id)->get();
 
-            return Inertia::render('Dashboard', ['confeitaria' => $confeitaria, 'data' => $data, 'pedidos' => $pedidos,"encomendas"=>$encomendas]);
+            return Inertia::render('Dashboard', ['confeitaria' => $confeitaria, 'data' => $data, 'pedidos' => $pedidos, "encomendas" => $encomendas]);
         } catch (Throwable $error) {
             return redirect()->route('auth.login');
         }
@@ -47,7 +47,8 @@ class CatalogoController
                 ]);
             }
         } catch (Throwable $error) {
-            dd($error);
+            report($error);
+            abort(500);
         }
     }
 

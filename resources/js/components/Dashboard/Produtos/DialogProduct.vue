@@ -95,7 +95,8 @@ const saveProduct = async () => {
 
 <template>
     <Dialog>
-        <Toaster theme="system" />
+        <Toaster />
+
         <DialogContent
             class="max-h-[90vh] max-w-[90vw] overflow-y-auto rounded-lg p-6 md:max-w-150"
         >

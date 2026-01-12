@@ -28,6 +28,16 @@ import {
 import { Edit2Icon, PlusCircle, Trash2 } from 'lucide-vue-next';
 
 import DialogOpcao from '@/components/Dashboard/Encomendas/DialogOpcao.vue';
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { ButtonGroup } from '@/components/ui/button-group';
 import Button from '@/components/ui/button/Button.vue';
 import Input from '@/components/ui/input/Input.vue';
@@ -40,7 +50,7 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import useOpcaoStore from '@/stores/Encomenda/OpcaoStore';
-import { EncomendaOpcoes, OpcaoEtapa, Paginator } from '@/types/types';
+import { OpcaoEtapa, Paginator } from '@/types/types';
 import { SearchIcon } from 'lucide-vue-next';
 import { ref } from 'vue';
 
@@ -52,10 +62,12 @@ interface Props {
     paginator: Paginator;
 }
 // NAGEVAÇÂO DE PAGINAS
+import Empty from '@/components/Empty.vue';
 import { router } from '@inertiajs/vue3';
 import axios from 'axios';
-import { toast } from 'vue-sonner';
-import { Toaster } from '@/components/ui/sonner';
+import { toast, Toaster } from 'vue-sonner';
+import 'vue-sonner/style.css';
+
 const navigate = (url: string | null) => {
     if (!url) return;
     router.get(url);
@@ -94,7 +106,7 @@ const searchOpcoes = async () => {
                     formData,
                 );
 
-                console.log(response.data)
+                console.log(response.data);
                 opcoesPesquisa.value = response.data;
 
                 loading.value = false;
@@ -116,16 +128,70 @@ const searchOpcoes = async () => {
         pesquisando.value = false;
     }
 };
+
+// Deletar
+const showAlertDialog = ref({
+    id: 0,
+    active: false,
+});
+
+const deleteEtapa = async () => {
+    loading.value = !loading.value;
+
+    const response = await opcaoStore.delete(showAlertDialog.value.id);
+    if (response.success) {
+        showAlertDialog.value.id = 0;
+        showAlertDialog.value.active = false;
+        loading.value = !loading.value;
+        opcaoStore.clear();
+        toast.success(response.success.titulo);
+    } else {
+        loading.value = !loading.value;
+        toast.error(response.error.titulo);
+    }
+};
 </script>
 
 <template>
     <AppLayout page="Opções">
-        <Toaster theme="system"/>
+        <Toaster />
         <DialogOpcao :open="showDialog" @close="showDialog = false" />
+        <AlertDialog :open="showAlertDialog.active">
+            <AlertDialogContent>
+                <AlertDialogHeader>
+                    <AlertDialogTitle
+                        >Deseja deletar essa opção?</AlertDialogTitle
+                    >
+                    <AlertDialogDescription>
+                        Essa ação irá deletar a opção PARA SEMPRE, tem certeza?
+                    </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                    <AlertDialogCancel
+                        @click="
+                            ((showAlertDialog.id = 0),
+                            (showAlertDialog.active = false))
+                        "
+                        >Cancelar</AlertDialogCancel
+                    >
+                    <AlertDialogAction @click="deleteEtapa"
+                        >Continuar</AlertDialogAction
+                    >
+                </AlertDialogFooter>
+            </AlertDialogContent>
+        </AlertDialog>
         <header class="menubar">
             <ButtonGroup class="w-full">
-                <Input placeholder="Pesquisar..." v-model="searchValue" @input="searchOpcoes" />
-                <Button variant="outline" aria-label="Search" @click="searchOpcoes">
+                <Input
+                    placeholder="Pesquisar..."
+                    v-model="searchValue"
+                    @input="searchOpcoes"
+                />
+                <Button
+                    variant="outline"
+                    aria-label="Search"
+                    @click="searchOpcoes"
+                >
                     <SearchIcon />
                 </Button>
             </ButtonGroup>
@@ -151,7 +217,7 @@ const searchOpcoes = async () => {
         </header>
 
         <div class="h-full w-full overflow-x-auto">
-            <Table>
+            <Table v-if="opcaoStore.opcoes.length > 0">
                 <TableHeader>
                     <TableRow>
                         <TableHead>Etapa</TableHead>
@@ -178,12 +244,12 @@ const searchOpcoes = async () => {
                         <TableCell>{{ opcao.nome }}</TableCell>
                         <TableCell>
                             {{
-                            
-                                  opcao.valor != 0 ? new Intl.NumberFormat('pt-BR', {
-                                style: 'currency',
-                                currency: 'BRL',
-                                }).format(opcao.valor) : "-"
-                                
+                                opcao.valor != 0
+                                    ? new Intl.NumberFormat('pt-BR', {
+                                          style: 'currency',
+                                          currency: 'BRL',
+                                      }).format(opcao.valor)
+                                    : '-'
                             }}
                         </TableCell>
                         <TableCell class="hidden md:table-cell">
@@ -236,13 +302,19 @@ const searchOpcoes = async () => {
                                         "
                                         ><Edit2Icon /> Editar</DropdownMenuItem
                                     >
-                                    <DropdownMenuItem class="bg-red-500"
+                                    <DropdownMenuItem
+                                        class="bg-red-500"
+                                        @click="
+                                            ((showAlertDialog.id = opcao.id),
+                                            (showAlertDialog.active = true))
+                                        "
                                         ><Trash2 />Deletar</DropdownMenuItem
                                     >
                                 </DropdownMenuContent>
                             </DropdownMenu>
                         </TableCell>
                     </TableRow>
+                    <!-- PESQUISA -->
                     <TableRow
                         v-if="opcoesPesquisa.length != 0"
                         v-for="(opcao, index) in opcoesPesquisa"
@@ -254,12 +326,12 @@ const searchOpcoes = async () => {
                         <TableCell>{{ opcao.nome }}</TableCell>
                         <TableCell>
                             {{
-                            
-                                  opcao.valor != 0 ? new Intl.NumberFormat('pt-BR', {
-                                style: 'currency',
-                                currency: 'BRL',
-                                }).format(opcao.valor) : "-"
-                                
+                                opcao.valor != 0
+                                    ? new Intl.NumberFormat('pt-BR', {
+                                          style: 'currency',
+                                          currency: 'BRL',
+                                      }).format(opcao.valor)
+                                    : '-'
                             }}
                         </TableCell>
                         <TableCell class="hidden md:table-cell">
@@ -312,7 +384,12 @@ const searchOpcoes = async () => {
                                         "
                                         ><Edit2Icon /> Editar</DropdownMenuItem
                                     >
-                                    <DropdownMenuItem class="bg-red-500"
+                                    <DropdownMenuItem
+                                        class="bg-red-500"
+                                        @click="
+                                            ((showAlertDialog.id = opcao.id),
+                                            (showAlertDialog.active = true))
+                                        "
                                         ><Trash2 />Deletar</DropdownMenuItem
                                     >
                                 </DropdownMenuContent>
@@ -321,10 +398,16 @@ const searchOpcoes = async () => {
                     </TableRow>
                 </TableBody>
             </Table>
+
+            <Empty
+                v-if="opcaoStore.opcoes.length == 0"
+                msg="Nehuma opção encontrada"
+            />
         </div>
 
         <div class="flex flex-col gap-6">
             <Pagination
+                v-if="opcaoStore.opcoes.length > 0"
                 v-slot="{ page }"
                 :items-per-page="props.paginator.per_page"
                 :total="props.paginator.total"

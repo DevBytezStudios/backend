@@ -31,6 +31,7 @@ import { ref } from 'vue';
 import { toast, Toaster } from 'vue-sonner';
 import 'vue-sonner/style.css';
 import LoadingBar from '@/components/LoadingBar.vue';
+import Empty from '@/components/Empty.vue';
 
 interface Props {
     produtos: Produto[];
@@ -149,7 +150,7 @@ const searchProdutos = async () => {
 
         <div class="flex flex-col gap-6 h-full">
             <ListVisualization
-                v-if="produtosPesquisa?.length == 0"
+                v-if="produtosPesquisa?.length == 0 && produtos.length > 0"
                 :produtos="props.produtos"
                 :open-dialog="showDialog"
             />
@@ -159,6 +160,8 @@ const searchProdutos = async () => {
                 :produtos="produtosPesquisa"
                 :open-dialog="showDialog"
             />
+
+            <Empty v-if="produtos.length == 0" msg="Sem produtos encontrados!"/>
 
             <!-- ADICIONAR VISUALIZAÇÔES DIFERENTES DEPOIS -->
             <!-- <Tabs default-value="list" class="w-full">

@@ -58,6 +58,7 @@ import Button from '@/components/ui/button/Button.vue';
 import Input from '@/components/ui/input/Input.vue';
 import { toast, Toaster } from 'vue-sonner';
 import 'vue-sonner/style.css';
+import Empty from '@/components/Empty.vue';
 
 const deletePedido = async (idPedido: number) => {
     try {
@@ -203,7 +204,7 @@ const searchPedido = async () => {
             >
                 <div
                     class="flex w-full flex-row flex-wrap gap-3"
-                    v-if="pedidosPesquisa.length == 0"
+                    v-if="pedidosPesquisa.length > 0"
                 >
                     <CardPedido
                         v-for="(pedido, index) in pedidosFiltrados"
@@ -228,6 +229,10 @@ const searchPedido = async () => {
                         "
                     />
                 </div>
+                    <Empty
+                        v-if="pedidosFiltrados.length == 0 && pedidosPesquisa.length == 0"
+                        msg="Você não possui nenhum pedido!"
+                    />
             </TabsContent>
         </Tabs>
     </AppLayout>

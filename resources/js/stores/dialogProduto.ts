@@ -13,12 +13,12 @@ const useDialogProduto = defineStore('dialogProduto', {
     state: (): DialogState => ({
         produto: {
             id: 0,
-            nome: '',
-            descricao: '',
+            nome: "",
+            descricao: "",
             categoria: null,
             valor: 0,
             valor_desc: 0,
-            imagem: '',
+            imagem: "",
         },
         variacoes: [],
         categorias: null,
@@ -117,12 +117,12 @@ const useDialogProduto = defineStore('dialogProduto', {
         clearDialog() {
             this.produto = {
                 id: 0,
-                nome: '',
-                descricao: '',
+                nome: "",
+                descricao: "",
                 categoria: null,
                 valor: 0,
                 valor_desc: 0,
-                imagem: '',
+                imagem: "",
             };
             this.variacoes = [];
             this.categorias = null;
@@ -168,13 +168,13 @@ const useDialogProduto = defineStore('dialogProduto', {
                 };
             };
 
-            if (!this.produto.nome || this.produto.nome.trim() === '') {
+            if (!this.produto.nome || this.produto.nome.trim() === "") {
                 return error('O nome do produto é obrigatório.');
             }
 
             if (
                 !this.produto.descricao ||
-                this.produto.descricao.trim() === ''
+                this.produto.descricao.trim() === ""
             ) {
                 return error('A descrição do produto é obrigatória.');
             }

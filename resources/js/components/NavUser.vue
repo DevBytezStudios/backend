@@ -37,6 +37,7 @@ const mode = useColorMode();
 
 function toggleTheme() {
     mode.value = mode.value === 'dark' ? 'light' : 'dark';
+    confeitariaStore.theme = mode.value;
 }
 </script>
 

@@ -4,11 +4,12 @@ namespace App\Http\Controllers\Auth;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Throwable;
 
 class LoginController
 {
-    public function authenticate(Request $request)
+      public function authenticate(Request $request)
     {
         try {
             $credentials = $request->validate([
@@ -20,7 +21,7 @@ class LoginController
                 $request->session()->regenerate();
                 return redirect()->route("dashboard");
             }
-            
+
             return back()->withErrors([
                 'titulo' => 'Email ou senha inválidos',
             ]);
@@ -30,11 +31,6 @@ class LoginController
             ]);
         }
     }
-
-    public function googleLogin(Request $request){
-
-    }
-
 
     public function logout()
     {

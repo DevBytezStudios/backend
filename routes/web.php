@@ -72,14 +72,19 @@ Route::prefix("encomenda/")->group(function () {
 
     Route::post('/etapas/setordem', [EtapaController::class, 'setOrdem'])->name('encomenda.setOrdem');
 
+    Route::post('/etapas/delete', [EtapaController::class, 'delete'])->name('encomenda.delete');
+
     // OPCOES
     Route::get('/opcoes', [EtapaOpcaoController::class, 'getOpcoes'])->name('encomenda.opcoes');
 
     Route::get('/opcoes/getetapas', [EtapaOpcaoController::class, 'getEtapas'])->name('encomenda.getEtapas');
 
     Route::post('/opcoes/setopcao', [EtapaOpcaoController::class, 'setOpcao'])->name('encomenda.setOpcao');
-    
+
     Route::post('/opcoes/search', [EtapaOpcaoController::class, 'search'])->name('opcoes.search');
+
+    Route::post('/opcoes/delete', [EtapaOpcaoController::class, 'delete'])->name('opcoes.delete');
+
 
     // ESTILOS
     Route::get('/estilos', [EstiloController::class, 'getEstilos'])->name('encomenda.estilos');
@@ -103,8 +108,6 @@ Route::prefix("encomenda/")->group(function () {
 // AUTH
 Route::prefix("auth/")->group(function () {
     Route::post('/login', [LoginController::class, "authenticate"])->name('auth.login');
-    Route::post('/googlelogin', [LoginController::class, "googleLogin"])->name('auth.google');
-
     Route::get('/login', function () {
         return Inertia::render('auth/Login');
     })->name('auth.loginForm');

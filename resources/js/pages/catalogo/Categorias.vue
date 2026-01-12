@@ -38,7 +38,7 @@ interface Props {
 const props = defineProps<Props>();
 const loading = ref(false);
 const dialogCategoria = useDialogCategoria();
-console.log(dialogCategoria);
+dialogCategoria.categorias = props.categorias;
 const showDialog = ref(false);
 
 const saveCategoria = async () => {
@@ -57,6 +57,7 @@ const saveCategoria = async () => {
     }
 };
 
+import Empty from '@/components/Empty.vue';
 import LoadingBar from '@/components/LoadingBar.vue';
 import {
     AlertDialog,
@@ -182,7 +183,7 @@ const deletarCategoria = async () => {
 
         <div class="w-full overflow-x-auto">
             <Toaster />
-            <Table>
+            <Table v-if="dialogCategoria.categorias.length > 0">
                 <TableHeader>
                     <TableRow>
                         <TableHead class="hidden md:table-cell"
@@ -194,7 +195,7 @@ const deletarCategoria = async () => {
 
                 <TableBody>
                     <TableRow
-                        v-for="(categoria, index) in props.categorias"
+                        v-for="(categoria, index) in dialogCategoria.categorias"
                         :key="index"
                         class="group cursor-pointer transition-all duration-200 hover:scale-[1.00] hover:bg-muted/40 hover:shadow-sm"
                     >
@@ -246,6 +247,10 @@ const deletarCategoria = async () => {
                     </TableRow>
                 </TableBody>
             </Table>
+            <Empty
+                v-if="dialogCategoria.categorias.length == 0"
+                msg="Sem produtos encontrados!"
+            />
         </div>
     </AppLayout>
 </template>

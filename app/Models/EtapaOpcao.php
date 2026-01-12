@@ -18,7 +18,7 @@ class EtapaOpcao extends Model
     ];
     /** @use HasFactory<\Database\Factories\EtapaOpcaoFactory> */
     use HasFactory;
-    protected $casts = ['active' => 'boolean'];
+    protected $casts = ['active' => 'boolean','valor' => 'float'];
 
     public function etapa(): BelongsTo{
         return $this->belongsTo(Etapa::class,'id_etapa','id')->select('id','nome');

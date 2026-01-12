@@ -31,15 +31,13 @@ class Etapa extends Model
                 if (Storage::disk('public')->exists("etapas/" . $icone)) {
                     return Storage::url("etapas/" . $icone);
                 } else {
-                    return Storage::url("semImagem.jpg");
+                    return Storage::url("semIcone.svg");
                 }
             },
 
             set: fn($icone) => $icone
         );
     }
-
-
 
     // PEGAR OPCOES
     public function opcoes(): HasMany

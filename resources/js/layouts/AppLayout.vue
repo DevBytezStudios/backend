@@ -6,6 +6,7 @@ export const containerClass = 'w-full h-full';
 </script>
 
 <script setup lang="ts">
+import ConfeitariaController from '@/actions/App/Http/Controllers/Dashboard/ConfeitariaController';
 import AppSidebar from '@/components/AppSidebar.vue';
 import {
     Breadcrumb,
@@ -19,6 +20,8 @@ import {
     SidebarProvider,
     SidebarTrigger,
 } from '@/components/ui/sidebar';
+import useConfeitariaStore from '@/stores/ConfeitariaStore';
+import { useColorMode } from '@vueuse/core';
 
 
 interface Props{
@@ -26,6 +29,11 @@ interface Props{
 }
 
 const props = defineProps<Props>();
+const mode = useColorMode();
+const confeitariaStore = useConfeitariaStore();
+mode.value = confeitariaStore.theme;
+
+
 </script>
 
 <template>

@@ -74,6 +74,7 @@ import { computed, ref } from 'vue';
 import { toast, Toaster } from 'vue-sonner';
 import 'vue-sonner/style.css';
 
+
 import {
     AlertDialog,
     AlertDialogAction,
@@ -86,6 +87,7 @@ import {
 } from '@/components/ui/alert-dialog';
 
 import LoadingBar from '@/components/LoadingBar.vue';
+import Empty from '@/components/Empty.vue';
 
 // PESQUISA
 const searchValue = ref('');
@@ -140,8 +142,7 @@ const serachEncomenda = async () => {
 <template>
     <AppLayout page="Encomendas">
         <LoadingBar :loading="loading" />
-        <Toaster  theme="system"/>
-        <AlertDialog :open="showAlert.active">
+         <AlertDialog :open="showAlert.active">
             <AlertDialogContent>
                 <AlertDialogHeader>
                     <AlertDialogTitle
@@ -225,6 +226,10 @@ const serachEncomenda = async () => {
                     />
                 </div>
             </TabsContent>
+             <Empty
+                v-if="encomendasFiltradas.length == 0 && encomendaPesquisa.length == 0"
+                msg="Você não tem encomendas!"
+            />
         </Tabs>
     </AppLayout>
 </template>

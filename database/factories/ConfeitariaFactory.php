@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\Hash;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Confeitaria>
@@ -23,7 +24,7 @@ class ConfeitariaFactory extends Factory
             'cor_sec' => fake()->colorName(),
             'logo' => 'semImagem',
             'email' => 'teste@gmail.com',
-            'password' => bcrypt('senha123'),
+            'password' => Hash::make('senha123'),
         ];
     }
 }
