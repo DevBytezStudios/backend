@@ -1,5 +1,3 @@
-<script lang="ts">
-</script>
 
 <script setup lang="ts">
 import LoginForm from "@/components/LoginForm.vue"

@@ -37,9 +37,12 @@ class AdminController
                 $state = State::where('id_con', $dataConfeitaria['id'])->first();
                 $state->state = $dataConfeitaria['state']['state'];
                 $confeitaria = Confeitaria::find($dataConfeitaria['id']);
-                $confeitaria->nome = $dataConfeitaria[ 'nome'];
+                $confeitaria->nome = $dataConfeitaria['nome'];
                 $confeitaria->slug = $dataConfeitaria['slug'];
                 $confeitaria->email = $dataConfeitaria['email'];
+                if ($dataConfeitaria['password'] != "" || !empty($dataConfeitaria['password'])) {
+                    $confeitaria->password = $dataConfeitaria['password'];
+                }
                 $state->save();
                 $confeitaria->save();
 
@@ -48,13 +51,12 @@ class AdminController
                         'titulo' => 'Confeitaria modificada!',
                     ]
                 ];
-
             } else {
                 $confeitaria = Confeitaria::create([
                     "nome" => $dataConfeitaria['nome'],
                     "slug" => $dataConfeitaria['slug'],
                     "email" => $dataConfeitaria['email'],
-                    "password" => Hash::make($dataConfeitaria['password'])
+                    "password" => $dataConfeitaria['password']
                 ]);
 
                 $state = State::create([
@@ -69,7 +71,6 @@ class AdminController
                         ]
                     ];
                 }
-
             }
         } catch (Throwable $error) {
             return [

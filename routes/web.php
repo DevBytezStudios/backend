@@ -107,9 +107,15 @@ Route::prefix("encomenda/")->group(function () {
 
 // AUTH
 Route::prefix("auth/")->group(function () {
+    // LOGIN
     Route::post('/login', [LoginController::class, "authenticate"])->name('auth.login');
     Route::get('/login', function () {
         return Inertia::render('auth/Login');
     })->name('auth.loginForm');
     Route::get('/logout', [LoginController::class, "logout"])->name('login.logout');
+
+    // REGISTRO
+    Route::get("/register", function () {
+        return Inertia::render('auth/Register');
+    })->name('auth.register');
 });

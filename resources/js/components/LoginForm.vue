@@ -1,12 +1,7 @@
 <script setup lang="ts">
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import {
-    Field,
-    FieldGroup,
-    FieldLabel,
-    FieldSeparator,
-} from '@/components/ui/field';
+import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import {
     InputGroup,
@@ -15,7 +10,7 @@ import {
 } from '@/components/ui/input-group';
 import { cn } from '@/lib/utils';
 import { useForm, usePage } from '@inertiajs/vue3';
-import { EyeIcon } from 'lucide-vue-next';
+import { EyeClosedIcon, EyeIcon } from 'lucide-vue-next';
 import { ref, type HTMLAttributes } from 'vue';
 
 const props = defineProps<{
@@ -99,7 +94,8 @@ import { Toggle } from '@/components/ui/toggle';
                                         class="h-8 w-8"
                                         v-model="showPassword"
                                     >
-                                        <EyeIcon />
+                                        <EyeIcon v-if="showPassword == false" />
+                                        <EyeClosedIcon v-else />
                                     </Toggle>
                                 </InputGroupAddon>
                             </InputGroup>
