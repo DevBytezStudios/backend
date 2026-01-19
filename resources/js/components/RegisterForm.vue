@@ -20,34 +20,25 @@ import {
     StepperTrigger,
 } from '@/components/ui/stepper';
 import { Toggle } from '@/components/ui/toggle';
-import {
-    BookUser,
-    Check,
-    Circle,
-    Dot,
-    EyeClosedIcon,
-    EyeIcon,
-    Truck,
-} from 'lucide-vue-next';
+import axios from 'axios';
+import { Check, Circle, Dot, EyeClosedIcon, EyeIcon } from 'lucide-vue-next';
 import { ref } from 'vue';
-import { Toaster } from 'vue-sonner';
+import { toast, Toaster } from 'vue-sonner';
 import 'vue-sonner/style.css';
 import FieldDescription from './ui/field/FieldDescription.vue';
 import FieldLegend from './ui/field/FieldLegend.vue';
 import Input from './ui/input/Input.vue';
+import LoadingBar from './LoadingBar.vue';
 
 const currentStep = ref(1);
 const steps = [
     {
         step: 1,
         title: 'Email e Senha',
-        icon: BookUser,
     },
     {
         step: 2,
-        title: 'confeitaria',
-        description: 'Set your preferred',
-        icon: Truck,
+        title: 'Confeitaria',
     },
 ];
 
@@ -64,23 +55,19 @@ const info = ref({
 const showPassword = ref(false);
 
 function nextStep() {
-    // if (currentStep.value == 1) {
-    //     console.log(info.value.password);
-    //     if (info.value.email == '' || info.value.password == '') {
-    //         toast.warning('Email ou senha vazios!');
-    //         return;
-    //     }
+    console.log(info.value);
+    // ETAPA INFORMAÇÔES
+    if (currentStep.value == 1) {
+        if (info.value.email == '' || info.value.password == '') {
+            toast.warning('Email ou Senha inválidos!');
+            return;
+        }
 
-    //     if (info.value.password.length < 8) {
-    //         toast.warning('A senha precisa ter 8 carácteres!');
-    //     }
-
-    //     if (currentStep.value < steps.length) {
-    //         currentStep.value++;
-    //     }
-
-    //     return;
-    // }
+        if (info.value.password.length < 8) {
+            toast.warning('A senha precisa ter no minímo 8 carácteres!');
+            return;
+        }
+    }
 
     if (currentStep.value < steps.length) {
         currentStep.value++;
@@ -92,17 +79,53 @@ function prevStep() {
         currentStep.value--;
     }
 }
+
+const loading = ref(false);
+const saveConfeitaria = async () => {
+    if (
+        info.value.confeitaria.nome == '' ||
+        info.value.confeitaria.cor == '' ||
+        info.value.confeitaria.cor_sec == ''
+    ) {
+        toast.warning('Verifique todas as infomações!');
+        return;
+    }
+
+    try {
+        loading.value = !loading.value;
+        const formData = new FormData();
+        const data = {
+            confeitaria: info.value,
+        };
+
+        formData.append('data', JSON.stringify(data));
+
+        const response = await axios.post('/auth/register', formData, {
+            headers: { 'Content-Type': 'application/json' },
+        });
+
+        if (response.data.success) {
+            toast.error(response.data.success.titulo);
+            window.location.href = "/auth/login";
+        } else {
+            loading.value = !loading.value;
+            toast.error(response.data.error.titulo);
+        }
+    } catch ($error) {
+        console.log($error);
+    }
+};
 </script>
 
 <template>
     <Toaster position="bottom-center" />
-
+    <LoadingBar :loading="loading"/>
     <Stepper v-model="currentStep" class="flex w-full items-start gap-2">
         <StepperItem
             v-for="step in steps"
             :key="step.step"
             v-slot="{ state }"
-            class="relative flex w-full flex-col items-center"
+            class="relative flex w-full flex-col items-center capitalize"
             :step="step.step"
             :linear="true"
         >
@@ -263,11 +286,12 @@ function prevStep() {
 
                 <Button
                     class="w-full"
-                    @click="console.log(info)"
+                    @click="saveConfeitaria"
                     :style="{ backgroundColor: info.confeitaria.cor }"
                 >
                     <span class="mix-blend-normal">Proximo</span>
                 </Button>
+
                 <Button
                     variant="outline"
                     @click="prevStep"

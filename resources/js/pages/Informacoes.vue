@@ -29,11 +29,9 @@ const updateConf = async () => {
         const response = await confStore.setConfeitaria();
         if (response.success) {
             loading.value = !loading.value;
-
             toast.success(response.success.titulo);
         } else {
             loading.value = !loading.value;
-
             toast.error(response.error.titulo);
         }
     } catch ($error) {}

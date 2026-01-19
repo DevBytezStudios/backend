@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('slug');
             $table->string('cor_princ')->default('black');
             $table->string('cor_sec')->default('black');
-            $table->string('logo')->default('');
+            $table->string('logo')->default('semImagem.jpg');
             $table->string('email');
             $table->string('password');
             $table->timestamps();

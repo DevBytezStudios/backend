@@ -117,5 +117,7 @@ Route::prefix("auth/")->group(function () {
     // REGISTRO
     Route::get("/register", function () {
         return Inertia::render('auth/Register');
-    })->name('auth.register');
+    })->name('auth.registerForm');
+
+    Route::post('/register',[LoginController::class,'register'])->name('auth.register');
 });
