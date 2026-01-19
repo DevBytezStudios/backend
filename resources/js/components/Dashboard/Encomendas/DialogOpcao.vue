@@ -7,7 +7,7 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
-const emits = defineEmits(['close']);
+const emits = defineEmits(['close','update:open']);
 
 // CONFIGURAÇÔES DO FORM
 import { FieldGroup, FieldSet } from '@/components/ui/field';
@@ -67,7 +67,8 @@ const setOpcao = async () => {
     }
 };
 
-watch(props, (newValue) => {
+watch(props, async (newValue)  => {
+    await opcaoStore.getEtapas();
     if (opcaoStore.etapas.length == 0 && newValue.open == true) {
         opcaoStore.clear();
         emits('close');
@@ -78,7 +79,7 @@ watch(props, (newValue) => {
 </script>
 
 <template>
-    <Dialog :open="props.open">
+    <Dialog v-model:open="props.open"  @update:open="emits('close')">
         <LoadingBar :loading="loading" />
         <Toaster />
         <DialogContent
@@ -93,49 +94,6 @@ watch(props, (newValue) => {
                         <FieldSet>
                             <FieldGroup>
                                 <FieldGroup>
-                                    <Field>
-                                        <FieldLabel for="txtNome">
-                                            Nome da Opção
-                                        </FieldLabel>
-                                        <Input
-                                            id="txtNome"
-                                            placeholder="Ex.. Chocolate"
-                                            v-model="opcaoStore.opcao.nome"
-                                        />
-                                    </Field>
-                                    <Field>
-                                        <FieldLabel for="txtDesc">
-                                            Descrição do opcao
-                                        </FieldLabel>
-                                        <Textarea
-                                            id="txtDesc"
-                                            placeholder="Ex.. Feito com KitKat"
-                                            class="resize-none"
-                                            v-model="opcaoStore.opcao.descricao"
-                                        />
-                                    </Field>
-                                    <div class="grid grid-cols-3 gap-4">
-                                        <Field>
-                                            <FieldLabel for="numValor">
-                                                Valor
-                                            </FieldLabel>
-                                            <InputGroup>
-                                                <InputGroupAddon>
-                                                    <InputGroupText
-                                                        >R$</InputGroupText
-                                                    >
-                                                </InputGroupAddon>
-                                                <InputGroupInput
-                                                    type="number"
-                                                    min="0"
-                                                    placeholder="9,99"
-                                                    v-model="
-                                                        opcaoStore.opcao.valor
-                                                    "
-                                                />
-                                            </InputGroup>
-                                        </Field>
-                                    </div>
                                     <Field>
                                         <FieldLabel for="slEtapa">
                                             Etapa
@@ -161,44 +119,88 @@ watch(props, (newValue) => {
                                             </SelectContent>
                                         </Select>
                                     </Field>
-                                    <FieldSeparator />
-                                    <Field>
-                                        <FieldTitle>Configurações</FieldTitle>
-                                        <div
-                                            class="flex items-center space-x-2"
-                                        >
-                                            <Switch
-                                                id="swAtiva"
-                                                v-model="
-                                                    opcaoStore.opcao.active
-                                                "
+                                    <FieldGroup v-if="opcaoStore.opcao.etapa.id != 0">
+                                        <Field>
+                                            <FieldLabel for="txtNome">
+                                                Nome da Opção
+                                            </FieldLabel>
+                                            <Input
+                                                id="txtNome"
+                                                placeholder="Ex.. Chocolate"
+                                                v-model="opcaoStore.opcao.nome"
                                             />
-
-                                            <Label for="swAtiva">Ativa</Label>
-                                            <TooltipProvider>
-                                                <Tooltip>
-                                                    <TooltipTrigger as-child>
-                                                        <Button
-                                                            variant="outline"
+                                        </Field>
+                                        <Field>
+                                            <FieldLabel for="txtDesc">
+                                                Descrição do opcao
+                                            </FieldLabel>
+                                            <Textarea
+                                                id="txtDesc"
+                                                placeholder="Ex.. Feito com KitKat"
+                                                class="resize-none"
+                                                v-model="opcaoStore.opcao.descricao"
+                                            />
+                                        </Field>
+                                        <div class="grid grid-cols-3 gap-4">
+                                            <Field>
+                                                <FieldLabel for="numValor">
+                                                    Valor
+                                                </FieldLabel>
+                                                <InputGroup>
+                                                    <InputGroupAddon>
+                                                        <InputGroupText
+                                                            >R$</InputGroupText
                                                         >
-                                                            <InfoIcon />
-                                                        </Button>
-                                                    </TooltipTrigger>
-                                                    <TooltipContent
-                                                        class="w-80"
-                                                    >
-                                                        <p>
-                                                            Se ativada a opção
-                                                            aparece para o
-                                                            cliente, caso
-                                                            contrario não será
-                                                            mostrada
-                                                        </p>
-                                                    </TooltipContent>
-                                                </Tooltip>
-                                            </TooltipProvider>
+                                                    </InputGroupAddon>
+                                                    <InputGroupInput
+                                                        type="number"
+                                                        min="0"
+                                                        placeholder="9,99"
+                                                        v-model="
+                                                            opcaoStore.opcao.valor
+                                                        "
+                                                    />
+                                                </InputGroup>
+                                            </Field>
                                         </div>
-                                    </Field>
+                                        <FieldSeparator />
+                                        <Field>
+                                            <FieldTitle>Configurações</FieldTitle>
+                                            <div
+                                                class="flex items-center space-x-2"
+                                            >
+                                                <Switch
+                                                    id="swAtiva"
+                                                    v-model="
+                                                        opcaoStore.opcao.active
+                                                    "
+                                                />
+                                                <Label for="swAtiva">Ativa</Label>
+                                                <TooltipProvider>
+                                                    <Tooltip>
+                                                        <TooltipTrigger as-child>
+                                                            <Button
+                                                                variant="outline"
+                                                            >
+                                                                <InfoIcon />
+                                                            </Button>
+                                                        </TooltipTrigger>
+                                                        <TooltipContent
+                                                            class="w-80"
+                                                        >
+                                                            <p>
+                                                                Se ativada a opção
+                                                                aparece para o
+                                                                cliente, caso
+                                                                contrario não será
+                                                                mostrada
+                                                            </p>
+                                                        </TooltipContent>
+                                                    </Tooltip>
+                                                </TooltipProvider>
+                                            </div>
+                                        </Field>
+                                    </FieldGroup>
                                 </FieldGroup>
                             </FieldGroup>
                         </FieldSet>

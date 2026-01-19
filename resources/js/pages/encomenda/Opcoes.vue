@@ -155,7 +155,7 @@ const deleteEtapa = async () => {
 <template>
     <AppLayout page="Opções">
         <Toaster />
-        <DialogOpcao :open="showDialog" @close="showDialog = false" />
+        <DialogOpcao v-model:open="showDialog" @close="showDialog = false" @update:open="showDialog = false"/>
         <AlertDialog :open="showAlertDialog.active">
             <AlertDialogContent>
                 <AlertDialogHeader>

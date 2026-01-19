@@ -99,7 +99,11 @@ const deletarCategoria = async () => {
     <LoadingBar :loading="loading" />
     <AppLayout page="Categorias">
         <Toaster />
-        <Dialog :open="showDialog" theme="system">
+        <Dialog
+            :open="showDialog"
+            theme="system"
+            @update:open="(dialogCategoria.clearDialog(), (showDialog = false))"
+        >
             <DialogContent
                 class="max-h-[90vh] max-w-[90vw] overflow-y-auto rounded-lg p-6 md:max-w-150"
             >

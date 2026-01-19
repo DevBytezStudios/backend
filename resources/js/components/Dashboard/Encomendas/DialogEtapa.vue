@@ -97,7 +97,7 @@ const setEtapa = async () => {
 <template>
     <Toaster />
     <LoadingBar :loading="loading" />
-    <Sheet :modal="true" v-model:open="props.open">
+    <Sheet :modal="true" v-model:open="props.open"  @update:open="emit('close')">
         <SheetContent>
             <SheetHeader>
                 <SheetTitle>{{
@@ -223,7 +223,7 @@ const setEtapa = async () => {
 
             <SheetFooter>
                 <SheetClose @click="(etapaStore.clear(), emit('close'))">
-                    <Button variant="outline"> Voltar </Button>
+                    <Button variant="outline" class="w-full"> Voltar </Button>
                 </SheetClose>
                 <Button type="submit" @click="setEtapa()"> Salvar </Button>
             </SheetFooter>

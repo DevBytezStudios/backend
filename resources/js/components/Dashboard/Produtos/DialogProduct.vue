@@ -94,7 +94,7 @@ const saveProduct = async () => {
 </script>
 
 <template>
-    <Dialog>
+    <Dialog @update:open="emits('closeDialog')">
         <Toaster />
 
         <DialogContent

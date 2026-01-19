@@ -65,7 +65,7 @@ const setEstilo = async () => {
 </script>
 
 <template>
-    <Dialog :open="props.open">
+    <Dialog :open="props.open"  @update:open="emits('close')">
         <LoadingBar :loading="loading" />
         <Toaster/>
         <DialogContent

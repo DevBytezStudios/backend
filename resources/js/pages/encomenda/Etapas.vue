@@ -192,7 +192,7 @@ const deleteEtapa = async () => {
                         <TableCell class="font-medium">
                             {{ etapa.ordem }}</TableCell
                         >
-                        <TableCell>{{ etapa.nome }}</TableCell>
+                        <TableCell class="capitalize">{{ etapa.nome }}</TableCell>
                         <TableCell class="hidden md:table-cell">
                             <Badge
                                 variant="secondary"
