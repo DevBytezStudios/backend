@@ -114,7 +114,7 @@ watch(props, async (newValue)  => {
                                                     :key="index"
                                                     :value="etapa"
                                                 >
-                                                    {{ etapa.nome }}
+                                                    {{ etapa.nome.toLocaleUpperCase() }}
                                                 </SelectItem>
                                             </SelectContent>
                                         </Select>

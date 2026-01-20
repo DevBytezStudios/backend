@@ -44,13 +44,14 @@ class EtapaController
                 ];
             } else {
                 // VERIFICA SE EXISTE 
-                if (Etapa::where('nome', $etapa["nome"])->exists()) {
+                if (Etapa::where('id_con',$confeitaria->id)->where('nome', $etapa["nome"])->exists()) {
                     return [
                         'error' => [
                             'titulo' => 'Etapa já existe!',
                         ]
                     ];
                 }
+                
                 // CRIA
                 $newEtapa = Etapa::create([
                     "id_con" => $confeitaria->id,

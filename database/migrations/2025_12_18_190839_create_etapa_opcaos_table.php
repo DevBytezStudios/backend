@@ -15,7 +15,7 @@ return new class extends Migration
            $table->id();
             $table->unsignedBigInteger('id_etapa');
             $table->foreign('id_etapa')->references('id')->on('etapas')->onDelete('cascade')->onUpdate('cascade');
-            $table->string('nome')->unique();
+            $table->string('nome');
             $table->decimal('valor',10,2);
             $table->string('descricao');
             $table->boolean('active');
