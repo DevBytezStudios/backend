@@ -9,7 +9,7 @@ import {
     InputGroupInput,
 } from '@/components/ui/input-group';
 import { cn } from '@/lib/utils';
-import { useForm, usePage } from '@inertiajs/vue3';
+import { Link, useForm, usePage } from '@inertiajs/vue3';
 import { EyeClosedIcon, EyeIcon } from 'lucide-vue-next';
 import { ref, type HTMLAttributes } from 'vue';
 
@@ -46,6 +46,7 @@ const login = () => {
 };
 
 import { Toggle } from '@/components/ui/toggle';
+import FieldDescription from './ui/field/FieldDescription.vue';
 </script>
 
 <template>
@@ -71,7 +72,8 @@ import { Toggle } from '@/components/ui/toggle';
                             <div class="flex items-center">
                                 <FieldLabel for="password"> Senha </FieldLabel>
                                 <a
-                                    href="#"
+                                    href="https://wa.me/5511949335503?text=Ol%C3%A1%2C%20perdi%20meu%20acesso%20ao%20sistema!"
+                                    target="_blank"
                                     class="ml-auto text-sm underline-offset-4 hover:underline"
                                 >
                                     Esqueceu a senha?
@@ -104,6 +106,10 @@ import { Toggle } from '@/components/ui/toggle';
                             <Button type="button" @click="login">
                                 Logar
                             </Button>
+                            <FieldDescription class="text-center">
+                                Não tem uma conta?
+                                <Link href="/auth/register"> Cadastre-se </Link>
+                            </FieldDescription>
                         </Field>
                     </FieldGroup>
                 </form>
