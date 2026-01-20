@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('id_con');
             $table->foreign('id_con')->references('id')->on('confeitarias')->onDelete('cascade')->onUpdate('cascade');
-            $table->string('nome')->unique();
+            $table->string('nome');
             $table->integer('ordem');
             $table->boolean('required');
             $table->boolean('multiple');
