@@ -13,10 +13,14 @@ class EstiloController
 {
     public function getEStilos()
     {
-        $confeitaria = Auth::User();
+      try{
+          $confeitaria = Auth::User();
         $estilos = Estilo::where('id_con', $confeitaria->id)->get();
 
         return Inertia::render('encomenda/Estilos', ['estilos' => $estilos]);
+      }catch(Throwable $error){
+        return redirect()->route("auth.loginForm");
+      }
     }
 
 
