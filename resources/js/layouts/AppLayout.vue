@@ -6,7 +6,6 @@ export const containerClass = 'w-full h-full';
 </script>
 
 <script setup lang="ts">
-import ConfeitariaController from '@/actions/App/Http/Controllers/Dashboard/ConfeitariaController';
 import AppSidebar from '@/components/AppSidebar.vue';
 import {
     Breadcrumb,

@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Models\Categoria;
 use Cocur\Slugify\Slugify;
 use App\Models\Confeitaria;
 use App\Models\Estilo;
 use App\Models\Etapa;
 use App\Models\EtapaOpcao;
 use App\Models\Opcao;
+use App\Models\Produto;
 use App\Models\State;
+use App\Models\Variacao;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -49,6 +52,7 @@ class LoginController
             if (Confeitaria::where('email', $dataConfeitaria['email'])->where('nome', $dataConfeitaria['confeitaria']['nome'])->first() == null) {
                 $confeitaria = Confeitaria::create([
                     'email' => $dataConfeitaria['email'],
+                    'telefone' => $dataConfeitaria['telefone'],
                     'password' => Hash::make($dataConfeitaria['password']),
                     'nome' =>  $dataConfeitaria['confeitaria']['nome'],
                     'slug' => $slugify->slugify($dataConfeitaria['confeitaria']['nome']),
@@ -60,6 +64,7 @@ class LoginController
                     'id_con' => $confeitaria->id,
                 ]);
                 $seeder = $this->seedEncomenda($confeitaria->id);
+                $seeder = $this->seedCatalogo($confeitaria->id);
                 if ($seeder == true) {
                     return [
                         'success' => [
@@ -292,7 +297,6 @@ class LoginController
             ],
         ];
 
-
         // ESTILO
         $estilosDefault = [
             [
@@ -369,7 +373,171 @@ class LoginController
         }
     }
 
-    protected function seedCatalogo($idConf){
+    protected function seedCatalogo($idConf)
+    {
+        $categoriasDefault = [
+            ['titulo' => 'Docinhos'],
+            ['titulo' => 'Salgados'],
+            ['titulo' => 'Tortas'],
+            ['titulo' => 'Cupcakes'],
+        ];
 
+        $produtosDefault = [
+
+            //Brigadeiro Gourmet
+            'Docinhos' => [
+                [
+                    'nome' => 'Brigadeiro Gourmet',
+                    'descricao' => 'Brigadeiros artesanais de diversos sabores premium',
+                    'valor' => 60.00,
+                    'valor_desc' => 0,
+                    'imagem' => 'semImagem.jpg',
+                    'variacoes' => [
+                        [
+                            'titulo' => 'Quantidade',
+                            'opcoes' => [
+                                ['nome' => '30 unidades', 'valor' => -15.00],
+                                ['nome' => '50 unidades', 'valor' => 0.00],
+                                ['nome' => '100 unidades', 'valor' => 50.00],
+                            ]
+                        ],
+                        [
+                            'titulo' => 'Sabores',
+                            'opcoes' => [
+                                ['nome' => 'Tradicional', 'valor' => 0.00],
+                                ['nome' => 'Chocolate Branco', 'valor' => 0.00],
+                                ['nome' => 'Nutella', 'valor' => 15.00],
+                                ['nome' => 'Pistache', 'valor' => 20.00],
+                                ['nome' => 'Maracujá', 'valor' => 5.00],
+                                ['nome' => 'Paçoca', 'valor' => 5.00],
+                            ]
+                        ]
+                    ],
+                ],
+            ],
+
+            // PRODUTO 3: Coxinha
+            'Salgados' => [
+                [
+                    'nome' => 'Coxinha',
+                    'descricao' => 'Coxinha crocante com recheios variados',
+                    'valor' => 4.50,
+                    'valor_desc' => 0,
+                    'imagem' => 'semImagem.jpg',
+                    'variacoes' => [
+                        [
+                            'titulo' => 'Recheio',
+                            'opcoes' => [
+                                ['nome' => 'Frango com Catupiry', 'valor' => 0.00],
+                                ['nome' => 'Carne', 'valor' => 0.50],
+                                ['nome' => 'Queijo', 'valor' => 1.00],
+                            ]
+                        ],
+                        [
+                            'titulo' => 'Tamanho',
+                            'opcoes' => [
+                                ['nome' => 'Mini', 'valor' => -1.50],
+                                ['nome' => 'Tradicional', 'valor' => 0.00],
+                                ['nome' => 'Grande', 'valor' => 2.00],
+                            ]
+                        ],
+                    ]
+                ],
+
+            ],
+
+            // PRODUTO 4: Torta de Limão
+            'Tortas' =>
+            [
+                [
+                    'nome' => 'Torta de Limão',
+                    'descricao' => 'Torta crocante com recheio cremoso de limão e merengue',
+                    'valor' => 35.00,
+                    'valor_desc' => 0,
+                    'imagem' => 'semImagem.jpg',
+                    'variacoes' => [
+                        [
+                            'titulo' => 'Tamanho',
+                            'opcoes' => [
+                                ['nome' => 'Individual', 'valor' => 0.00],
+                                ['nome' => 'Média (6-8 fatias)', 'valor' => 25.00],
+                                ['nome' => 'Grande (12-15 fatias)', 'valor' => 50.00],
+                            ]
+                        ],
+                    ]
+                ],
+
+            ],
+
+            // PRODUTO: Cupcake Red Velvet
+             'Cupkakes' => 
+            [
+               [
+                    'nome' => 'Cupcake Red Velvet',
+                    'descricao' => 'Cupcake aveludado com frosting de cream cheese',
+                    'valor' => 48.00,
+                    'valor_desc' => 0,
+                    'imagem' => 'semImagem.jpg',
+                    'variacoes' => [
+                        [
+                            'titulo' => 'Quantidade',
+                            'opcoes' => [
+                                ['nome' => '6 unidades', 'valor' => 0.00],
+                                ['nome' => '12 unidades', 'valor' => 42.00],
+                                ['nome' => '24 unidades', 'valor' => 78.00],
+                            ]
+                        ],
+                        [
+                            'titulo' => 'Decoração',
+                            'opcoes' => [
+                                ['nome' => 'Simples', 'valor' => 0.00],
+                                ['nome' => 'Personalizada', 'valor' => 15.00],
+                            ]
+                        ],
+                    ]
+                ],
+
+            ],
+        ];
+
+        try {
+            //PREENCHENDO OS DADOS
+            foreach ($categoriasDefault as $categoria) {
+                $cat = Categoria::create([
+                    'id_con' => $idConf,
+                    ...$categoria
+                ]);
+
+                foreach ($produtosDefault[$cat['titulo']] as $produto) {
+                    $ormProduto = Produto::create([
+                        "id_con" => $idConf,
+                        "id_cat" => $cat->id,
+                        ...$produto
+                    ]);
+
+                    foreach ($produto['variacoes'] as $variacao) {
+                        $ormVariacao = Variacao::create([
+                            "id_produto" => $ormProduto->id,
+                            ...$variacao,
+                        ]);
+
+                        foreach ($variacao['opcoes'] as $opcao) {
+                            $ormOpcao = Opcao::create([
+                                "id_var" => $ormVariacao->id,
+                                ...$opcao,
+                            ]);
+                        }
+                    }
+                }
+            }
+            return true;
+        } catch (Throwable $error) {
+            return [
+                'error' => [
+                    'titulo' => 'Algo de errado!',
+                    'message' => $error->getMessage(),
+                ]
+            ];
+        }
     }
 }

@@ -26,6 +26,7 @@ import { Check, Circle, Dot, EyeClosedIcon, EyeIcon } from 'lucide-vue-next';
 import { ref } from 'vue';
 import { toast, Toaster } from 'vue-sonner';
 import 'vue-sonner/style.css';
+import InputTelefone from './InputTelefone.vue';
 import LoadingBar from './LoadingBar.vue';
 import FieldDescription from './ui/field/FieldDescription.vue';
 import FieldLegend from './ui/field/FieldLegend.vue';
@@ -47,6 +48,7 @@ const steps = [
 const info = ref({
     email: '',
     password: '',
+    telefone: '',
     confeitaria: {
         nome: '',
         cor_sec: '',
@@ -59,8 +61,13 @@ function nextStep() {
     console.log(info.value);
     // ETAPA INFORMAÇÔES
     if (currentStep.value == 1) {
-        if (info.value.email == '' || info.value.password == '') {
-            toast.warning('Email ou Senha inválidos!');
+        if (
+            info.value.email == '' ||
+            info.value.password == '' ||
+            info.value.telefone.length < 11 ||
+            info.value.telefone == ''
+        ) {
+            toast.warning('Dados inválidos!');
             return;
         }
 
@@ -217,11 +224,13 @@ const saveConfeitaria = async () => {
                                         </Toggle>
                                     </InputGroupAddon>
                                 </InputGroup>
+                            </Field>
+                            <Field>
+                                <FieldLabel for="text"> Telefone </FieldLabel>
+                                <InputTelefone v-model="info.telefone" />
                                 <FieldDescription class="text-center">
                                     Já tem uma conta?
-                                    <Link href="/auth/login">
-                                        Entrar
-                                    </Link>
+                                    <Link href="/auth/login"> Entrar </Link>
                                 </FieldDescription>
                             </Field>
                         </FieldGroup>

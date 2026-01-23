@@ -20,6 +20,7 @@ class ConfeitariaFactory extends Factory
         return [
             'nome' => 'Doce Sabor',
             'slug' => 'confeitariateste',
+            'telefone' => '11949335503',
             'cor_princ' => fake()->colorName(),
             'cor_sec' => fake()->colorName(),
             'logo' => 'semImagem',

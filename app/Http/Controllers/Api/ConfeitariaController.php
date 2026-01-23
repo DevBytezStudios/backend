@@ -28,7 +28,7 @@ class ConfeitariaController extends Controller
                 ];
             }
 
-            $this->confeitaria = DB::table('confeitarias')->select('id', 'nome', 'slug', 'cor_princ', 'cor_sec', 'logo')->where('slug', $request->slug)->first();
+            $this->confeitaria = DB::table('confeitarias')->select('id', 'nome', 'slug', 'cor_princ', 'cor_sec', 'logo','telefone')->where('slug', $request->slug)->first();
 
 
             // VERIFICAR STATE

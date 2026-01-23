@@ -20,7 +20,8 @@ class Confeitaria extends Authenticatable
         'cor_sec',
         'logo',
         'email',
-        'password'
+        'password',
+        'telefone'
     ];
 
     protected $hidden = [

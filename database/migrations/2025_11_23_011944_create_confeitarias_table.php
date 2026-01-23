@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('nome');
             $table->string('slug');
+            $table->string('telefone')->default('');
             $table->string('cor_princ')->default('black');
             $table->string('cor_sec')->default('black');
             $table->string('logo')->default('semImagem.jpg');

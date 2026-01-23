@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import UploadComponent from '@/components/Dashboard/UploadComponent.vue';
+import InputTelefone from '@/components/InputTelefone.vue';
 import LoadingBar from '@/components/LoadingBar.vue';
 import { Button } from '@/components/ui/button';
 import {
@@ -55,7 +56,7 @@ const updateConf = async () => {
                     </FieldGroup>
                     <FieldGroup>
                         <Field>
-                            <FieldLabel for="checkout-7j9-card-name-43j">
+                            <FieldLabel>
                                 Nome da confeitaria
                             </FieldLabel>
                             <Input
@@ -63,14 +64,20 @@ const updateConf = async () => {
                                 v-model="confStore.confeitaria.nome"
                             />
                         </Field>
+                         <Field>
+                            <FieldLabel>
+                                Telefone
+                            </FieldLabel>
+                           <InputTelefone v-model="confStore.confeitaria.telefone"/>
+                        </Field>
                     </FieldGroup>
                     <FieldGroup>
                         <Field>
-                            <FieldLegend>Cores da confeitaria</FieldLegend>
+                            <FieldLegend>Cores</FieldLegend>
                             <FieldDescription>
                                 Escolha as cores dos botões e demais
                             </FieldDescription>
-                            <FieldLabel for="checkout-7j9-card-name-43j">
+                            <FieldLabel>
                                 Cor principal
                             </FieldLabel>
                             <input
@@ -79,7 +86,7 @@ const updateConf = async () => {
                                 name="corPrincipal"
                                 v-model="confStore.confeitaria.cor_princ"
                             />
-                            <FieldLabel for="checkout-7j9-card-name-43j">
+                            <FieldLabel>
                                 Cor segundaria
                             </FieldLabel>
                             <input
