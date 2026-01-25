@@ -28,7 +28,7 @@ class ConfeitariaController extends Controller
                 ];
             }
 
-            $this->confeitaria = DB::table('confeitarias')->select('id', 'nome', 'slug', 'cor_princ', 'cor_sec', 'logo','telefone')->where('slug', $request->slug)->first();
+            $this->confeitaria = DB::table('confeitarias')->select('id', 'nome', 'slug', 'cor_princ', 'cor_sec', 'logo', 'telefone')->where('slug', $request->slug)->first();
 
 
             // VERIFICAR STATE
@@ -47,21 +47,18 @@ class ConfeitariaController extends Controller
                             'hasMore' => $paginator->hasMorePages(),
                         ]
                     ];
+                } else {
 
-                }else{
-
-                     $catalogo = [
+                    $catalogo = [
                         'confeitaria' => $this->confeitaria,
                         'categorias' => [],
                         'produtos' => [],
                     ];
-
                 }
 
                 if ($this->confeitaria != null) {
                     return response()->json($catalogo);
                 }
-
             } else if ($state->state == "paralyzed") {
 
                 return [
@@ -79,12 +76,8 @@ class ConfeitariaController extends Controller
                         'titulo' => 'Confeitaria Inativa!',
                     ]
                 ];
-                
             }
-
-            dd('adada');
         } catch (Throwable $error) {
-
             return [
                 'error' => [
                     'titulo' => 'Algo de errado!',
@@ -126,23 +119,45 @@ class ConfeitariaController extends Controller
     public function getEtapas(Request $request)
     {
         try {
-            if ($request->slug == null) {
+            // VERIFICAR STATE
+            $state = State::where('id_con', $this->confeitaria->id)->first();
+            if ($state->state == "active") {
+                if ($request->slug == null) {
+                    return [
+                        'titulo' => 'Confeitaria não encontrada!',
+                        'message' => 'Slug Vazio!',
+                        'code' => 404,
+                    ];
+                }
+
+                $this->confeitaria = DB::table('confeitarias')->select('id', 'nome', 'slug', 'cor_princ', 'cor_sec', 'logo')->where('slug', $request->slug)->first();
+
+
+                // PRAPRANDO OS DADOS
+                $etapas = Etapa::where('id_con', $this->confeitaria->id)->select('id', 'id_con', 'nome', 'ordem', 'icone', 'required', 'multiple')->orderby('ordem', 'ASC')->get();
+
                 return [
-                    'titulo' => 'Confeitaria não encontrada!',
-                    'message' => 'Slug Vazio!',
-                    'code' => 404,
+                    'confeitaria' => $this->confeitaria,
+                    'etapas' => $etapas
+                ];
+            } else if ($state->state == "paralyzed") {
+
+                return [
+
+                    'error' => [
+                        'titulo' => 'Confeitaria Paralizada!',
+
+                    ]
+
+                ];
+            } else if ($state->state == "inactive") {
+
+                return [
+                    'error' => [
+                        'titulo' => 'Confeitaria Inativa!',
+                    ]
                 ];
             }
-
-            $this->confeitaria = DB::table('confeitarias')->select('id', 'nome', 'slug', 'cor_princ', 'cor_sec', 'logo')->where('slug', $request->slug)->first();
-
-            // PRAPRANDO OS DADOS
-            $etapas = Etapa::where('id_con', $this->confeitaria->id)->select('id', 'id_con', 'nome', 'ordem', 'icone', 'required', 'multiple')->orderby('ordem', 'ASC')->get();
-
-            return [
-                'confeitaria' => $this->confeitaria,
-                'etapas' => $etapas
-            ];
         } catch (Throwable $error) {
             return [
                 'error' => [
@@ -175,7 +190,7 @@ class ConfeitariaController extends Controller
                 ->whereHas('etapa', function ($query) {
                     $query->where('id_con', $this->confeitaria->id)->where('id_etapa', $this->idetapa);
                 })->select('id', 'id_etapa', 'nome', 'valor', 'active', 'descricao')->get();
-            
+
             return [
                 'opcoes' => $opcoes
             ];

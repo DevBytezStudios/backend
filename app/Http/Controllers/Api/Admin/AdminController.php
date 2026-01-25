@@ -32,7 +32,7 @@ class AdminController
     {
         try {
             $data = json_decode($request->data, true);
-            $dataConfeitaria = $data['confeitaria'];
+            $dataConfeitaria = $data['confeitaria'];    
             if ($dataConfeitaria['id'] != 0) {
                 $state = State::where('id_con', $dataConfeitaria['id'])->first();
                 $state->state = $dataConfeitaria['state']['state'];
@@ -40,7 +40,7 @@ class AdminController
                 $confeitaria->nome = $dataConfeitaria['nome'];
                 $confeitaria->slug = $dataConfeitaria['slug'];
                 $confeitaria->email = $dataConfeitaria['email'];
-                if ($dataConfeitaria['password'] != "" && !empty($dataConfeitaria['password'])) {
+                if ($dataConfeitaria['password'] != "") {
                     $confeitaria->password = Hash::make($dataConfeitaria['password']);
                 }
                 $state->save();
