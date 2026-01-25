@@ -36,7 +36,7 @@ class Confeitaria extends Authenticatable
         // PEGAR A URL DA logo COMPLETA AO PEDIR ELA
         return Attribute::make(
             get: function ($logo) {
-                if (Storage::disk('public')->exists("confeitarias/" . $logo) || $logo != ' ') {
+                if (Storage::disk('public')->exists("confeitarias/" . $logo) && $logo != "") {
                     return Storage::url("confeitarias/" . $logo);
                 } else {
                     return Storage::url("semImagem.jpg");

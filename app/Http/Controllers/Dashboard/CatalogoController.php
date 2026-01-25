@@ -17,12 +17,20 @@ class CatalogoController
 
     public function dashboard()
     {
+
+        $confeitaria = Auth::User();
+
+        $entregashoje = Pedido::where('id_con', $confeitaria->id)->where('data', today())->count() + Encomenda::where('id_con', $confeitaria->id)->where('data_entrega', today())->count();
+
+        $proximasentregas = Pedido::where('id_con', $confeitaria->id)->where('data', now()->addDays(5))->count() + Encomenda::where('id_con', $confeitaria->id)->where('data_entrega', now()->addDays(5))->count();
+
         try {
-            $confeitaria = Auth::User();
             $data = [
-                "totalpedidos" => Pedido::where('id_con', $confeitaria->id)->count(),
-                "pedidoshoje" => Pedido::where('id_con', $confeitaria->id)->where('data', today())->where('status', 'em_progresso')->count(),
-                "totalprodutos" => Produto::where('id_con', $confeitaria->id)->count(),
+                "entregasHoje" => $entregashoje,
+
+                "proximasEntregas" => $proximasentregas,
+
+                "produtosTotais" => Produto::where('id_con', $confeitaria->id)->count(),
             ];
 
             $pedidos = Pedido::with(['cliente', 'pedidoItem'])->where('id_con', $confeitaria->id)->orderBy('data', 'DESC')->where('data', today())->where('status', 'em_progresso')->get()->select('id', 'code', 'pagamento', 'data', 'status', 'produto', 'pedidoItem', 'cliente');

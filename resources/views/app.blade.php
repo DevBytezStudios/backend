@@ -13,7 +13,7 @@
                     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 
                     if (prefersDark) {
-                        document.documentElement.classList.add('dark');
+                         document.documentElement.classList.add('dark');
                     }
                 }
             })();
@@ -32,8 +32,8 @@
 
         <title inertia>{{ config('app.name', 'Laravel') }}</title>
 
-        <link rel="icon" href="/LogoTransp.svg" sizes="any">
-        <link rel="icon" href="/LogoTransp.svg" type="image/svg+xml">
+        <link rel="icon" href="/logo.png" sizes="any">
+        <link rel="icon" href="/logo.png" type="image/svg+xml">
         <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
         <link rel="preconnect" href="https://fonts.bunny.net">

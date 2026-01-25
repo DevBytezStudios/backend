@@ -470,9 +470,9 @@ class LoginController
             ],
 
             // PRODUTO: Cupcake Red Velvet
-             'Cupkakes' => 
+            'Cupkakes' =>
             [
-               [
+                [
                     'nome' => 'Cupcake Red Velvet',
                     'descricao' => 'Cupcake aveludado com frosting de cream cheese',
                     'valor' => 48.00,

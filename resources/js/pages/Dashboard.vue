@@ -1,20 +1,30 @@
 <script setup lang="ts">
 import CardEncomenda from '@/components/Dashboard/Home/CardEncomenda.vue';
 import CardPedido from '@/components/Dashboard/Home/CardPedido.vue'; //CARD DE PEDIDO PAR A HOME
+import ButtonGroup from '@/components/ui/button-group/ButtonGroup.vue';
+import ButtonGroupSeparator from '@/components/ui/button-group/ButtonGroupSeparator.vue';
+import Button from '@/components/ui/button/Button.vue';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import AppLayout from '@/layouts/AppLayout.vue';
 import useCofeitariaStrore from '@/stores/ConfeitariaStore';
 import { Confeitaria, Encomenda, Pedido } from '@/types/types';
-import { CalendarIcon, PackageIcon, ShoppingBagIcon } from 'lucide-vue-next';
+import {
+    ArrowBigRightDashIcon,
+    CalendarIcon,
+    CopyIcon,
+    Link,
+    PackageIcon,
+    ShoppingBagIcon,
+} from 'lucide-vue-next';
 import { computed, onMounted, ref } from 'vue';
 import { toast, Toaster } from 'vue-sonner';
 import 'vue-sonner/style.css';
 const confeitariaStore = useCofeitariaStrore();
 
 interface Data {
-    totalpedidos: number;
-    pedidoshoje: number;
-    totalprodutos: number;
+    entregasHoje: number;
+    proximasEntregas: number;
+    produtosTotais: number;
 }
 
 interface Props {
@@ -26,9 +36,9 @@ interface Props {
 
 const props = defineProps<Props>();
 confeitariaStore.confeitaria = props.confeitaria;
-const totalPedidos = props.data.totalpedidos;
-const pedidosHoje = props.data.pedidoshoje;
-const totalProdutos = props.data.totalprodutos;
+const entregasHoje = props.data.entregasHoje;
+const proximasEntregas = props.data.proximasEntregas;
+const produtosTotais = props.data.produtosTotais;
 
 // CONFIGURAR OS PEDIDOS
 const pedidos = ref([...props.pedidos]);
@@ -72,58 +82,113 @@ onMounted(() => {
             }
         });
 });
+
+// url para o app
+const urlApp = `https://app.bakerfast.com.br/${confeitariaStore.confeitaria.slug}`;
+const copyLink = async () => {
+    try {
+        await navigator.clipboard.writeText(urlApp);
+        toast.success('Link copiado!');
+    } catch (err) {
+        toast.error('Erro ao copiar!');
+    }
+};
 </script>
 
 <template>
     <AppLayout page="Home">
         <Toaster position="bottom-center" />
+
+        <!-- CARD PARA O LINK DO APP -->
+        <Card class="rounded-xl border bg-background">
+            <CardHeader
+                class="flex flex-row items-center justify-between space-y-0 pb-2"
+            >
+                <div class="flex items-center gap-2">
+                    <Link class="h-5 w-5 text-muted-foreground" />
+                    <CardTitle class="text-sm font-semibold">
+                        Link para o App
+                    </CardTitle>
+                </div>
+            </CardHeader>
+
+            <CardContent
+                class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"
+            >
+                <!-- Texto -->
+                <div class="max-w-md space-y-1">
+                    <p class="text-sm text-muted-foreground">
+                        Compartilhe este link com seus clientes para receber
+                        <span class="font-medium text-foreground"
+                            >pedidos e encomendas</span
+                        >
+                        diretamente no sistema.
+                    </p>
+                </div>
+
+                <!-- Ações -->
+                <ButtonGroup class="w-full sm:w-auto">
+                    <Button variant="outline" @click="copyLink">
+                        <CopyIcon class="mr-2 h-4 w-4" />
+                        Copiar link
+                    </Button>
+
+                    <ButtonGroupSeparator />
+
+                    <Button variant="secondary" as-child>
+                        <a :href="urlApp" target="_blank">
+                            Acessar
+                            <ArrowBigRightDashIcon class="ml-2 h-4 w-4" />
+                        </a>
+                    </Button>
+                </ButtonGroup>
+            </CardContent>
+        </Card>
+
         <!-- CARDS -->
         <div class="grid auto-rows-min gap-4 md:grid-cols-3">
-            <!-- Total de pedidos -->
             <Card class="rounded-xl">
                 <CardHeader
                     class="flex flex-row items-center justify-between pb-2"
                 >
                     <CardTitle class="text-sm font-medium">
-                        Pedidos totais
+                        Entregas Hoje (Pedidos + Encomendas)
                     </CardTitle>
                     <PackageIcon class="h-5 w-5 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
                     <div class="text-2xl font-bold">
-                        {{ totalPedidos }}
+                        {{ entregasHoje }}
                     </div>
                 </CardContent>
             </Card>
-            <!-- Pedidos hoje -->
             <Card class="rounded-xl">
                 <CardHeader
                     class="flex flex-row items-center justify-between pb-2"
                 >
                     <CardTitle class="text-sm font-medium">
-                        Pedidos hoje
+                        Proxímas Entregas (até 5 dias)
                     </CardTitle>
                     <CalendarIcon class="h-5 w-5 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
                     <div class="text-2xl font-bold">
-                        {{ pedidosHoje }}
+                        {{ proximasEntregas }}
                     </div>
                 </CardContent>
             </Card>
-            <!-- Produtos cadastrados -->
             <Card class="rounded-xl">
                 <CardHeader
                     class="flex flex-row items-center justify-between pb-2"
                 >
                     <CardTitle class="text-sm font-medium">
-                        Produtos ativos
+                        Produtos Totais
                     </CardTitle>
                     <ShoppingBagIcon class="h-5 w-5 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
                     <div class="text-2xl font-bold">
-                        {{ totalProdutos }}
+                        {{ produtosTotais }}
                     </div>
                 </CardContent>
             </Card>
@@ -159,7 +224,7 @@ onMounted(() => {
         <div class="flex w-full flex-col gap-3">
             <!-- Título -->
             <div class="flex items-center justify-between">
-                <h2 class="text-sm font-semibold">Encomendas Proximas</h2>
+                <h2 class="text-sm font-semibold">Encomendas</h2>
                 <span class="text-xs text-muted-foreground">
                     {{ arrEncomendas.length }} Encomendas
                 </span>
@@ -181,7 +246,7 @@ onMounted(() => {
                 v-else
                 class="flex items-center justify-center rounded-lg border border-dashed p-6 text-sm text-muted-foreground"
             >
-                Nenhuma encomenda proxima 🎂
+                Nenhuma  🎂
             </div>
         </div>
     </AppLayout>
