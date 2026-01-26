@@ -51,6 +51,7 @@ class AdminController
                         'titulo' => 'Confeitaria modificada!',
                     ]
                 ];
+                
             } else {
                 $confeitaria = Confeitaria::create([
                     "nome" => $dataConfeitaria['nome'],

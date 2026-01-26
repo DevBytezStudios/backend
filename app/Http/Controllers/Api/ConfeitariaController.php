@@ -48,7 +48,6 @@ class ConfeitariaController extends Controller
                         ]
                     ];
                 } else {
-
                     $catalogo = [
                         'confeitaria' => $this->confeitaria,
                         'categorias' => [],

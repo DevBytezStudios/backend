@@ -63,6 +63,7 @@ class LoginController
                 State::create([
                     'id_con' => $confeitaria->id,
                 ]);
+                
                 $seeder = $this->seedEncomenda($confeitaria->id);
                 $seeder = $this->seedCatalogo($confeitaria->id);
                 if ($seeder == true) {
