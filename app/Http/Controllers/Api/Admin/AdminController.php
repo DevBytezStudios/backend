@@ -40,8 +40,7 @@ class AdminController
                 $confeitaria->nome = $dataConfeitaria['nome'];
                 $confeitaria->slug = $dataConfeitaria['slug'];
                 $confeitaria->email = $dataConfeitaria['email'];
-                return $dataConfeitaria['password'];
-                if ($dataConfeitaria['password'] != "") {
+                if (isset($dataConfeitaria['password']) && $dataConfeitaria['password'] != "") {
                     $confeitaria->password = Hash::make($dataConfeitaria['password']);
                 }
                 $state->save();
