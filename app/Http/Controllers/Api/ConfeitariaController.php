@@ -121,7 +121,6 @@ class ConfeitariaController extends Controller
         try {
             // VERIFICAR STATE
             $state = State::where('id_con', $this->confeitaria->id)->first();
-            if ($state->state == "active") {
                 if ($request->slug == null) {
                     return [
                         'titulo' => 'Confeitaria não encontrada!',
@@ -140,24 +139,6 @@ class ConfeitariaController extends Controller
                     'confeitaria' => $this->confeitaria,
                     'etapas' => $etapas
                 ];
-            } else if ($state->state == "paralyzed") {
-
-                return [
-
-                    'error' => [
-                        'titulo' => 'Confeitaria Paralizada!',
-
-                    ]
-
-                ];
-            } else if ($state->state == "inactive") {
-
-                return [
-                    'error' => [
-                        'titulo' => 'Confeitaria Inativa!',
-                    ]
-                ];
-            }
         } catch (Throwable $error) {
             return [
                 'error' => [
