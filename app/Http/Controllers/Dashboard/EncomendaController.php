@@ -19,7 +19,6 @@ class EncomendaController
 
             return Inertia::render('encomenda/Encomendas', ['encomendas' => $encomendas]);
         } catch (Throwable $error) {
-
             return redirect()->route('auth.login');
         }
     }
@@ -39,6 +38,7 @@ class EncomendaController
                         'titulo' => 'Atualizado!',
                     ]
                 ];
+                
             } else {
                 return [
                     'error' => [
@@ -46,6 +46,7 @@ class EncomendaController
                     ]
                 ];
             }
+
         } catch (Throwable $error) {
             return [
                 'error' => [

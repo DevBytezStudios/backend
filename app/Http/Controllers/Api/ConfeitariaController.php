@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Categoria;
+use App\Models\Confeitaria;
 use App\Models\Estilo;
 use App\Models\Etapa;
 use App\Models\EtapaOpcao;
@@ -28,7 +29,7 @@ class ConfeitariaController extends Controller
                 ];
             }
 
-            $this->confeitaria = DB::table('confeitarias')->select('id', 'nome', 'slug', 'cor_princ', 'cor_sec', 'logo', 'telefone')->where('slug', $request->slug)->first();
+            $this->confeitaria = Confeitaria::select('id', 'nome', 'slug', 'cor_princ', 'cor_sec', 'logo', 'telefone')->where('slug', $request->slug)->first();
 
 
             // VERIFICAR STATE
@@ -56,7 +57,7 @@ class ConfeitariaController extends Controller
                 }
 
                 if ($this->confeitaria != null) {
-                    return response()->json($catalogo);
+                    return $catalogo;
                 }
             } else if ($state->state == "paralyzed") {
 
@@ -118,47 +119,27 @@ class ConfeitariaController extends Controller
     public function getEtapas(Request $request)
     {
         try {
-            // VERIFICAR STATE
 
-
-            $this->confeitaria = DB::table('confeitarias')->select('id', 'nome', 'slug', 'cor_princ', 'cor_sec', 'logo')->where('slug', $request->slug)->first();
-
-            $state = State::where('id_con', $this->confeitaria->id)->first();
-            if ($state->state == "active") {
-                if ($request->slug == null) {
-                    return [
-                        'titulo' => 'Confeitaria não encontrada!',
-                        'message' => 'Slug Vazio!',
-                        'code' => 404,
-                    ];
-                }
-
-
-                // PRAPRANDO OS DADOS
-                $etapas = Etapa::where('id_con', $this->confeitaria->id)->select('id', 'id_con', 'nome', 'ordem', 'icone', 'required', 'multiple')->orderby('ordem', 'ASC')->get();
-
+            if ($request->slug == null) {
                 return [
-                    'confeitaria' => $this->confeitaria,
-                    'etapas' => $etapas
-                ];
-            } else if ($state->state == "paralyzed") {
-
-                return [
-
-                    'error' => [
-                        'titulo' => 'Confeitaria Paralizada!',
-
-                    ]
-
-                ];
-            } else if ($state->state == "inactive") {
-
-                return [
-                    'error' => [
-                        'titulo' => 'Confeitaria Inativa!',
-                    ]
+                    'titulo' => 'Confeitaria não encontrada!',
+                    'message' => 'Slug Vazio!',
+                    'code' => 404,
                 ];
             }
+
+            
+
+
+            $this->confeitaria = Confeitaria::where('slug', $request->slug)->first();
+
+            // PRAPRANDO OS DADOS
+            $etapas = Etapa::where('id_con', $this->confeitaria->id)->select('id', 'id_con', 'nome', 'ordem', 'icone', 'required', 'multiple')->orderby('ordem', 'ASC')->get();
+
+            return [
+                'confeitaria' => $this->confeitaria,
+                'etapas' => $etapas
+            ];
         } catch (Throwable $error) {
             return [
                 'error' => [

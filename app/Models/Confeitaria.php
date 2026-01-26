@@ -23,24 +23,28 @@ class Confeitaria extends Authenticatable
         'password',
         'telefone'
     ];
-
+    protected $appends = ['logo_url'];
     protected $hidden = [
         'password',
+        'id',
+        'created_at',
+        'updated_at'
     ];
+
 
     /** @use HasFactory<\Database\Factories\ConfeitariaFactory> */
     use HasFactory;
 
-    protected function logo(): Attribute
+    protected function logoUrl(): Attribute
     {
         // PEGAR A URL DA logo COMPLETA AO PEDIR ELA
         return Attribute::make(
             get: function ($logo) {
-                if (Storage::disk('public')->exists("confeitarias/" . $logo) && $logo != "") {
-                    return Storage::url("confeitarias/" . $logo);
-                } else {
-                    return Storage::url("semImagem.jpg");
+                if ($logo && Storage::disk('public')->exists("confeitarias/" . $logo)) {
+                    return asset(Storage::url("confeitarias/" . $logo));
                 }
+
+                return asset('storage/semImagem.jpg');
             },
 
             set: fn($logo) => $logo
@@ -51,5 +55,4 @@ class Confeitaria extends Authenticatable
     {
         return $this->belongsTo(State::class, 'id', 'id_con');
     }
-
 }

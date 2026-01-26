@@ -17,7 +17,6 @@ class CatalogoController
 
     public function dashboard()
     {
-
         $confeitaria = Auth::User();
 
         $entregashoje = Pedido::where('id_con', $confeitaria->id)->where('data', today())->count() + Encomenda::where('id_con', $confeitaria->id)->where('data_entrega', today())->count();

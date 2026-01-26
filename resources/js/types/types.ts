@@ -3,7 +3,7 @@ export interface Confeitaria{
     nome: string,
     telefone: string,
     slug: string,
-    logo: string,
+    logo_url: string,
     cor_princ: string,
     cor_sec: string,
     email: string

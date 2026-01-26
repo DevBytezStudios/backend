@@ -50,7 +50,7 @@ const updateConf = async () => {
                         <Field>
                             <FieldTitle>Logo</FieldTitle>
                             <UploadComponent
-                                :imagem="confStore.confeitaria.logo"
+                                :imagem="confStore.confeitaria.logo_url"
                             />
                         </Field>
                     </FieldGroup>
