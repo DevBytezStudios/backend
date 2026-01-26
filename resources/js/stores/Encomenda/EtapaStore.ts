@@ -28,7 +28,7 @@ const useEtapaStore = defineStore('etapaStore', {
                 if (this.etapa.ordem == 0) {
                     this.etapa.ordem = this.etapas.length + 1;
                 }
-                
+
                 const data = {
                     etapa: this.etapa,
                 };
@@ -40,7 +40,7 @@ const useEtapaStore = defineStore('etapaStore', {
                     formData,
                 );
 
-                if(response.data.success){
+                if (response.data.etapa) {
                     const newEtapa: Etapa = response.data.etapa;
                     this.etapas.push(newEtapa);
                 }
@@ -50,7 +50,7 @@ const useEtapaStore = defineStore('etapaStore', {
                 return response.data;
             } catch ($error) {}
         },
-        async setOrdem(current:Etapa, novo:Etapa) {
+        async setOrdem(current: Etapa, novo: Etapa) {
             try {
                 const formData = new FormData();
 
@@ -60,7 +60,7 @@ const useEtapaStore = defineStore('etapaStore', {
 
                 const data = {
                     atual: current,
-                    novo: novo
+                    novo: novo,
                 };
 
                 formData.append('data', JSON.stringify(data));
@@ -73,18 +73,18 @@ const useEtapaStore = defineStore('etapaStore', {
                 return response.data;
             } catch ($error) {}
         },
-        async delete(idEtapa:number){
-                const response = await axios.post(
-                    '/encomenda/etapas/delete',
-                    {
-                        id:idEtapa
-                    },
-                );
+        async delete(idEtapa: number) {
+            const response = await axios.post('/encomenda/etapas/delete', {
+                id: idEtapa,
+            });
 
-                if(response.data.success){
-                    this.etapas = this.etapas.filter((etapa:Etapa) => etapa.id != idEtapa);
-                }
-                return response.data;
+            if (response.data.success) {
+                this.etapas = this.etapas.filter(
+                    (etapa: Etapa) => etapa.id != idEtapa,
+                );
+            }
+
+            return response.data;
         },
         clear() {
             this.etapa = {
