@@ -14,7 +14,7 @@ class EtapaController
     {
         try {
             $confeitaria = Auth::User();
-            $etapas = Etapa::where('id_con', $confeitaria->id)->orderBy('ordem', 'ASC')->select('id', 'id_con', 'nome', 'ordem', 'required', 'multiple', 'icone')->get();
+            $etapas = Etapa::withCount('opcoes')->where('id_con', $confeitaria->id)->orderBy('ordem', 'ASC')->get();
             return Inertia::render('encomenda/Etapas', ['etapas' => $etapas]);
         } catch (Throwable $error) {
             return redirect()->route('auth.login');

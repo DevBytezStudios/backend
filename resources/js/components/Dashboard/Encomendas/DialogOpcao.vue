@@ -7,7 +7,7 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
-const emits = defineEmits(['close','update:open']);
+const emits = defineEmits(['close', 'update:open','addedOpcao']);
 
 // CONFIGURAÇÔES DO FORM
 import { FieldGroup, FieldSet } from '@/components/ui/field';
@@ -36,7 +36,9 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from '@/components/ui/tooltip';
+import etapa from '@/routes/encomenda/etapa';
 import useOpcaoStore from '@/stores/Encomenda/OpcaoStore';
+import { Etapa } from '@/types/types';
 import { InfoIcon } from 'lucide-vue-next';
 import { ref, watch } from 'vue';
 import { Toaster, toast } from 'vue-sonner';
@@ -44,6 +46,7 @@ import 'vue-sonner/style.css';
 
 interface Props {
     open: boolean;
+    etapa: Etapa | null;
 }
 
 const props = defineProps<Props>();
@@ -59,6 +62,9 @@ const setOpcao = async () => {
     if (response.success) {
         opcaoStore.clear();
         loading.value = !loading.value;
+        if(props.etapa != null){
+            emits('addedOpcao',props.etapa.id);
+        }
         toast.success(response.success.titulo);
     } else {
         opcaoStore.clear();
@@ -67,7 +73,12 @@ const setOpcao = async () => {
     }
 };
 
-watch(props, async (newValue)  => {
+watch(props, async (newValue) => {
+    if(props.etapa != null){
+        opcaoStore.opcao.etapa.id = props.etapa.id;
+        opcaoStore.opcao.etapa.nome = props.etapa.nome;
+        return;
+    }
     await opcaoStore.getEtapas();
     if (opcaoStore.etapas.length == 0 && newValue.open == true) {
         opcaoStore.clear();
@@ -76,10 +87,11 @@ watch(props, async (newValue)  => {
         return;
     }
 });
+
 </script>
 
 <template>
-    <Dialog v-model:open="props.open"  @update:open="emits('close')">
+    <Dialog v-model:open="props.open" @update:open="emits('close')">
         <LoadingBar :loading="loading" />
         <Toaster />
         <DialogContent
@@ -114,12 +126,16 @@ watch(props, async (newValue)  => {
                                                     :key="index"
                                                     :value="etapa"
                                                 >
-                                                    {{ etapa.nome.toLocaleUpperCase() }}
+                                                    {{
+                                                        etapa.nome.toLocaleUpperCase()
+                                                    }}
                                                 </SelectItem>
                                             </SelectContent>
                                         </Select>
                                     </Field>
-                                    <FieldGroup v-if="opcaoStore.opcao.etapa.id != 0">
+                                    <FieldGroup
+                                        v-if="opcaoStore.opcao.etapa.id != 0"
+                                    >
                                         <Field>
                                             <FieldLabel for="txtNome">
                                                 Nome da Opção
@@ -138,7 +154,9 @@ watch(props, async (newValue)  => {
                                                 id="txtDesc"
                                                 placeholder="Ex.. Feito com KitKat"
                                                 class="resize-none"
-                                                v-model="opcaoStore.opcao.descricao"
+                                                v-model="
+                                                    opcaoStore.opcao.descricao
+                                                "
                                             />
                                         </Field>
                                         <div class="grid grid-cols-3 gap-4">
@@ -157,7 +175,8 @@ watch(props, async (newValue)  => {
                                                         min="0"
                                                         placeholder="9,99"
                                                         v-model="
-                                                            opcaoStore.opcao.valor
+                                                            opcaoStore.opcao
+                                                                .valor
                                                         "
                                                     />
                                                 </InputGroup>
@@ -165,7 +184,9 @@ watch(props, async (newValue)  => {
                                         </div>
                                         <FieldSeparator />
                                         <Field>
-                                            <FieldTitle>Configurações</FieldTitle>
+                                            <FieldTitle
+                                                >Configurações</FieldTitle
+                                            >
                                             <div
                                                 class="flex items-center space-x-2"
                                             >
@@ -175,10 +196,16 @@ watch(props, async (newValue)  => {
                                                         opcaoStore.opcao.active
                                                     "
                                                 />
-                                                <Label for="swAtiva">Ativa</Label>
+                                                <Label for="swAtiva"
+                                                    >Ativa</Label
+                                                >
                                                 <TooltipProvider>
-                                                    <Tooltip>
-                                                        <TooltipTrigger as-child>
+                                                    <Tooltip
+                                                        :delay-duration="1"
+                                                    >
+                                                        <TooltipTrigger
+                                                            as-child
+                                                        >
                                                             <Button
                                                                 variant="outline"
                                                             >
@@ -189,11 +216,12 @@ watch(props, async (newValue)  => {
                                                             class="w-80"
                                                         >
                                                             <p>
-                                                                Se ativada a opção
-                                                                aparece para o
+                                                                Se ativada a
+                                                                opção irá
+                                                                aparecer para o
                                                                 cliente, caso
-                                                                contrario não será
-                                                                mostrada
+                                                                contrário não
+                                                                será mostrada
                                                             </p>
                                                         </TooltipContent>
                                                     </Tooltip>

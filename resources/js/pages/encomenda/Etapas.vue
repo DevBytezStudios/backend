@@ -1,6 +1,13 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
 
+import { Badge } from '@/components/ui/badge';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import {
     Table,
     TableBody,
@@ -9,14 +16,12 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
-
-import { Badge } from '@/components/ui/badge';
 import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from '@/components/ui/tooltip';
 
 import DialogEtapa from '@/components/Dashboard/Encomendas/DialogEtapa.vue';
 import {
@@ -35,7 +40,11 @@ import { Etapa } from '@/types/types';
 import {
     ArrowDownSquareIcon,
     ArrowUpSquareIcon,
+    BadgeAlertIcon,
+    BadgeCheckIcon,
+    BadgeXIcon,
     Edit2Icon,
+    InfoIcon,
     PlusCircleIcon,
     Trash2,
 } from 'lucide-vue-next';
@@ -45,6 +54,7 @@ import 'vue-sonner/style.css';
 
 import Empty from '@/components/Empty.vue';
 import LoadingBar from '@/components/LoadingBar.vue';
+import DialogOpcao from '@/components/Dashboard/Encomendas/DialogOpcao.vue';
 
 const showDialog = ref(false);
 
@@ -128,6 +138,21 @@ const deleteEtapa = async () => {
         toast.error(response.error.titulo);
     }
 };
+
+// PARA OPCOES
+interface DialogOpcao{
+    active: boolean,
+    etapa: Etapa | null,
+}
+const showDialogOpcao = ref<DialogOpcao>({
+    active: false,
+    etapa: null
+});
+
+const addOpcoa = (etapa:Etapa) => {
+    showDialogOpcao.value.active = true;
+    showDialogOpcao.value.etapa = etapa;
+}
 </script>
 
 <template>
@@ -136,6 +161,7 @@ const deleteEtapa = async () => {
         <LoadingBar :loading="loading" />
 
         <DialogEtapa :open="showDialog" @close="showDialog = false" />
+        <DialogOpcao v-model:open="showDialogOpcao.active" @close="showDialogOpcao.active = false" @update:open="showDialogOpcao.active = false" :etapa="showDialogOpcao.etapa" @added-opcao="(id:Number)=>etapaStore.addCountOpcao(id)"/>
 
         <AlertDialog :open="showAlertDialog.active">
             <AlertDialogContent>
@@ -180,7 +206,30 @@ const deleteEtapa = async () => {
                         <TableHead class="hidden md:table-cell">
                             Multiplas escolhas
                         </TableHead>
-                        <TableHead></TableHead>
+                        <TableHead>Mover</TableHead>
+                        <TableHead>Opcões</TableHead>
+                        <TableHead>
+                            Status
+                            <TooltipProvider>
+                                <Tooltip :delay-duration="1">
+                                    <TooltipTrigger as-child>
+                                        <Button
+                                            variant="ghost"
+                                            class="h-10 w-10"
+                                            ><InfoIcon />
+                                        </Button>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                        <p>
+                                            Este status indica se a etapa está
+                                            pronta para uso.<br />
+                                            Etapas incompletas não aparecem para
+                                            o cliente no pedido.
+                                        </p>
+                                    </TooltipContent>
+                                </Tooltip>
+                            </TooltipProvider>
+                        </TableHead>
                         <TableHead class="text-right"></TableHead>
                     </TableRow>
                 </TableHeader>
@@ -192,7 +241,9 @@ const deleteEtapa = async () => {
                         <TableCell class="font-medium">
                             {{ etapa.ordem }}</TableCell
                         >
-                        <TableCell class="capitalize">{{ etapa.nome }}</TableCell>
+                        <TableCell class="capitalize">{{
+                            etapa.nome
+                        }}</TableCell>
                         <TableCell class="hidden md:table-cell">
                             <Badge
                                 variant="secondary"
@@ -244,6 +295,37 @@ const deleteEtapa = async () => {
                                 </Button>
                             </div>
                         </TableCell>
+                        <TableCell class="hidden font-medium md:table-cell">
+                            {{ etapa.opcoes_count }}
+                        </TableCell>
+                        <TableCell class="hidden md:table-cell">
+                            <Badge
+                                v-if="etapa.opcoes_count == 0"
+                                variant="secondary"
+                                class="bg-red-500 text-white uppercase dark:bg-red-600"
+                            >
+                                <BadgeXIcon class="w-5" />
+                                Não configurada
+                            </Badge>
+                            <Badge
+                                v-if="etapa.opcoes_count == 1"
+                                class="bg-yellow-500 text-white uppercase dark:bg-yellow-600"
+                            >
+                                <BadgeAlertIcon class="w-5" />
+
+                                Incompleta
+                            </Badge>
+                            <Badge
+                                variant="secondary"
+                                v-if="etapa.opcoes_count >= 2"
+                                class="bg-green-500 text-white uppercase dark:bg-green-600"
+                            >
+                                <BadgeCheckIcon class="w-5" />
+
+                                Configurada
+                            </Badge>
+                        </TableCell>
+
                         <TableCell class="flex justify-end gap-2 text-right">
                             <DropdownMenu>
                                 <DropdownMenuTrigger
@@ -267,6 +349,10 @@ const deleteEtapa = async () => {
                                 <DropdownMenuContent>
                                     <DropdownMenuItem @click="editEtapa(etapa)"
                                         ><Edit2Icon /> Editar</DropdownMenuItem
+                                    >
+                                    <DropdownMenuItem @click="addOpcoa(etapa)"
+                                        ><PlusCircleIcon /> Adicionar
+                                        Opcão</DropdownMenuItem
                                     >
                                     <DropdownMenuItem
                                         class="bg-red-500"

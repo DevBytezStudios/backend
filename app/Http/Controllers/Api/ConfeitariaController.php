@@ -128,17 +128,24 @@ class ConfeitariaController extends Controller
                 ];
             }
 
-            
-
-
             $this->confeitaria = Confeitaria::where('slug', $request->slug)->first();
 
             // PRAPRANDO OS DADOS
             $etapas = Etapa::where('id_con', $this->confeitaria->id)->select('id', 'id_con', 'nome', 'ordem', 'icone', 'required', 'multiple')->orderby('ordem', 'ASC')->get();
 
+            $etapasCollection = [];
+
+            foreach ($etapas as $etapa) {
+                $opcoes = EtapaOpcao::where('id_etapa', $etapa->id)->count();
+
+                if ($opcoes != 0 && $opcoes > 1) {
+                    $etapasCollection[] = $etapa;
+                }
+            }
+
             return [
                 'confeitaria' => $this->confeitaria,
-                'etapas' => $etapas
+                'etapas' => $etapasCollection
             ];
         } catch (Throwable $error) {
             return [
@@ -171,11 +178,12 @@ class ConfeitariaController extends Controller
             $opcoes = EtapaOpcao::with('etapa')
                 ->whereHas('etapa', function ($query) {
                     $query->where('id_con', $this->confeitaria->id)->where('id_etapa', $this->idetapa);
-                })->select('id', 'id_etapa', 'nome', 'valor', 'active', 'descricao')->get();
+                })->select('id', 'id_etapa', 'nome', 'valor', 'active', 'descricao')->where('active',true)->get();
 
             return [
                 'opcoes' => $opcoes
             ];
+
         } catch (Throwable $error) {
             return [
                 'error' => [

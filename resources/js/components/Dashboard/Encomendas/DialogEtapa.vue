@@ -166,7 +166,7 @@ const setEtapa = async () => {
                                             >Obrigatorio</Label
                                         >
                                         <TooltipProvider>
-                                            <Tooltip>
+                                            <Tooltip :delay-duration="1">
                                                 <TooltipTrigger as-child>
                                                     <Button variant="outline">
                                                         <InfoIcon />
@@ -195,7 +195,7 @@ const setEtapa = async () => {
                                             >Multiplas escolhas</Label
                                         >
                                         <TooltipProvider>
-                                            <Tooltip>
+                                            <Tooltip :delay-duration="1">
                                                 <TooltipTrigger as-child>
                                                     <Button variant="outline">
                                                         <InfoIcon />

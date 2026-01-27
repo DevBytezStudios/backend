@@ -18,6 +18,7 @@ const useEtapaStore = defineStore('etapaStore', {
             ordem: 0,
             multiple: false,
             required: true,
+            opcoes_count: 0,
         },
     }),
     actions: {
@@ -95,8 +96,16 @@ const useEtapaStore = defineStore('etapaStore', {
                 ordem: 0,
                 multiple: false,
                 required: true,
+                opcoes_count: 0,
             };
         },
+        addCountOpcao(idEtapa:Number){
+            this.etapas.map((etapa)=>{
+                if(etapa.id == idEtapa){
+                    etapa.opcoes_count++
+                }
+            })
+        }
     },
 });
 

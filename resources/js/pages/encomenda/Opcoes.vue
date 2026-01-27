@@ -50,7 +50,7 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import useOpcaoStore from '@/stores/Encomenda/OpcaoStore';
-import { OpcaoEtapa, Paginator } from '@/types/types';
+import { Etapa, OpcaoEtapa, Paginator } from '@/types/types';
 import { SearchIcon } from 'lucide-vue-next';
 import { ref } from 'vue';
 

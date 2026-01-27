@@ -19,10 +19,14 @@ class Etapa extends Model
         'ordem',
         'multiple'
     ];
+
+    protected $hidden = [
+        'created_at',
+        'updated_at'
+    ];
     use HasFactory;
 
     protected $casts = ['required' => 'boolean', 'multiple' => 'boolean'];
-
     protected function icone(): Attribute
     {
         // PEGAR A URL DA IMAGEM COMPLETA AO PEDIR ELA
@@ -42,6 +46,6 @@ class Etapa extends Model
     // PEGAR OPCOES
     public function opcoes(): HasMany
     {
-        return $this->hasMany(EtapaOpcao::class, 'id_etapa', 'id');
+        return $this->hasMany(EtapaOpcao::class, 'id_etapa', 'id')->where('active', true);
     }
 }

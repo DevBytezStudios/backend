@@ -119,6 +119,7 @@ export interface Etapa{
     required: boolean,
     multiple: boolean,
     icone: string
+    opcoes_count: number
 }
 
 export interface OpcaoEtapa{
