@@ -1,8 +1,7 @@
-<script  lang="ts">
+<script lang="ts">
 export const description = 'A sidebar that collapses to icons.';
 export const iframeHeight = '800px';
 export const containerClass = 'w-full h-full';
-
 </script>
 
 <script setup lang="ts">
@@ -21,10 +20,11 @@ import {
 } from '@/components/ui/sidebar';
 import useConfeitariaStore from '@/stores/ConfeitariaStore';
 import { useColorMode } from '@vueuse/core';
+import { onMounted } from 'vue';
+import { toast, Toaster } from 'vue-sonner';
 
-
-interface Props{
-    page: string
+interface Props {
+    page: string;
 }
 
 const props = defineProps<Props>();
@@ -32,7 +32,22 @@ const mode = useColorMode();
 const confeitariaStore = useConfeitariaStore();
 mode.value = confeitariaStore.theme;
 
-
+onMounted(() => {
+    const audio = new Audio('/assets/notification.mp3');
+    window.Echo.channel(`confeitaria.${confeitariaStore.confeitaria.id}`)
+        .listen('NewPedido', () => {
+            if (confeitariaStore.notification == true) {
+                audio.play();
+                toast.warning('Novo pedido!');
+            }
+        })
+        .listen('NewEncomenda', () => {
+            if (confeitariaStore.notification == true) {
+                audio.play();
+                toast.warning('Nova Encomenda!');
+            }
+        });
+});
 </script>
 
 <template>
@@ -61,6 +76,8 @@ mode.value = confeitariaStore.theme;
             </header>
             <div class="flex flex-1 flex-col">
                 <div class="flex flex-1 flex-col gap-4 p-4 pt-0">
+                    <Toaster position="bottom-center" />
+
                     <slot />
                 </div>
             </div>

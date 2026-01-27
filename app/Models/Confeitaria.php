@@ -26,7 +26,6 @@ class Confeitaria extends Authenticatable
     protected $appends = ['logo_url'];
     protected $hidden = [
         'password',
-        'id',
         'created_at',
         'updated_at'
     ];

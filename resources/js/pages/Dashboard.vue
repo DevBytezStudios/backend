@@ -66,23 +66,6 @@ const updateStatusEncomenda = (encomenda: Encomenda, status: string) => {
     return;
 };
 
-onMounted(() => {
-    const audio = new Audio('/assets/notification.mp3');
-    window.Echo.channel(`confeitaria.${confeitariaStore.confeitaria.id}`)
-        .listen('NewPedido', () => {
-            if (confeitariaStore.notification == true) {
-                audio.play();
-                toast.warning('Novo pedido! Atualize a página!');
-            }
-        })
-        .listen('NewEncomenda', () => {
-            if (confeitariaStore.notification == true) {
-                audio.play();
-                toast.warning('Nova Encomenda! Atualize a página!');
-            }
-        });
-});
-
 // url para o app
 const urlApp = `https://app.bakerfast.com.br/${confeitariaStore.confeitaria.slug}`;
 const copyLink = async () => {
