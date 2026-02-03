@@ -176,15 +176,13 @@ const copyLink = async () => {
                 </CardContent>
             </Card>
         </div>
-        <div class="flex w-full flex-col gap-3">
-            <!-- Título -->
+        <!-- <div class="flex w-full flex-col gap-3">
             <div class="flex items-center justify-between">
                 <h2 class="text-sm font-semibold">Pedidos do dia</h2>
                 <span class="text-xs text-muted-foreground">
                     {{ arrPedidos.length }} pedidos
                 </span>
             </div>
-            <!-- Lista de cards -->
             <div
                 v-if="arrPedidos.length > 0"
                 class="flex max-w-full snap-x snap-mandatory flex-row gap-3 overflow-x-auto pb-4 whitespace-nowrap md:flex-wrap"
@@ -196,14 +194,13 @@ const copyLink = async () => {
                     @update-status="updateStauts"
                 />
             </div>
-            <!-- Estado vazio -->
             <div
                 v-else
                 class="flex items-center justify-center rounded-lg border border-dashed p-6 text-sm text-muted-foreground"
             >
                 Nenhum pedido hoje 🍰
             </div>
-        </div>
+        </div> -->
         <div class="flex w-full flex-col gap-3">
             <!-- Título -->
             <div class="flex items-center justify-between">

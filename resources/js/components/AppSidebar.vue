@@ -3,7 +3,7 @@ import type { SidebarProps } from '@/components/ui/sidebar';
 
 import NavMain from '@/components/NavMain.vue';
 import NavUser from '@/components/NavUser.vue';
-import { BookOpen, Bot, CakeIcon, Home, InfoIcon } from 'lucide-vue-next';
+import { CakeIcon, Home, InfoIcon } from 'lucide-vue-next';
 
 import {
     Sidebar,
@@ -35,25 +35,25 @@ const data = {
     ],
 
     navProdutos: [
-        {
-            title: 'Menu',
-            url: '#',
-            icon: Bot,
-            items: [
-                {
-                    title: 'Produtos',
-                    url: '/catalogo/produtos',
-                },
-                {
-                    title: 'Pedidos',
-                    url: '/catalogo/pedidos',
-                },
-                {
-                    title: 'Categorias',
-                    url: '/catalogo/categorias',
-                },
-            ],
-        },
+        // {
+        //     title: 'Menu',
+        //     url: '#',
+        //     icon: Bot,
+        //     items: [
+        //         {
+        //             title: 'Produtos',
+        //             url: '/catalogo/produtos',
+        //         },
+        //         {
+        //             title: 'Pedidos',
+        //             url: '/catalogo/pedidos',
+        //         },
+        //         {
+        //             title: 'Categorias',
+        //             url: '/catalogo/categorias',
+        //         },
+        //     ],
+        // },
         {
             title: 'Encomenda',
             url: '#',
