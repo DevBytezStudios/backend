@@ -32,7 +32,7 @@ watch(
 </script>
 
 <template>
-    <div class="flex items-start gap-3">
+    <div class="w-full flex items-start gap-3">
         <div
             class="relative h-32 w-32 overflow-hidden rounded-lg border bg-muted/30 shadow-sm"
         >
@@ -46,7 +46,7 @@ watch(
         </div>
         <Label
             for="upload-input"
-            class="flex h-20 w-20 cursor-pointer flex-col items-center justify-center rounded-lg border border-dashed border-muted-foreground transition hover:bg-muted/30"
+            class="flex h-20 w-20 cursor-pointer flex-col items-center justify-center rounded-lg border border-dashed border-muted-foreground transition hover:bg-muted/30 text-center"
         >
             <UploadCloud class="mb-0.5 size-5 text-muted-foreground" />
             <p class="text-[10px] leading-none text-muted-foreground">

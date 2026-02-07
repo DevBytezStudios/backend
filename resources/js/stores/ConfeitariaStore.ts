@@ -7,6 +7,7 @@ interface ConfeitariaState {
     file: File | null;
     notification: boolean;
     theme: 'light' | 'dark';
+    blockDates: string[];
 }
 
 const useConfeitariaStore = defineStore('confeitariaStore', {
@@ -24,13 +25,17 @@ const useConfeitariaStore = defineStore('confeitariaStore', {
         file: null,
         notification: true,
         theme: 'light',
+        blockDates: [],
     }),
     actions: {
         async setConfeitaria() {
             try {
                 const formData = new FormData();
+                console.log(this.blockDates);
+
                 const data = {
                     confeitaria: this.confeitaria,
+                    blockdates: this.blockDates,
                 };
 
                 formData.append('data', JSON.stringify(data));
@@ -40,7 +45,7 @@ const useConfeitariaStore = defineStore('confeitariaStore', {
                 }
 
                 const response = await axios.post(
-                    '/informacoes/setinfo',
+                    '/configuracoes/setinfo',
                     formData,
                     {
                         headers: { 'Content-Type': 'multipart/form-data' },
@@ -51,6 +56,19 @@ const useConfeitariaStore = defineStore('confeitariaStore', {
                     this.confeitaria = response.data.confeitaria;
                 }
                 return response.data;
+            } catch ($error) {
+                console.log($error);
+            }
+        },
+        async getBlockDates() {
+            try {
+                const response = await axios.get(
+                    '/configuracoes/getblockdates',
+                );
+
+                if (response.data) {
+                    this.blockDates = response.data;
+                }
             } catch ($error) {
                 console.log($error);
             }

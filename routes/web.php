@@ -21,11 +21,13 @@ Route::get('/', function () {
 
 Route::get('/dashboard', [CatalogoController::class, 'dashboard'])->name('dashboard')->middleware(Auth::class);
 
-Route::get('/informacoes', function () {
-    return Inertia::render('Informacoes');
-})->name('informacoes')->middleware(Auth::class);
+Route::get('/configuracoes', function () {
+    return Inertia::render('Configurações');
+})->name('configuracoes')->middleware(Auth::class);
 
-Route::post('/informacoes/setinfo', [ConfeitariaController::class, 'setInfo'])->middleware(Auth::class);
+Route::get('/configuracoes/getblockdates', [ConfeitariaController::class,'getBlockDates'])->name('configuracoes.blockdates');
+
+Route::post('/configuracoes/setinfo', [ConfeitariaController::class, 'setInfo'])->middleware(Auth::class);
 
 // CATALOGO DE PRODUTOS
 Route::prefix("catalogo/")->group(function () {

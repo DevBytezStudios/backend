@@ -3,6 +3,7 @@ import UploadComponent from '@/components/Dashboard/UploadComponent.vue';
 import InputTelefone from '@/components/InputTelefone.vue';
 import LoadingBar from '@/components/LoadingBar.vue';
 import { Button } from '@/components/ui/button';
+import Calendar from '@/components/ui/calendar/Calendar.vue';
 import {
     Field,
     FieldGroup,
@@ -16,12 +17,13 @@ import FieldTitle from '@/components/ui/field/FieldTitle.vue';
 import Input from '@/components/ui/input/Input.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import useConfeitariaStore from '@/stores/ConfeitariaStore';
-import { ref } from 'vue';
-
+import { computed, onMounted, Ref, ref } from 'vue';
 import { toast, Toaster } from 'vue-sonner';
 import 'vue-sonner/style.css';
 
+
 const confStore = useConfeitariaStore();
+
 
 const loading = ref(false);
 const updateConf = async () => {
@@ -37,17 +39,45 @@ const updateConf = async () => {
         }
     } catch ($error) {}
 };
+
+// CALENDARIO
+// VERIFICA SE  POSSUI DATAS
+
+import type { DateValue } from '@internationalized/date';
+import { fromDate, getLocalTimeZone, parseDate, today } from '@internationalized/date';
+const date = ref(fromDate(new Date(), getLocalTimeZone())) as Ref<DateValue>;
+const currentToday = today(getLocalTimeZone());
+const selectedDates = ref<DateValue[]>();
+const formattedSelectedDates = computed(() => {
+    if (!selectedDates.value) return ((confStore.blockDates = []), []);
+    confStore.blockDates = selectedDates.value.map((d) => d.toString());
+    return selectedDates.value.map((d) => d.toString());
+});
+
+
+onMounted(async () => {
+    if (confStore.blockDates.length == 0) {
+        loading.value = true;
+        await confStore.getBlockDates();
+        if(confStore.blockDates.length > 0){
+            selectedDates.value = confStore.blockDates.map((date:string)=> parseDate(date))
+        }
+        loading.value = false;
+    }
+});
+
+
 </script>
 
 <template>
     <AppLayout page="Informações">
         <LoadingBar :loading="loading" />
         <Toaster />
-        <form>
-            <FieldGroup>
+        <form >
+            <FieldGroup @vue:updated="">
                 <FieldSet>
                     <FieldGroup>
-                        <Field>
+                        <Field class="w-full">
                             <FieldTitle>Logo</FieldTitle>
                             <UploadComponent
                                 :imagem="confStore.confeitaria.logo_url"
@@ -55,20 +85,33 @@ const updateConf = async () => {
                         </Field>
                     </FieldGroup>
                     <FieldGroup>
+                        <Field class="w-fit">
+                            <FieldTitle>Gestão de Disponibilidade</FieldTitle>
+                            <span>Toque para bloquear datas de produção</span>
+                            <Calendar
+                                v-model="selectedDates"
+                                multiple
+                                class="rounded-md border shadow-sm [&_[data-selected]]:bg-white [&_[data-selected]]:text-black [&_[data-selected]]:opacity-100 [&_[data-selected]]:hover:bg-white/90"
+                                layout="month-and-year"
+                                locale="pt-BR"
+                                :min-value="currentToday"
+                                :block-dates="formattedSelectedDates"
+                            />
+                        </Field>
+                    </FieldGroup>
+                    <FieldGroup>
                         <Field>
-                            <FieldLabel>
-                                Nome da confeitaria
-                            </FieldLabel>
+                            <FieldLabel> Nome da confeitaria </FieldLabel>
                             <Input
                                 type="text"
                                 v-model="confStore.confeitaria.nome"
                             />
                         </Field>
-                         <Field>
-                            <FieldLabel>
-                                Telefone
-                            </FieldLabel>
-                           <InputTelefone v-model="confStore.confeitaria.telefone"/>
+                        <Field>
+                            <FieldLabel> Telefone </FieldLabel>
+                            <InputTelefone
+                                v-model="confStore.confeitaria.telefone"
+                            />
                         </Field>
                     </FieldGroup>
                     <FieldGroup>
@@ -77,18 +120,14 @@ const updateConf = async () => {
                             <FieldDescription>
                                 Escolha as cores dos botões e demais
                             </FieldDescription>
-                            <FieldLabel>
-                                Cor principal
-                            </FieldLabel>
+                            <FieldLabel> Cor principal </FieldLabel>
                             <input
                                 type="color"
                                 class="colorPicker"
                                 name="corPrincipal"
                                 v-model="confStore.confeitaria.cor_princ"
                             />
-                            <FieldLabel>
-                                Cor segundaria
-                            </FieldLabel>
+                            <FieldLabel> Cor segundaria </FieldLabel>
                             <input
                                 type="color"
                                 class="colorPicker"

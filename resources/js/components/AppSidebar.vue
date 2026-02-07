@@ -3,7 +3,7 @@ import type { SidebarProps } from '@/components/ui/sidebar';
 
 import NavMain from '@/components/NavMain.vue';
 import NavUser from '@/components/NavUser.vue';
-import { CakeIcon, Home, InfoIcon } from 'lucide-vue-next';
+import { CakeIcon, Home, InfoIcon, Settings2Icon } from 'lucide-vue-next';
 
 import {
     Sidebar,
@@ -28,9 +28,9 @@ const data = {
             icon: Home,
         },
         {
-            title: 'Informações',
-            url: '/informacoes',
-            icon: InfoIcon,
+            title: 'Configurações',
+            url: '/configuracoes',
+            icon: Settings2Icon,
         },
     ],
 

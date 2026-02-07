@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\Storage;
@@ -53,5 +54,9 @@ class Confeitaria extends Authenticatable
     public function state(): BelongsTo
     {
         return $this->belongsTo(State::class, 'id', 'id_con');
+    }
+
+    public function blockdates(): HasMany{
+        return $this->hasMany(Data::class,'id_con','id')->select('id','id_con','dt_bloq');
     }
 }
