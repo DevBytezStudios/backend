@@ -25,7 +25,6 @@ watch(
     () => props.imagem,
     (novaImg) => {
         previewUrl.value = novaImg || null;
-        console.log(novaImg)
     },
     { immediate: true }
 );

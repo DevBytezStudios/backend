@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Dashboard;
 
-
+use App\Models\Capacidade;
 use App\Models\Confeitaria;
 use App\Models\Data;
 use App\Models\Produto;
@@ -20,6 +20,7 @@ class ConfeitariaController extends Controller
     {
         try {
             $data = json_decode($request->data, true);
+            $limite = json_decode($request->limite, true);
             $slugify = new Slugify();
 
             // AJUSTES NAS DATAS BLOQUEADAS
@@ -44,20 +45,26 @@ class ConfeitariaController extends Controller
             if ($request->hasFile('logo')) {
                 $confeitaria->logo = $logo;
             }
-
             $confeitaria->save();
+
+            // MODIFICANDO AS DATAS BLOQUEADAS
             Data::where('id_con', $confeitaria->id)
                 ->whereNotIn('dt_bloq', $blockdates)
                 ->delete();
 
             if (is_array($blockdates)) {
                 foreach ($blockdates as $date) {
-                    Data::create([
+                    Data::firstOrCreate([
                         'id_con' => $confeitaria->id,
                         'dt_bloq' => $date,
                     ]);
                 }
             }
+
+            // MODIFICANDO O LIMITE DIARIO
+            $capacidade = Capacidade::where('id_con', $confeitaria->id)->first();
+            $capacidade->limite = $limite;
+            $capacidade->save();
 
             return [
                 'success' => [
@@ -80,10 +87,26 @@ class ConfeitariaController extends Controller
     {
         try {
             $confeitaria = Auth::user();
-            // $datas = Confeitaria::with(['blockdates'])->find($confeitaria->id);
-            $datas = DB::table('data')->where('id_con',$confeitaria->id)->pluck('dt_bloq');
-            return $datas;
+            $datas = DB::table('data')->where('id_con', $confeitaria->id)->pluck('dt_bloq');
+            return response()->json($datas);
         } catch (Throwable $error) {
+            return [
+                'error' => [
+                    'titulo' => 'Algo de errado!',
+                    'message' => $error->getMessage(),
+                    'code' => $error->getCode(),
+                ]
+            ];
         }
+    }
+
+    public function config(Request $request)
+    {
+        $confeitaria = Auth::user();
+        $capacidade = Capacidade::where('id_con', $confeitaria->id)->firstOrCreate([
+            'id_con' => $confeitaria->id
+        ])->select('limite')->first();
+        $limite = $capacidade->limite;
+        return Inertia::render('Configurações', ['limite' => $limite]);
     }
 }

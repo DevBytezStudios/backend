@@ -6,7 +6,7 @@ export interface Confeitaria{
     logo_url: string,
     cor_princ: string,
     cor_sec: string,
-    email: string
+    email: string,
 }
 
 

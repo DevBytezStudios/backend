@@ -18,16 +18,12 @@ use Laravel\Fortify\Features;
 Route::get('/', function () {
     return redirect()->route('dashboard');
 });
-
 Route::get('/dashboard', [CatalogoController::class, 'dashboard'])->name('dashboard')->middleware(Auth::class);
-
-Route::get('/configuracoes', function () {
-    return Inertia::render('Configurações');
-})->name('configuracoes')->middleware(Auth::class);
-
+Route::get('/configuracoes', [ConfeitariaController::class,"config"])->name('configuracoes')->middleware(Auth::class);
 Route::get('/configuracoes/getblockdates', [ConfeitariaController::class,'getBlockDates'])->name('configuracoes.blockdates');
-
 Route::post('/configuracoes/setinfo', [ConfeitariaController::class, 'setInfo'])->middleware(Auth::class);
+
+
 
 // CATALOGO DE PRODUTOS
 Route::prefix("catalogo/")->group(function () {
@@ -65,8 +61,11 @@ Route::prefix("catalogo/")->group(function () {
     Route::post('/categorias/delete', [CategoriaController::class, 'deleteCategoria'])->name('catalogo.deleteCategoria');
 })->middleware(Auth::class);
 
+
+
 // CONFIGURAÇÔES DE ENCOMENDA
 Route::prefix("encomenda/")->group(function () {
+
     // ETAPAS
     Route::get('/etapas', [EtapaController::class, 'getEtapas'])->name('encomenda.etapas');
 
@@ -105,6 +104,7 @@ Route::prefix("encomenda/")->group(function () {
 
     Route::post('/search', [EncomendaController::class, 'search'])->name('encomenda.search');
 })->middleware(Auth::class);
+
 
 
 // AUTH

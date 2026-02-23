@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('capacidades', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('id_con');
+            $table->unsignedBigInteger('id_con')->unique();
             $table->foreign('id_con')->references('id')->on('confeitarias')->onDelete('cascade')->onUpdate('cascade');
-            $table->integer('limite');
+            $table->integer('limite')->default(5);
             $table->timestamps();
         });
     }

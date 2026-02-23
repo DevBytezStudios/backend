@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Events\NewEncomenda;
+use App\Models\Capacidade;
 use App\Models\Cliente;
 use App\Models\Confeitaria;
+use App\Models\Data;
 use App\Models\Encomenda;
 use App\Models\Encomenda_Opcao;
 use App\Models\EncomendaOpcao;
@@ -28,7 +30,26 @@ class EncomendaController extends Controller
             $data_entrega = $request->data_entrega;
             $confeitaria = DB::table('confeitarias')->select('id')->where('slug', $request->slug)->first();
 
+            // VERIFICA SE A DATA ESTA DISPONIVEL
+            $confLimite = Capacidade::where('id_con', $confeitaria->id)->select('limite')->first();
+            $encomendasTotais = Encomenda::where('id_con', $confeitaria->id)->where('data_entrega', $data_entrega)->count();
+            if ($encomendasTotais >= $confLimite->limite) {
+
+                Data::firstOrCreate([
+                    'id_con' => $confeitaria->id,
+                    'dt_bloq' => $data_entrega,
+                ]);
+
+                return response([
+                    'error' => [
+                        'titulo' => 'Algo de errado!',
+                        'message' => "Limite de encomendas atingido!",
+                    ]
+                ], 422);
+            }
+
             $cliente = Cliente::select('id', 'nome', 'telefone', 'cep')->where('telefone', $dataCliente['telefone'])->where('nome', $dataCliente['nome'])->where('cep', $dataCliente['cep'])->first();
+
             if ($cliente == null) {
                 $cliente = Cliente::create([
                     'nome'        => $dataCliente['nome'],
@@ -90,7 +111,7 @@ class EncomendaController extends Controller
 
             // gerar letras
             for ($i = 0; $i < 3; $i++) {
-                $letras .= chr(rand(65, 90)); // A-Z
+                $letras .= chr(rand(65, 90));
             }
 
             // gerar números
@@ -102,5 +123,40 @@ class EncomendaController extends Controller
         } while (Encomenda::where('code', $code)->exists());
 
         return $code;
+    }
+
+      // CHECA SE AQUELA DATA TEM LIMITE DISPONIVEL
+    public function checkDate(Request $request)
+    {
+        try {
+            if ($request->slug == null) {
+                return [
+                    'titulo' => 'Confeitaria não encontrada!',
+                    'message' => 'Slug Vazio!',
+                    'code' => 404,
+                ];
+            }
+
+            $confeitaria = DB::table('confeitarias')->select('id')->where('slug', $request->slug)->first();
+            $confCapacidade = Capacidade::where('id_con', $confeitaria->id)->select('limite')->first();
+            $encomendasTotais = Encomenda::where('id_con', $confeitaria->id)->where('data_entrega', $request->date)->count();
+            if ($confCapacidade->limite > $encomendasTotais) {
+                return [
+                    "status" => $request->date,
+                ];
+            }
+
+            return [
+                "status" => false,
+            ];
+        } catch (Throwable $error) {
+            return [
+                'error' => [
+                    'titulo' => 'Algo de errado!',
+                    'message' => $error->getMessage(),
+                    'code' => $error->getCode(),
+                ]
+            ];
+        }
     }
 }

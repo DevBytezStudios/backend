@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\Capacidade;
 use App\Models\Categoria;
 use App\Models\Confeitaria;
+use App\Models\Encomenda;
 use App\Models\Estilo;
 use App\Models\Etapa;
 use App\Models\EtapaOpcao;
@@ -114,7 +116,6 @@ class ConfeitariaController extends Controller
         }
     }
 
-
     // CONFIGURAÇÂO PARA ENCOMENDAS
     public function getEtapas(Request $request)
     {
@@ -178,12 +179,11 @@ class ConfeitariaController extends Controller
             $opcoes = EtapaOpcao::with('etapa')
                 ->whereHas('etapa', function ($query) {
                     $query->where('id_con', $this->confeitaria->id)->where('id_etapa', $this->idetapa);
-                })->select('id', 'id_etapa', 'nome', 'valor', 'active', 'descricao')->where('active',true)->get();
+                })->select('id', 'id_etapa', 'nome', 'valor', 'active', 'descricao')->where('active', true)->get();
 
             return [
                 'opcoes' => $opcoes
             ];
-
         } catch (Throwable $error) {
             return [
                 'error' => [
@@ -223,4 +223,30 @@ class ConfeitariaController extends Controller
             ];
         }
     }
+
+    public function getBlockDates(Request $request)
+    {
+        try {
+            if ($request->slug == null) {
+                return [
+                    'titulo' => 'Confeitaria não encontrada!',
+                    'message' => 'Slug Vazio!',
+                    'code' => 404,
+                ];
+            }
+
+            $this->confeitaria = DB::table('confeitarias')->select('id')->where('slug', $request->slug)->first();
+            $dates = DB::table('data')->select('dt_bloq')->where('id_con', $this->confeitaria->id)->orderBy('dt_bloq', "ASC")->get()->pluck('dt_bloq');
+            return $dates;
+        } catch (Throwable $error) {
+            return [
+                'error' => [
+                    'titulo' => 'Algo de errado!',
+                    'message' => $error->getMessage(),
+                    'code' => $error->getCode(),
+                ]
+            ];
+        }
+    }
+
 }

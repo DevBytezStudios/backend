@@ -13,4 +13,6 @@ class Capacidade extends Model
     ];
     /** @use HasFactory<\Database\Factories\CapacidadeFactory> */
     use HasFactory;
+    
+    protected $casts = ['limite' => 'integer'];
 }

@@ -59,4 +59,8 @@ class Confeitaria extends Authenticatable
     public function blockdates(): HasMany{
         return $this->hasMany(Data::class,'id_con','id')->select('id','id_con','dt_bloq');
     }
+
+    public function limite(): HasOne{
+        return $this->hasOne(Capacidade::class,'id_con','id')->select('limite');
+    }
 }

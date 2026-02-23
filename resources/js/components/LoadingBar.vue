@@ -16,7 +16,9 @@ interface Props{
 }
 
 const props = defineProps<Props>();
+
 const loading = ref(props.loading );
+
 watch(props, (newState) => {
   loading.value = newState.loading;
 });

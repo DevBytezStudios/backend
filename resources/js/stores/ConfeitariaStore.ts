@@ -8,6 +8,7 @@ interface ConfeitariaState {
     notification: boolean;
     theme: 'light' | 'dark';
     blockDates: string[];
+    limite: number;
 }
 
 const useConfeitariaStore = defineStore('confeitariaStore', {
@@ -26,19 +27,21 @@ const useConfeitariaStore = defineStore('confeitariaStore', {
         notification: true,
         theme: 'light',
         blockDates: [],
+        limite: 0,
     }),
     actions: {
-        async setConfeitaria() {
+        async setConfeitaria(dataConf:Confeitaria) {
             try {
                 const formData = new FormData();
-                console.log(this.blockDates);
-
-                const data = {
-                    confeitaria: this.confeitaria,
+                let data = {
+                    confeitaria: dataConf,
                     blockdates: this.blockDates,
                 };
 
                 formData.append('data', JSON.stringify(data));
+                if (this.limite != 0 && this.limite != null && this.limite != undefined) {
+                    formData.append('limite', JSON.stringify(this.limite));
+                }
 
                 if (this.file != null) {
                     formData.append('logo', this.file);
