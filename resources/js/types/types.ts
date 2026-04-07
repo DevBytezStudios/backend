@@ -1,14 +1,37 @@
-export interface Confeitaria{
-    id: number,
-    nome: string,
-    telefone: string,
-    slug: string,
-    logo_url: string,
-    cor_princ: string,
-    cor_sec: string,
-    email: string,
+export interface Confeitaria {
+    id: number;
+    nome: string;
+    telefone: string;
+    slug: string;
+    logo_url: string;
+    cor_princ: string;
+    cor_sec: string;
+    email: string;
 }
 
+export interface Cardapio {
+    id: number;
+    id_con: number;
+    titulo: string;
+    cor_princ: string;
+    cor_sec: string;
+    dt_inicio: string;
+    dt_fim: string;
+    active: boolean;
+}
+
+export interface Categoria {
+    id: number;
+    id_cardap: number;
+    titulo: string;
+}
+
+export interface CategoriaProduto {
+    id: number;
+    id_cardap: number;
+    titulo: string;
+    produtos: Produto[];
+}
 
 export interface Produto {
     id: number;
@@ -20,7 +43,7 @@ export interface Produto {
     categoria: Categoria | null;
 }
 
-export interface Variacao {
+export interface Complemento {
     id: number;
     id_produto: number;
     titulo: string;
@@ -29,14 +52,9 @@ export interface Variacao {
 
 export interface Opcao {
     id: number;
-    id_var: number;
+    id_comp: number;
     nome: string;
     valor: number;
-}
-
-export interface Categoria {
-    id: number;
-    titulo: string;
 }
 
 export interface PaginatorLink {
@@ -62,38 +80,37 @@ export interface Paginator {
     total: number;
 }
 
-
 // PEDIDOS
-export interface Pedido{
-    id: number,
-    id_con: number,
-    cliente: Cliente,
-    pagamento: string,
-    code: string,
-    data: Date,
-    pedidoItem: PedidoItems[]
-    total: number,
-    status: string,
+export interface Pedido {
+    id: number;
+    id_con: number;
+    cliente: Cliente;
+    pagamento: string;
+    code: string;
+    data: Date;
+    pedidoItem: PedidoItems[];
+    total: number;
+    status: string;
 }
 
-export interface Cliente{
-    id: number,
-    nome: string,
-    telefone: string,
-    cep: string,
-    rua: string,
-    numero: number,
-    complemento: string,
-    bairro: string,
-    cidade:string,
+export interface Cliente {
+    id: number;
+    nome: string;
+    telefone: string;
+    cep: string;
+    rua: string;
+    numero: number;
+    complemento: string;
+    bairro: string;
+    cidade: string;
 }
 
-export interface PedidoItems{
-    id: number,
-    id_pedido: number,
-    produto: ProdutoPedido,
-    opcoes:OpcaoPedido[],
-    quantidade: number
+export interface PedidoItems {
+    id: number;
+    id_pedido: number;
+    produto: ProdutoPedido;
+    opcoes: OpcaoPedido[];
+    quantidade: number;
 }
 
 export interface ProdutoPedido {
@@ -103,70 +120,69 @@ export interface ProdutoPedido {
     valor_desc: number;
 }
 
-export interface OpcaoPedido{
-    id:number,
-    valor: number,
-    nome: string
+export interface OpcaoPedido {
+    id: number;
+    valor: number;
+    nome: string;
 }
-
 
 // CONFIGURAÇÂO ENCOMENDAS
-export interface Etapa{
-    id: number,
-    id_con:number,
-    nome: string,
-    ordem: number,
-    required: boolean,
-    multiple: boolean,
-    icone: string
-    opcoes_count: number
+export interface Etapa {
+    id: number;
+    id_con: number;
+    nome: string;
+    ordem: number;
+    required: boolean;
+    multiple: boolean;
+    icone: string;
+    opcoes_count: number;
 }
 
-export interface OpcaoEtapa{
-    id: number,
-    etapa:{
-        id: number,
-        nome: string,
-    }
-    nome: string,
-    valor: number,
-    descricao: string,
-    active:boolean
+export interface OpcaoEtapa {
+    id: number;
+    etapa: {
+        id: number;
+        nome: string;
+    };
+    nome: string;
+    valor: number;
+    descricao: string;
+    active: boolean;
 }
 
-export interface Estilo{
-    id: number,
-    id_con: number,
-    titulo: string,
-    valor: number,
-    imagem: string,
-    descricao: string,
-    active: boolean
+export interface Estilo {
+    id: number;
+    id_con: number;
+    titulo: string;
+    valor: number;
+    imagem: string;
+    descricao: string;
+    active: boolean;
 }
 
 // ENCOMENDAS
 
-export interface Encomenda{
-    id: number,
-    cliente: Cliente
-    id_con: number,
-    observacao: string,
-    data_entrega: Date,
-    pagamento: string,
-    status: string,
-    code:string
-    opcoes: EncomendaOpcoes[]
-    estilo:{
-        titulo: string,
-        imagem: string,
-        valor: number
-    }
+export interface Encomenda {
+    id: number;
+    cliente: Cliente;
+    id_con: number;
+    observacao: string;
+    data_entrega: Date;
+    pagamento: string;
+    status: string;
+    code: string;
+    opcoes: EncomendaOpcoes[];
+    estilo: {
+        titulo: string;
+        imagem: string;
+        valor: number;
+    };
 }
 
-export interface EncomendaOpcoes{
-    id: number,
-    id_encomenda: number,
-    etapa: string,
-    nome: string,
-    valor: number
+export interface EncomendaOpcoes {
+    id: number;
+    id_encomenda: number;
+    etapa: string;
+    nome: string;
+    valor: number;
 }

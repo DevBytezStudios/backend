@@ -76,6 +76,8 @@ onMounted(() => {
             </header>
             <div class="flex flex-1 flex-col">
                 <div class="flex flex-1 flex-col gap-4 p-4 pt-0">
+                    <Toaster />
+
                     <slot />
                 </div>
             </div>

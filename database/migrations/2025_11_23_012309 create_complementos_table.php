@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('variacaos', function (Blueprint $table) {
+        Schema::create('complementos', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('id_produto');
-            $table->foreign('id_produto')->references('id')->on('produtos')->onDelete('cascade')->onUpdate('cascade');
+            $table->unsignedBigInteger('id_prod');
+            $table->foreign('id_prod')->references('id')->on('produtos')->onDelete('cascade')->onUpdate('cascade');
             $table->string('titulo');
             $table->timestamps();
         });
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('variacaos');
+        Schema::dropIfExists('complementos');
     }
 };

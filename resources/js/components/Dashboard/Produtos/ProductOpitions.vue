@@ -15,7 +15,7 @@ import {
 } from '@/components/ui/input-group';
 import Input from '@/components/ui/input/Input.vue';
 import useDialogProduto from '@/stores/DialogProduto';
-import { Opcao, Variacao } from '@/types/types';
+import { Opcao, Complemento } from '@/types/types';
 import {
     Coins,
     PlusCircle,
@@ -26,23 +26,23 @@ import {
 const dialogProduto = useDialogProduto();
 
 interface Props {
-    variante: Variacao;
+    variante: Complemento;
 }
 const emit = defineEmits(['deleteVariacao', 'adicionarOpcao','deleteOpcao']);
 const props = defineProps<Props>();
 
 // CONFIGURAÇÂO DE VARIAÇÔES
-const deleteVariacao = (variaco: Variacao) => {
+const deleteVariacao = (variaco: Complemento) => {
     if (variaco.id != 0) {
         emit('deleteVariacao',variaco.id);
 
          dialogProduto.variacoes = dialogProduto.variacoes.filter(
-        (v) => v.id !== variaco.id,);
+        (v:any) => v.id !== variaco.id,);
         return;
     }
 
     dialogProduto.variacoes = dialogProduto.variacoes.filter(
-        (v) => v.titulo !== variaco.titulo,
+        (v:any) => v.titulo !== variaco.titulo,
     );
 };
 

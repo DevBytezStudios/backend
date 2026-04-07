@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('opcaos', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('id_var');
-            $table->foreign('id_var')->references('id')->on('variacaos')->onDelete('cascade')->onUpdate('cascade');
+            $table->unsignedBigInteger('id_comp');
+            $table->foreign('id_comp')->references('id')->on('complementos')->onDelete('cascade')->onUpdate('cascade');
             $table->string('nome');
             $table->decimal('valor',10,2);
             $table->timestamps();

@@ -13,9 +13,10 @@ return new class extends Migration
     {
         Schema::create('categorias', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('id_con');
-            $table->foreign('id_con')->references('id')->on('confeitarias')->onDelete('cascade')->onUpdate('cascade');
+            $table->unsignedBigInteger('id_cardap');
+            $table->foreign('id_cardap')->references('id')->on('cardapios')->onDelete('cascade')->onUpdate('cascade');
             $table->string('titulo');
+            $table->integer('ordem');
             $table->timestamps();
         });
     }

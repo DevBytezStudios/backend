@@ -93,7 +93,6 @@ watch(props, async (newValue) => {
 <template>
     <Dialog v-model:open="props.open" @update:open="emits('close')">
         <LoadingBar :loading="loading" />
-        <Toaster />
         <DialogContent
             class="max-h-[90vh] max-w-[90vw] overflow-y-auto rounded-lg p-6 md:max-w-150"
         >

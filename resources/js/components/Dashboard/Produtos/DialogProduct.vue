@@ -208,15 +208,6 @@ const saveProduct = async () => {
                         </FieldSet>
                         <FieldSeparator />
                         <FieldSet>
-                            <FieldGroup class="flex flex-row justify-between">
-                                <FieldLegend>Variaçoes do produto</FieldLegend>
-                                <Button
-                                    class="max-w-fit"
-                                    type="button"
-                                    @click="adicionarVariacao"
-                                    ><PlusSquareIcon
-                                /></Button>
-                            </FieldGroup>
                             <FieldGroup>
                                 <ProductOpitions
                                     v-for="(

@@ -5,8 +5,6 @@ namespace App\Http\Controllers\Dashboard;
 use App\Models\Categoria;
 use App\Models\Encomenda;
 use App\Models\Pedido;
-use App\Models\Produto;
-use Illuminate\Container\Attributes\Auth as AttributesAuth;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -29,7 +27,7 @@ class CatalogoController
 
                 "proximasEntregas" => $proximasentregas,
 
-                "produtosTotais" => Produto::where('id_con', $confeitaria->id)->count(),
+                "produtosTotais" => 0,
             ];
 
             $pedidos = Pedido::with(['cliente', 'pedidoItem'])->where('id_con', $confeitaria->id)->orderBy('data', 'DESC')->where('data', today())->where('status', 'em_progresso')->get()->select('id', 'code', 'pagamento', 'data', 'status', 'produto', 'pedidoItem', 'cliente');
@@ -46,13 +44,7 @@ class CatalogoController
     {
         try {
             $confeitaria = Auth::User();
-            $produtos = Produto::with('categoria')->select('id', 'id_con', 'id_cat', 'nome', "descricao", 'imagem', 'valor', 'valor_desc')->where('id_con', $confeitaria->id)->paginate(10); //MEXER NA AUTENTICAÇÂO DEPOIS
-            if ($produtos != null) {
-                return Inertia::render('catalogo/Produtos', [
-                    'produtos' => $produtos->items(),
-                    'paginator' => $produtos,
-                ]);
-            }
+
         } catch (Throwable $error) {
             report($error);
             abort(500);
