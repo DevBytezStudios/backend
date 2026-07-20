@@ -12,6 +12,7 @@ import { createApp, h } from 'vue';
 import Echo from 'laravel-echo';
 import Pusher from 'pusher-js';
 window.Pusher = Pusher
+console.log(import.meta.env.VITE_PUSHER_APP_KEY);
 
 window.Echo = new Echo({
     broadcaster: 'pusher',
@@ -20,6 +21,7 @@ window.Echo = new Echo({
     forceTLS: true,
     namespace:undefined
 });
+
 
 import { createPinia } from 'pinia';
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate';
