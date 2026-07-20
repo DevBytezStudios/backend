@@ -24,7 +24,7 @@ import {
     TableRow,
 } from '@/components/ui/table';
 import AppLayout from '@/layouts/AppLayout.vue';
-import useDialogCategoria from '@/stores/DialogCategoria';
+import useDialogCategoria from '@/stores/Cardapio/DialogCategoriaStore';
 import { Categoria } from '@/types/types';
 import { Edit2Icon, PlusCircleIcon, TrashIcon } from 'lucide-vue-next';
 import { ref } from 'vue';

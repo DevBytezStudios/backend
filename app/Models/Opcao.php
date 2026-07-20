@@ -10,12 +10,12 @@ class Opcao extends Model
 {
 
     protected $fillable = [
-        'id_con',
-        'id_var',
+        'id_comp',
         'nome',
         'valor'
     ];
 
+    protected $casts = ['valor' => 'decimal'];
 
     /** @use HasFactory<\Database\Factories\OpcaoFactory> */
     use HasFactory;

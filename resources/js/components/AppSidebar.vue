@@ -3,7 +3,15 @@ import type { SidebarProps } from '@/components/ui/sidebar';
 
 import NavMain from '@/components/NavMain.vue';
 import NavUser from '@/components/NavUser.vue';
-import { CakeIcon, Home, InfoIcon, Settings2Icon } from 'lucide-vue-next';
+import {
+    Home,
+    Layers,
+    ListCheck,
+    Palette,
+    Settings2Icon,
+    ShoppingBag,
+    Utensils,
+} from 'lucide-vue-next';
 
 import {
     Sidebar,
@@ -13,7 +21,8 @@ import {
     SidebarRail,
 } from '@/components/ui/sidebar';
 import useConfeitariaStore from '@/stores/ConfeitariaStore';
-import NavProduto from './NavProduto.vue';
+import NavCardapio from './NavCardapio.vue';
+import NavEncomenda from './NavEncomenda.vue';
 const confeitariaStore = useConfeitariaStore();
 const props = withDefaults(defineProps<SidebarProps>(), {
     collapsible: 'icon',
@@ -34,48 +43,33 @@ const data = {
         },
     ],
 
-    navProdutos: [
-        // {
-        //     title: 'Menu',
-        //     url: '#',
-        //     icon: Bot,
-        //     items: [
-        //         {
-        //             title: 'Produtos',
-        //             url: '/catalogo/produtos',
-        //         },
-        //         {
-        //             title: 'Pedidos',
-        //             url: '/catalogo/pedidos',
-        //         },
-        //         {
-        //             title: 'Categorias',
-        //             url: '/catalogo/categorias',
-        //         },
-        //     ],
-        // },
+    // navCardapios: [
+    //     {
+    //         title: 'Cardápios',
+    //         url: '/cardapios',
+    //         icon: Utensils,
+    //     },
+    // ],
+    navEncomenda: [
         {
-            title: 'Encomenda',
-            url: '#',
-            icon: CakeIcon,
-            items: [
-                {
-                    title: 'Etapas',
-                    url: '/encomenda/etapas',
-                },
-                {
-                    title: 'Opcões',
-                    url: '/encomenda/opcoes',
-                },
-                {
-                    title: 'Estilos',
-                    url: '/encomenda/estilos',
-                },
-                {
-                    title: 'Encomendas',
-                    url: '/encomenda/encomendas',
-                },
-            ],
+            icon: Layers,
+            title: 'Etapas',
+            url: '/encomenda/etapas',
+        },
+        {
+            icon: ListCheck,
+            title: 'Opções',
+            url: '/encomenda/opcoes',
+        },
+        {
+            icon: Palette,
+            title: 'Estilos',
+            url: '/encomenda/estilos',
+        },
+        {
+            icon: ShoppingBag,
+            title: 'Encomendas',
+            url: '/encomenda/encomendas',
         },
     ],
 };
@@ -88,7 +82,8 @@ const data = {
         </SidebarHeader>
         <SidebarContent>
             <NavMain :items="data.navInfo" />
-            <NavProduto :items="data.navProdutos" />
+            <!-- <NavCardapio :items="data.navCardapios" /> -->
+            <NavEncomenda :items="data.navEncomenda" />
         </SidebarContent>
         <SidebarFooter>
             <NavUser :confeitaria="data.user" />

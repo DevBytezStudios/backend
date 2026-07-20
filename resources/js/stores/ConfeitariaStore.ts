@@ -33,12 +33,14 @@ const useConfeitariaStore = defineStore('confeitariaStore', {
         async setConfeitaria(dataConf:Confeitaria) {
             try {
                 const formData = new FormData();
+                
                 let data = {
                     confeitaria: dataConf,
                     blockdates: this.blockDates,
                 };
 
                 formData.append('data', JSON.stringify(data));
+
                 if (this.limite != 0 && this.limite != null && this.limite != undefined) {
                     formData.append('limite', JSON.stringify(this.limite));
                 }

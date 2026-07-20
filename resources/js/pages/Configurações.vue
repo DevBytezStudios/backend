@@ -32,6 +32,7 @@ import { router } from '@inertiajs/vue3';
 interface Props {
     limite: number;
 }
+
 const props = defineProps<Props>();
 const confStore = useConfeitariaStore();
 const confeitariaConfig = ref({ ...confStore.confeitaria });
@@ -130,7 +131,6 @@ onMounted(async () => {
 
 <template>
     <AppLayout page="Informações">
-        <Toaster />
         <LoadingBar :loading="loading" />
         <SaveAlert
             :open="showAlertSave"
