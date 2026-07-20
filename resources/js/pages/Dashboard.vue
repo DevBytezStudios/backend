@@ -67,8 +67,8 @@ const updateStatusEncomenda = (encomenda: Encomenda, status: string) => {
 };
 
 // url para o app
-// const urlApp = `https://app.bakerfast.com.br/${confeitariaStore.confeitaria.slug}`;
-const urlApp = `http://localhost:5174/${confeitariaStore.confeitaria.slug}`;
+const urlApp = `https://app.bakerfast.com.br/${confeitariaStore.confeitaria.slug}`;
+// const urlApp = `http://localhost:5174/${confeitariaStore.confeitaria.slug}`;
 const copyLink = async () => {
     try {
         await navigator.clipboard.writeText(urlApp);
