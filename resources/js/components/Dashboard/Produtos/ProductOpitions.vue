@@ -14,8 +14,7 @@ import {
     InputGroupInput,
 } from '@/components/ui/input-group';
 import Input from '@/components/ui/input/Input.vue';
-import useDialogProduto from '@/stores/DialogProduto';
-import { Opcao, Complemento } from '@/types/types';
+import useDialogProduto from '@/stores/Cardapio/DialogProdutoStore';import { Opcao, Complemento } from '@/types/types';
 import {
     Coins,
     PlusCircle,

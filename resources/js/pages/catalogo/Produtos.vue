@@ -7,7 +7,7 @@ import Button from '@/components/ui/button/Button.vue';
 import Input from '@/components/ui/input/Input.vue';
 import { SearchIcon } from 'lucide-vue-next';
 import DialogProduct from '@/components/Dashboard/Produtos/DialogProduct.vue';
-import ListVisualization from '@/components/Dashboard/Produtos/ListVisualization.vue'; 
+// import ListVisualization from '@/components/Dashboard/Produtos/ListVisualization.vue'; 
 import {
     Pagination,
     PaginationContent,
@@ -23,7 +23,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-import useDialogProduto from '@/stores/DialogProduto';
+import useDialogProduto from '@/stores/Cardapio/DialogProdutoStore';
 import { Paginator, Produto } from '@/types/types';
 import axios from 'axios';
 import { PlusCircleIcon } from 'lucide-vue-next';
@@ -44,12 +44,12 @@ const showDialog = ref(false);
 const props = defineProps<Props>();
 const dialogProduto = useDialogProduto();
 
-const addProduto = async () => {
-    loading.value = !loading.value;
-    await dialogProduto.getCategorias();
-    showDialog.value = true;
-    loading.value = !loading.value;
-};
+// const addProduto = async () => {
+//     loading.value = !loading.value;
+//     await dialogProduto.getCategorias();
+//     showDialog.value = true;
+//     loading.value = !loading.value;
+// };
 
 const navigate = (url: string | null) => {
     if (!url) return;
@@ -143,9 +143,9 @@ const searchProdutos = async () => {
                 </SelectContent>
             </Select>
 
-            <Button variant="outline" @click="addProduto()" type="button">
+            <!-- <Button variant="outline" @click="addProduto()" type="button">
                 <PlusCircleIcon />
-            </Button>
+            </Button> -->
         </header>
 
         <div class="flex flex-col gap-6 h-full">

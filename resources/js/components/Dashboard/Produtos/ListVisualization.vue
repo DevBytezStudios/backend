@@ -17,8 +17,7 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import useDialogProduto from '@/stores/DialogProduto';
-import { Produto } from '@/types/types';
+import useDialogProduto from '@/stores/Cardapio/DialogProdutoStore';import { Produto } from '@/types/types';
 import { Edit2Icon, TrashIcon } from 'lucide-vue-next';
 import DialogProduct from './DialogProduct.vue';
 
@@ -47,7 +46,7 @@ const editProduto = async (produto: Produto) => {
     loading.value = !loading.value;
 
     dialogProduto.produto = produto;
-    await dialogProduto.getVariacao();
+    // await dialogProduto.getVariacao();
     showDialog.value = true;
     loading.value = !loading.value;
 };
@@ -60,21 +59,21 @@ const loading = ref(false);
 const alertDialog = ref(false);
 
 const deletarProduto = async () => {
-    try {
-        loading.value = !loading.value;
-        const response = await dialogProduto.deleteProduto();
-        if (response.success) {
-            alertDialog.value = false;
-            dialogProduto.produto.id = 0;
-            loading.value = !loading.value;
+    // try {
+        // loading.value = !loading.value;
+    //     // const response = await dialogProduto.deleteProduto();
+    //     if (response.success) {
+    //         alertDialog.value = false;
+    //         dialogProduto.produto.id = 0;
+    //         loading.value = !loading.value;
 
-            toast.success(response.success.titulo);
-        } else {
-            loading.value = !loading.value;
+    //         toast.success(response.success.titulo);
+    //     } else {
+    //         loading.value = !loading.value;
 
-            toast.error(response.error.titulo);
-        }
-    } catch ($error) {}
+    //         toast.error(response.error.titulo);
+    //     }
+    // } catch ($error) {}
 };
 </script>
 

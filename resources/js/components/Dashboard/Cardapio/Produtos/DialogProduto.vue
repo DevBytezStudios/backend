@@ -75,7 +75,6 @@ import useDialogProduto from '@/stores/Cardapio/DialogProdutoStore';
                                                     <Input
                                                         id="txtNome"
                                                         placeholder="Ex.. Trufa de chocolate"
-                                                        v-model="something"
                                                         required
                                                     />
                                                 </Field>

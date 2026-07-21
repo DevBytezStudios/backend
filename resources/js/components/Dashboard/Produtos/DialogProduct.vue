@@ -8,8 +8,7 @@ import {
 } from '@/components/ui/dialog';
 const emits = defineEmits(['closeDialog', 'saveProduct']);
 
-import useDialogProduto from '@/stores/DialogProduto';
-const dialogProduto = useDialogProduto();
+import useDialogProduto from '@/stores/Cardapio/DialogProdutoStore';const dialogProduto = useDialogProduto();
 const loading = ref(false);
 
 // CONFIGURAÇÔES DO FORM
