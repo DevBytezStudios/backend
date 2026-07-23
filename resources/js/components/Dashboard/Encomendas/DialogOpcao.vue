@@ -158,7 +158,7 @@ watch(props, async (newValue) => {
                                                 "
                                             />
                                         </Field>
-                                        <div class="grid grid-cols-3 gap-4">
+                                        <!-- <div class="grid grid-cols-3 gap-4">
                                             <Field>
                                                 <FieldLabel for="numValor">
                                                     Valor
@@ -180,7 +180,7 @@ watch(props, async (newValue) => {
                                                     />
                                                 </InputGroup>
                                             </Field>
-                                        </div>
+                                        </div> -->
                                         <FieldSeparator />
                                         <Field>
                                             <FieldTitle

@@ -30,47 +30,47 @@ Route::post('/configuracoes/setinfo', [ConfeitariaController::class, 'setInfo'])
 //     return Inertia::render("Cardapios");
 // });
 
-Route::prefix("cardapios/")->group(function () {
-    // CONFIGURAÇÂO DOS CATALOGOS PERSONALIZADOS
-    Route::get('/',function(){
-        return Inertia::render("Cardapios");
-    })->name('cardapios');
-    Route::get('/{titulo}',[CardapioController::class,'cardapioProds'])->name('cardapio.produtos');
-    Route::post('/setcardapio',[CardapioController::class,'setCardapio'])->name('cardapio.set');
+// Route::prefix("cardapios/")->group(function () {
+//     // CONFIGURAÇÂO DOS CATALOGOS PERSONALIZADOS
+//     Route::get('/',function(){
+//         return Inertia::render("Cardapios");
+//     })->name('cardapios');
+//     Route::get('/{titulo}',[CardapioController::class,'cardapioProds'])->name('cardapio.produtos');
+//     Route::post('/setcardapio',[CardapioController::class,'setCardapio'])->name('cardapio.set');
 
-    // CONFIGURAÇÂO DOS PRODUTOS
-    // Route::get('/produtos', [CatalogoController::class, 'getProdutos'])->name('catalogo.produtos');
+//     // CONFIGURAÇÂO DOS PRODUTOS
+//     // Route::get('/produtos', [CatalogoController::class, 'getProdutos'])->name('catalogo.produtos');
 
-    // Route::post('/categorias', [CategoriaController::class, 'getCategorias'])->name('catalogo.produtoCategorias');
+//     // Route::post('/categorias', [CategoriaController::class, 'getCategorias'])->name('catalogo.produtoCategorias');
 
-    // Route::post('/produto/variacao', [ProdutoController::class, 'getVariacao'])->name('catalogo.variacao');
+//     // Route::post('/produto/variacao', [ProdutoController::class, 'getVariacao'])->name('catalogo.variacao');
 
-    // Route::post('/produto/deleteopcao', [ProdutoController::class, 'deleteOpcao'])->name('catalogo.deleteOpcao');
+//     // Route::post('/produto/deleteopcao', [ProdutoController::class, 'deleteOpcao'])->name('catalogo.deleteOpcao');
 
-    // Route::post('/produto/deletevariacao', [ProdutoController::class, 'deleteVariacao'])->name('catalogo.deleteVariacao');
+//     // Route::post('/produto/deletevariacao', [ProdutoController::class, 'deleteVariacao'])->name('catalogo.deleteVariacao');
 
-    // Route::post('/produto/deleteproduto', [ProdutoController::class, 'deleteProduto'])->name('catalogo.deleteProduto');
+//     // Route::post('/produto/deleteproduto', [ProdutoController::class, 'deleteProduto'])->name('catalogo.deleteProduto');
 
-    // Route::post('/produto/setproduto', [ProdutoController::class, 'setProduto'])->name('catalogo.setProduto');
+//     // Route::post('/produto/setproduto', [ProdutoController::class, 'setProduto'])->name('catalogo.setProduto');
 
-    // Route::post('/produto/search', [ProdutoController::class, 'search'])->name('catalogo.searchProduto');
+//     // Route::post('/produto/search', [ProdutoController::class, 'search'])->name('catalogo.searchProduto');
 
-    // // CONFIGURAÇÂO DOS PEDIDOS
-    // Route::get('/pedidos', [CatalogoController::class, "getPedidos"])->name('catalogo.pedidos');
+//     // // CONFIGURAÇÂO DOS PEDIDOS
+//     // Route::get('/pedidos', [CatalogoController::class, "getPedidos"])->name('catalogo.pedidos');
 
-    // Route::post('/pedidos/updatestatus', [PedidoController::class, "setStatus"])->name('catalogo.pedidosStatus');
+//     // Route::post('/pedidos/updatestatus', [PedidoController::class, "setStatus"])->name('catalogo.pedidosStatus');
 
-    // Route::post('/pedidos/delete', [PedidoController::class, "deletePedido"])->name('catalogo.deletePedido');
+//     // Route::post('/pedidos/delete', [PedidoController::class, "deletePedido"])->name('catalogo.deletePedido');
 
-    // Route::post('/pedidos/search', [PedidoController::class, "search"])->name('catalogo.searchPedido');
+//     // Route::post('/pedidos/search', [PedidoController::class, "search"])->name('catalogo.searchPedido');
 
-    // // CONFIGURAÇÂO DAS CATEGORIAS
-    // Route::get('/categorias', [CatalogoController::class, "getCategorias"])->name('catalogo.categorias');
+//     // // CONFIGURAÇÂO DAS CATEGORIAS
+//     // Route::get('/categorias', [CatalogoController::class, "getCategorias"])->name('catalogo.categorias');
 
-    // Route::post('/categorias/setcategoria', [CategoriaController::class, "setCategoria"])->name('catalogo.setCategoria');
+//     // Route::post('/categorias/setcategoria', [CategoriaController::class, "setCategoria"])->name('catalogo.setCategoria');
 
-    // Route::post('/categorias/delete', [CategoriaController::class, 'deleteCategoria'])->name('catalogo.deleteCategoria');
-})->middleware(Auth::class);
+//     // Route::post('/categorias/delete', [CategoriaController::class, 'deleteCategoria'])->name('catalogo.deleteCategoria');
+// })->middleware(Auth::class);
 
 
 
@@ -79,40 +79,28 @@ Route::prefix("encomenda/")->group(function () {
 
     // ETAPAS
     Route::get('/etapas', [EtapaController::class, 'getEtapas'])->name('encomenda.etapas');
-
     Route::post('/etapas/setetapa', [EtapaController::class, 'setEtapa'])->name('encomenda.setEtapa');
-
     Route::post('/etapas/setordem', [EtapaController::class, 'setOrdem'])->name('encomenda.setOrdem');
-
     Route::post('/etapas/delete', [EtapaController::class, 'delete'])->name('encomenda.etapa.delete');
 
     // OPCOES
     Route::get('/opcoes', [EtapaOpcaoController::class, 'getOpcoes'])->name('encomenda.opcoes');
-
     Route::get('/opcoes/getetapas', [EtapaOpcaoController::class, 'getEtapas'])->name('encomenda.getEtapas');
-
     Route::post('/opcoes/setopcao', [EtapaOpcaoController::class, 'setOpcao'])->name('encomenda.setOpcao');
-
     Route::post('/opcoes/search', [EtapaOpcaoController::class, 'search'])->name('opcoes.search');
-
     Route::post('/opcoes/delete', [EtapaOpcaoController::class, 'delete'])->name('opcoes.delete');
 
 
     // ESTILOS
     Route::get('/estilos', [EstiloController::class, 'getEstilos'])->name('encomenda.estilos');
-
     Route::post('/estilos/setestilo', [EstiloController::class, 'setEstilo'])->name('encomenda.setEstilo');
-
     Route::post('/estilos/delete', [EstiloController::class, 'delete'])->name('encomenda.estiloDelete');
 
 
     // ENCOMENDAS
     Route::get('/encomendas', [EncomendaController::class, 'getEncomendas'])->name('encomenda.getEncomendas');
-
     Route::post('/updatestatus', [EncomendaController::class, 'updateStatus'])->name('encomenda.updatestatus');
-
     Route::post('/delete', [EncomendaController::class, 'deleteEncomenda'])->name('encomenda.delete');
-
     Route::post('/search', [EncomendaController::class, 'search'])->name('encomenda.search');
 })->middleware(Auth::class);
 

@@ -30,7 +30,7 @@ class EtapaController
             $etapa = $data['etapa'];
             // ATUALIZA
             if ($etapa['id'] != 0) {
-                $etapaModel = Etapa::find($etapa['id']);
+                $etapaModel = Etapa::find("id",$etapa['id']);
                 $etapaModel->nome = $etapa['nome'];
                 $etapaModel->required = $etapa['required'];
                 $etapaModel->multiple = $etapa['multiple'];
@@ -44,14 +44,14 @@ class EtapaController
                 ];
             } else {
                 // VERIFICA SE EXISTE 
-                if (Etapa::where('id_con',$confeitaria->id)->where('nome', $etapa["nome"])->exists()) {
+                if (Etapa::where('id_con', $confeitaria->id)->where('nome', $etapa["nome"])->exists()) {
                     return [
                         'error' => [
                             'titulo' => 'Etapa já existe!',
                         ]
                     ];
                 }
-                
+
                 // CRIA
                 $newEtapa = Etapa::create([
                     "id_con" => $confeitaria->id,
@@ -59,7 +59,6 @@ class EtapaController
                     "required" => $etapa["required"],
                     "multiple" => $etapa["multiple"],
                     "ordem" => $etapa["ordem"],
-                    "icone" => "" //CONFIGURAR DEPOIS
                 ]);
 
                 if ($newEtapa) {
@@ -97,11 +96,11 @@ class EtapaController
             $data = json_decode($request->data, true);
             $atual = $data['atual'];
 
-            $ormAtual = Etapa::find($atual['id']);
+            $ormAtual = Etapa::find("id",$atual['id']);
             $ormAtual->ordem = $atual['ordem'];
 
             $anterior = $data['novo'];
-            $ormanterior = Etapa::find($anterior['id']);
+            $ormanterior = Etapa::find("id",$anterior['id']);
             $ormanterior->ordem = $anterior['ordem'];
 
             $ormAtual->save();
@@ -127,7 +126,7 @@ class EtapaController
     public function delete(Request $request)
     {
         try {
-            $etapa = Etapa::find($request->id);
+            $etapa = Etapa::find("id",$request->id);
             $etapa->delete();
 
             return [

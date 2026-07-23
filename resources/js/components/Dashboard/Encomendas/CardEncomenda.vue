@@ -153,13 +153,14 @@ function diasRestantes(dataEntrega: string | Date): number {
                     <p class="text-sm font-medium">
                         {{ encomenda.estilo.titulo }}
                     </p>
-                     <p class="text-xs text-muted-foreground">Valor</p>
+                    <!-- CALCULAR O TOTAL DA ENCOMENDA -->
+                    <!-- <p class="text-xs text-muted-foreground">Valor</p>
                     <p class="text-sm font-medium">
                         {{  new Intl.NumberFormat('pt-BR', {
                             style: 'currency',
                             currency: 'BRL',
                         }).format(encomenda.estilo.valor) }}
-                    </p>
+                    </p> -->
                 </div>
             </div>
         </CardContent>
@@ -186,7 +187,7 @@ function diasRestantes(dataEntrega: string | Date): number {
         <CardFooter
             class="flex flex-wrap items-center justify-between bg-muted/10 pt-3"
         >
-            <div class="flex flex-col leading-tight">
+            <!-- <div class="flex flex-col leading-tight">
                 <span class="text-xs text-muted-foreground"> Total </span>
                 <span class="text-sm font-semibold">
                     {{
@@ -196,7 +197,7 @@ function diasRestantes(dataEntrega: string | Date): number {
                         }).format(calcularTotal(encomenda))
                     }}
                 </span>
-            </div>
+            </div> -->
             <div class="flex flex-col leading-tight">
                 <span class="text-xs text-muted-foreground">
                     Dias restantes:

@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('descricao');
             $table->string('imagem');
             $table->boolean('active');
-            $table->decimal('valor',10,2);
+            $table->decimal('valor',10,2)->nullable()->default(0);
             $table->timestamps();
         });
     }

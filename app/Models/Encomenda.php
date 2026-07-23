@@ -17,7 +17,6 @@ class Encomenda extends Model
                 'status',
                 'pagamento',
                 'code',
-                'observacao'
         ];
         use HasFactory;
 

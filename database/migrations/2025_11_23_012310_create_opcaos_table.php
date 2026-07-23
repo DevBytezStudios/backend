@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('id_comp');
             $table->foreign('id_comp')->references('id')->on('complementos')->onDelete('cascade')->onUpdate('cascade');
             $table->string('nome');
-            $table->decimal('valor',10,2);
+            $table->decimal('valor',10,2)->nullable();
             $table->timestamps();
         });
     }

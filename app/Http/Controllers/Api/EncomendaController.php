@@ -71,7 +71,7 @@ class EncomendaController extends Controller
                     "pagamento" => $pagamento,
                     "code" => $this->getCode(),
                     "data_entrega" => date($data_entrega),
-                    "observacao" => $observacao,
+                    // "observacao" => $observacao,
                     "status" => "em_progresso"
                 ]);
 

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import CardEncomenda from '@/components/Dashboard/Home/CardEncomenda.vue';
-import CardPedido from '@/components/Dashboard/Home/CardPedido.vue'; //CARD DE PEDIDO PAR A HOME
+// import CardPedido from '@/components/Dashboard/Home/CardPedido.vue'; //CARD DE PEDIDO PAR A HOME
 import ButtonGroup from '@/components/ui/button-group/ButtonGroup.vue';
 import ButtonGroupSeparator from '@/components/ui/button-group/ButtonGroupSeparator.vue';
 import Button from '@/components/ui/button/Button.vue';
@@ -10,16 +10,14 @@ import useCofeitariaStrore from '@/stores/ConfeitariaStore';
 import { Confeitaria, Encomenda, Pedido } from '@/types/types';
 import {
     ArrowBigRightDashIcon,
-    CalendarIcon,
     CopyIcon,
     Link,
-    PackageIcon,
-    ShoppingBagIcon,
 } from 'lucide-vue-next';
-import { computed, onMounted, ref } from 'vue';
+import { computed, ref } from 'vue';
 import { toast, Toaster } from 'vue-sonner';
 import 'vue-sonner/style.css';
 const confeitariaStore = useCofeitariaStrore();
+confeitariaStore.getConfeitaria;
 
 interface Data {
     entregasHoje: number;
@@ -28,29 +26,29 @@ interface Data {
 }
 
 interface Props {
-    confeitaria: Confeitaria;
-    pedidos: Pedido[];
-    data: Data;
+    // confeitaria: Confeitaria;
+    // pedidos: Pedido[];
+    // data: Data;
     encomendas: Encomenda[];
 }
 
 const props = defineProps<Props>();
-confeitariaStore.confeitaria = props.confeitaria;
-const entregasHoje = props.data.entregasHoje;
-const proximasEntregas = props.data.proximasEntregas;
-const produtosTotais = props.data.produtosTotais;
+// ADICIONAR A CONFIGURAÇÂO DE CARDS PARA ANALISE DEPOIS
+// const entregasHoje = props.data.entregasHoje;
+// const proximasEntregas = props.data.proximasEntregas;
+// const produtosTotais = props.data.produtosTotais;
 
 // CONFIGURAR OS PEDIDOS
-const pedidos = ref([...props.pedidos]);
-const arrPedidos = computed(() => {
-    return pedidos.value.filter((pedido) => pedido.status == 'em_progresso');
-});
+// const pedidos = ref([...props.pedidos]);
+// const arrPedidos = computed(() => {
+//     return pedidos.value.filter((pedido) => pedido.status == 'em_progresso');
+// });
 
-const updateStauts = (pedido: Pedido, status: string) => {
-    pedido.status = status;
-    arrPedidos;
-    return;
-};
+// const updateStauts = (pedido: Pedido, status: string) => {
+//     pedido.status = status;
+//     arrPedidos;
+//     return;
+// };
 
 // CONFIGURAR ENCOMENDAS
 const encomendas = ref(props.encomendas);
@@ -67,8 +65,8 @@ const updateStatusEncomenda = (encomenda: Encomenda, status: string) => {
 };
 
 // url para o app
-const urlApp = `https://app.bakerfast.com.br/${confeitariaStore.confeitaria.slug}`;
-// const urlApp = `http://localhost:5174/${confeitariaStore.confeitaria.slug}`;
+// const urlApp = `https://app.bakerfast.com.br/${confeitariaStore.confeitaria.slug}`;
+const urlApp = `http://localhost:5174/${confeitariaStore.confeitaria.slug}`;
 const copyLink = async () => {
     try {
         await navigator.clipboard.writeText(urlApp);
@@ -130,7 +128,7 @@ const copyLink = async () => {
         </Card>
 
         <!-- CARDS -->
-        <div class="grid auto-rows-min gap-4 md:grid-cols-3">
+        <!-- <div class="grid auto-rows-min gap-4 md:grid-cols-3">
             <Card class="rounded-xl">
                 <CardHeader
                     class="flex flex-row items-center justify-between pb-2"
@@ -176,7 +174,7 @@ const copyLink = async () => {
                     </div>
                 </CardContent>
             </Card>
-        </div>
+        </div> -->
         <!-- <div class="flex w-full flex-col gap-3">
             <div class="flex items-center justify-between">
                 <h2 class="text-sm font-semibold">Pedidos do dia</h2>

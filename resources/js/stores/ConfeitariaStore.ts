@@ -1,7 +1,11 @@
+import { getConfeitarias } from '@/actions/App/Http/Controllers/Api/Admin/AdminController';
 import { Confeitaria } from '@/types/types';
+import { usePage } from '@inertiajs/vue3';
 import axios from 'axios';
 import { defineStore } from 'pinia';
 
+
+const page = usePage();
 interface ConfeitariaState {
     confeitaria: Confeitaria;
     file: File | null;
@@ -14,7 +18,7 @@ interface ConfeitariaState {
 const useConfeitariaStore = defineStore('confeitariaStore', {
     state: (): ConfeitariaState => ({
         confeitaria: {
-            id: 0,
+            // id: 0,
             email: '',
             telefone: '',
             cor_princ: '',
@@ -29,6 +33,11 @@ const useConfeitariaStore = defineStore('confeitariaStore', {
         blockDates: [],
         limite: 0,
     }),
+    getters:{
+        getConfeitaria(){
+            this.confeitaria = page.props.auth.user;
+        }
+    },
     actions: {
         async setConfeitaria(dataConf:Confeitaria) {
             try {

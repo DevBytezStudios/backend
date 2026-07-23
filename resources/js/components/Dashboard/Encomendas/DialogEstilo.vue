@@ -109,7 +109,7 @@ const setEstilo = async () => {
                                             "
                                         />
                                     </Field>
-                                    <div class="grid grid-cols-3 gap-4">
+                                    <!-- <div class="grid grid-cols-3 gap-4">
                                         <Field>
                                             <FieldLabel for="numValor">
                                                 Valor
@@ -130,7 +130,7 @@ const setEstilo = async () => {
                                                 />
                                             </InputGroup>
                                         </Field>
-                                    </div>
+                                    </div> -->
                                     <FieldSeparator />
                                     <Field>
                                         <FieldTitle>Configurações</FieldTitle>

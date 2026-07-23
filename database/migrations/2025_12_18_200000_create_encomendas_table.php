@@ -23,7 +23,6 @@ return new class extends Migration
             $table->string('status');
             $table->string('pagamento');
             $table->string('code');
-            $table->string('observacao');
             $table->timestamps();
         });
     }

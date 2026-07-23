@@ -1,8 +1,9 @@
 import { InertiaLinkProps } from '@inertiajs/vue3';
 import type { LucideIcon } from 'lucide-vue-next';
+import { Confeitaria } from './types';
 
 export interface Auth {
-    user: User;
+    user: Confeitaria;
 }
 
 export interface BreadcrumbItem {

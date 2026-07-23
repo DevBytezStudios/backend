@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreign('id_encomenda')->references('id')->on('encomendas')->onDelete('cascade')->onUpdate('cascade');
             $table->string("etapa");
             $table->string('nome');
-            $table->decimal('valor', 10, 2);
+            $table->decimal('valor', 10, 2)->nullable();
             $table->timestamps();
         });
     }

@@ -26,7 +26,6 @@ import {
 import useDialogProduto from '@/stores/Cardapio/DialogProdutoStore';
 import { Paginator, Produto } from '@/types/types';
 import axios from 'axios';
-import { PlusCircleIcon } from 'lucide-vue-next';
 import { ref } from 'vue';
 import { toast, Toaster } from 'vue-sonner';
 import 'vue-sonner/style.css';

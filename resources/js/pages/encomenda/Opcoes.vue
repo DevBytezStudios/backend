@@ -222,7 +222,7 @@ const deleteEtapa = async () => {
                     <TableRow>
                         <TableHead>Etapa</TableHead>
                         <TableHead> Nome </TableHead>
-                        <TableHead> Valor </TableHead>
+                        <!-- <TableHead> Valor </TableHead> -->
                         <TableHead class="hidden md:table-cell">
                             Descrição
                         </TableHead>
@@ -242,7 +242,7 @@ const deleteEtapa = async () => {
                             >{{ opcao.etapa.nome }}
                         </TableCell>
                         <TableCell>{{ opcao.nome }}</TableCell>
-                        <TableCell>
+                        <!-- <TableCell>
                             {{
                                 opcao.valor != 0
                                     ? new Intl.NumberFormat('pt-BR', {
@@ -251,7 +251,7 @@ const deleteEtapa = async () => {
                                       }).format(opcao.valor)
                                     : '-'
                             }}
-                        </TableCell>
+                        </TableCell> -->
                         <TableCell class="hidden md:table-cell">
                             {{ opcao.descricao }}
                         </TableCell>

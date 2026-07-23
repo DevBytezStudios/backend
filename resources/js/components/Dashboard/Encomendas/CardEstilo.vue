@@ -49,7 +49,7 @@ const emit = defineEmits(['editEstilo','delete'])
             >
                 {{ estilo.descricao }}
             </CardDescription>
-
+<!-- 
             <div class="pt-1 text-sm font-medium">
                 <span class="text-muted-foreground">Valor:</span>
                 <span class="ml-1"
@@ -62,7 +62,7 @@ const emit = defineEmits(['editEstilo','delete'])
                             : '-'
                     }}
                 </span>
-            </div>
+            </div> -->
 
             <div class="pt-1 text-sm font-medium">
                 <span class="text-muted-foreground">Ativo:</span>
