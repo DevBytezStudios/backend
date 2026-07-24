@@ -16,7 +16,7 @@ class Auth
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if(AuthConfeitaria::check()){
+        if(AuthConfeitaria::check()  != null ){
             return $next($request);
         }
 

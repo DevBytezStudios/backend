@@ -1,9 +1,9 @@
 export interface Confeitaria {
-    // id: number;
+    id: number;
     nome: string;
     telefone: string;
     slug: string;
-    logo_url: string;
+    logo: string,
     cor_princ: string;
     cor_sec: string;
     email: string;

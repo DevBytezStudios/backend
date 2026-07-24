@@ -18,13 +18,14 @@ interface ConfeitariaState {
 const useConfeitariaStore = defineStore('confeitariaStore', {
     state: (): ConfeitariaState => ({
         confeitaria: {
-            // id: 0,
+            id: 0,
             email: '',
             telefone: '',
             cor_princ: '',
             cor_sec: '',
             nome: '',
-            logo_url: '',
+            logo: "",
+            // logo_url: '',
             slug: '',
         },
         file: null,

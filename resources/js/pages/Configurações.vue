@@ -104,7 +104,6 @@ onUnmounted(() => {
 // VERIFICA SE  POSSUI DATAS
 import type { DateValue } from '@internationalized/date';
 import { getLocalTimeZone, parseDate, today } from '@internationalized/date';
-import SaveAlert from '@/components/SaveAlert.vue';
 import { Trash2Icon } from 'lucide-vue-next';
 const currentToday = today(getLocalTimeZone());
 const selectedDates = ref<DateValue[]>();
@@ -144,7 +143,7 @@ onMounted(async () => {
                         <Field class="w-full">
                             <FieldTitle>Logo</FieldTitle>
                             <UploadComponent
-                                :imagem="confStore.confeitaria.logo_url"
+                                :imagem="confStore.confeitaria.logo"
                             />
                         </Field>
                     </FieldGroup>

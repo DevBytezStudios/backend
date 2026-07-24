@@ -33,7 +33,6 @@ class ConfeitariaController extends Controller
 
             $this->confeitaria = Confeitaria::select('id', 'nome', 'slug', 'cor_princ', 'cor_sec', 'logo', 'telefone')->where('slug', $request->slug)->first();
 
-
             // VERIFICAR STATE
             $state = State::where('id_con', $this->confeitaria->id)->first();
             if ($state->state == "active") {
@@ -64,7 +63,6 @@ class ConfeitariaController extends Controller
             } else if ($state->state == "paralyzed") {
 
                 return [
-
                     'error' => [
                         'titulo' => 'Confeitaria Paralizada!',
 

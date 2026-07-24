@@ -5,14 +5,13 @@ namespace App\Http\Controllers\Dashboard;
 use App\Models\Categoria;
 use App\Models\Encomenda;
 use App\Models\Pedido;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Throwable;
 
 class CatalogoController
 {
-
     public function dashboard()
     {
         $confeitaria = Auth::User();
@@ -28,13 +27,13 @@ class CatalogoController
             // ];
 
             $pedidos = Pedido::with(['cliente', 'pedidoItem'])->where('id_con', $confeitaria->id)->orderBy('data', 'DESC')->where('data', today())->where('status', 'em_progresso')->get()->select('id', 'code', 'pagamento', 'data', 'status', 'produto', 'pedidoItem', 'cliente');
-
-            $encomendas = Encomenda::with(['opcoes', 'cliente', 'estilo'])->where("data_entrega", ">", now())->where('id_con', $confeitaria->id)->get();
+            $encomendas = Encomenda::with(['opcoes', 'cliente', 'estilo'])->where('data_entrega', '>', now())->where('id_con', $confeitaria->id)->get();
 
             // return Inertia::render('Dashboard', ['confeitaria' => $confeitaria, 'data' => $data, 'pedidos' => $pedidos, "encomendas" => $encomendas]);
-            return Inertia::render('Dashboard', [ "encomendas" => $encomendas]);
+            return Inertia::render('Dashboard', ['encomendas' => $encomendas]);
         } catch (Throwable $error) {
             dd("ERRO $error");
+
             return redirect()->route('auth.login');
         }
     }
@@ -55,8 +54,9 @@ class CatalogoController
         $confeitaria = Auth::user();
         if ($confeitaria) {
             $pedidos = Pedido::with(['cliente', 'pedidoItem'])->where('id_con', $confeitaria->id)->orderBy('data', 'DESC')->get()->select('id', 'code', 'pagamento', 'data', 'status', 'produto', 'pedidoItem', 'cliente');
+
             // return $pedidos;
-            return Inertia::render("catalogo/Pedidos", ['pedidos' => $pedidos]);
+            return Inertia::render('catalogo/Pedidos', ['pedidos' => $pedidos]);
         } else {
             return redirect()->route('auth.login');
         }
@@ -67,6 +67,7 @@ class CatalogoController
         $confeitaria = Auth::user();
 
         $categorias = Categoria::where('id_con', $confeitaria->id)->get()->select('id', 'titulo');
-        return Inertia::render("catalogo/Categorias", ['categorias' => $categorias]);
+
+        return Inertia::render('catalogo/Categorias', ['categorias' => $categorias]);
     }
 }

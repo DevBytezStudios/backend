@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Dashboard;
 use App\Models\Capacidade;
 use App\Models\Confeitaria;
 use App\Models\Data;
-use App\Models\Produto;
 use Cocur\Slugify\Slugify;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -21,17 +20,10 @@ class ConfeitariaController extends Controller
         try {
             $data = json_decode($request->data, true);
             $limite = json_decode($request->limite, true);
-            $slugify = new Slugify();
+            $slugify = new Slugify;
 
             // AJUSTES NAS DATAS BLOQUEADAS
             $blockdates = is_array($data['blockdates']) ? $data['blockdates'] : json_decode($data['blockdates'], true)->toArray() ?? [];
-            if ($request->hasFile('logo')) {
-                $logo = ' ';
-                if ($request->logo) {
-                    $path = Storage::disk('public')->put('confeitarias', $request->logo);
-                    $logo = basename($path);
-                }
-            }
 
             // AJUSTES DA CONFEITARIA
             $confeitaria = Auth::user();
@@ -42,9 +34,13 @@ class ConfeitariaController extends Controller
             $newSlug = $slugify->slugify($data['confeitaria']['nome']);
             $confeitaria->slug = $newSlug;
 
+            $logo = '';
             if ($request->hasFile('logo')) {
+                $path = Storage::disk('public')->put('confeitarias', $request->logo);
+                $logo = basename($path);
                 $confeitaria->logo = $logo;
             }
+
             $confeitaria->save();
 
             // MODIFICANDO AS DATAS BLOQUEADAS
@@ -69,8 +65,8 @@ class ConfeitariaController extends Controller
             return [
                 'success' => [
                     'titulo' => 'Atualizada!',
-                    'confeitaria' => $confeitaria
-                ]
+                    'confeitaria' => $confeitaria,
+                ],
             ];
         } catch (Throwable $error) {
             return [
@@ -78,7 +74,7 @@ class ConfeitariaController extends Controller
                     'titulo' => 'Algo de errado!',
                     'message' => $error->getMessage(),
                     'code' => $error->getCode(),
-                ]
+                ],
             ];
         }
     }
@@ -88,6 +84,7 @@ class ConfeitariaController extends Controller
         try {
             $confeitaria = Auth::user();
             $datas = DB::table('data')->where('id_con', $confeitaria->id)->pluck('dt_bloq');
+
             return response()->json($datas);
         } catch (Throwable $error) {
             return [
@@ -95,7 +92,7 @@ class ConfeitariaController extends Controller
                     'titulo' => 'Algo de errado!',
                     'message' => $error->getMessage(),
                     'code' => $error->getCode(),
-                ]
+                ],
             ];
         }
     }
@@ -104,9 +101,10 @@ class ConfeitariaController extends Controller
     {
         $confeitaria = Auth::user();
         $capacidade = Capacidade::where('id_con', $confeitaria->id)->firstOrCreate([
-            'id_con' => $confeitaria->id
+            'id_con' => $confeitaria->id,
         ])->select('limite')->first();
         $limite = $capacidade->limite;
+
         return Inertia::render('Configurações', ['limite' => $limite]);
     }
 }

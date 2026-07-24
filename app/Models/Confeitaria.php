@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -22,32 +21,35 @@ class Confeitaria extends Authenticatable
         'logo',
         'email',
         'password',
-        'telefone'
+        'telefone',
     ];
-    protected $appends = ['logo_url'];
+
+    // protected $appends = ['logo_url'];
+
     protected $hidden = [
         'password',
         'created_at',
-        'updated_at'
+        'updated_at',
     ];
-
 
     /** @use HasFactory<\Database\Factories\ConfeitariaFactory> */
     use HasFactory;
 
-    protected function logoUrl(): Attribute
+    protected function logo(): Attribute
     {
         // PEGAR A URL DA logo COMPLETA AO PEDIR ELA
         return Attribute::make(
-            get: function ($logo) {
-                if ($logo && Storage::disk('public')->exists("confeitarias/" . $logo)) {
-                    return asset(Storage::url("confeitarias/" . $logo));
+            get: function () {
+                $logo = $this->attributes['logo'] ?? null;
+
+                if ($logo && Storage::disk('public')->exists('confeitarias/'.$logo)) {
+                    return asset('storage/confeitarias/'.$logo);
                 }
 
                 return asset('storage/semImagem.jpg');
             },
 
-            set: fn($logo) => $logo
+            set: fn (string $logo) => $logo
         );
     }
 
@@ -56,11 +58,13 @@ class Confeitaria extends Authenticatable
         return $this->belongsTo(State::class, 'id', 'id_con');
     }
 
-    public function blockdates(): HasMany{
-        return $this->hasMany(Data::class,'id_con','id')->select('id','id_con','dt_bloq');
+    public function blockdates(): HasMany
+    {
+        return $this->hasMany(Data::class, 'id_con', 'id')->select('id', 'id_con', 'dt_bloq');
     }
 
-    public function limite(): HasOne{
-        return $this->hasOne(Capacidade::class,'id_con','id')->select('limite');
+    public function limite(): HasOne
+    {
+        return $this->hasOne(Capacidade::class, 'id_con', 'id')->select('limite');
     }
 }

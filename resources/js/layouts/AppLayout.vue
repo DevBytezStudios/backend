@@ -30,17 +30,12 @@ interface Props {
 const props = defineProps<Props>();
 const mode = useColorMode();
 const confeitariaStore = useConfeitariaStore();
+confeitariaStore.getConfeitaria;
 mode.value = confeitariaStore.theme;
 
 onMounted(() => {
     const audio = new Audio('/assets/notification.mp3');
     window.Echo.channel(`confeitaria.${confeitariaStore.confeitaria.id}`)
-        .listen('NewPedido', () => {
-            if (confeitariaStore.notification == true) {
-                audio.play();
-                toast.warning('Novo pedido!');
-            }
-        })
         .listen('NewEncomenda', () => {
             if (confeitariaStore.notification == true) {
                 audio.play();

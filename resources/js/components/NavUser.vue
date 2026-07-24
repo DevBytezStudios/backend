@@ -52,7 +52,7 @@ function toggleTheme() {
                     >
                         <Avatar class="h-8 w-8 rounded-lg">
                             <AvatarImage
-                                :src="confeitaria.logo_url"
+                                :src="confeitaria.logo"
                                 :alt="confeitaria.nome"
                             />
                             <AvatarFallback class="rounded-lg">
@@ -84,7 +84,7 @@ function toggleTheme() {
                         >
                             <Avatar class="h-8 w-8 rounded-lg">
                                 <AvatarImage
-                                    :src="confeitaria.logo_url"
+                                    :src="confeitaria.logo"
                                     :alt="confeitaria.nome"
                                 />
                                 <AvatarFallback class="rounded-lg">

@@ -17,7 +17,6 @@ import { computed, ref } from 'vue';
 import { toast, Toaster } from 'vue-sonner';
 import 'vue-sonner/style.css';
 const confeitariaStore = useCofeitariaStrore();
-confeitariaStore.getConfeitaria;
 
 interface Data {
     entregasHoje: number;
@@ -66,7 +65,7 @@ const updateStatusEncomenda = (encomenda: Encomenda, status: string) => {
 
 // url para o app
 // const urlApp = `https://app.bakerfast.com.br/${confeitariaStore.confeitaria.slug}`;
-const urlApp = `http://localhost:5174/${confeitariaStore.confeitaria.slug}`;
+const urlApp = `http://localhost:5173/${confeitariaStore.confeitaria.slug}`;
 const copyLink = async () => {
     try {
         await navigator.clipboard.writeText(urlApp);
@@ -79,8 +78,6 @@ const copyLink = async () => {
 
 <template>
     <AppLayout page="Home">
-        <Toaster position="bottom-center" />
-
         <!-- CARD PARA O LINK DO APP -->
         <Card class="rounded-xl border bg-background">
             <CardHeader
